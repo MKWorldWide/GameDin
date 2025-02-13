@@ -1,78 +1,127 @@
-import React from 'react';
-import { IConversation, IConversationParticipant } from '../../types/social';
-import useStore from '../../store/useStore';
+import {
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Avatar,
+  Typography,
+  Box,
+  CircularProgress,
+} from '@mui/material';
+import { IConversation, IUser } from '../../types/social';
+import { useAuth } from '../../hooks/useAuth';
 
 interface ConversationsListProps {
   conversations: IConversation[];
-  activeConversationId?: string;
-  onSelectConversation: (conversation: IConversation) => void;
+  selectedConversation: string | null;
+  onSelectConversation: (conversationId: string) => void;
+  loading?: boolean;
 }
 
-const ConversationsList: React.FC<ConversationsListProps> = ({
+export default function ConversationsList({
   conversations,
-  activeConversationId,
+  selectedConversation,
   onSelectConversation,
-}) => {
-  const user = useStore(state => state.user);
+  loading = false,
+}: ConversationsListProps) {
+  const { user } = useAuth();
 
-  const getOtherParticipant = (conversation: IConversation): IConversationParticipant | undefined => {
-    return conversation.participants.find(p => p.user.id !== user?.id);
+  const getOtherParticipant = (conversation: IConversation) => {
+    return conversation.participants.find(
+      (p) => p.user.username !== user?.username
+    )?.user;
   };
 
+  const getLastMessageTime = (timestamp: string) => {
+    const date = new Date(timestamp);
+    const now = new Date();
+    const diff = now.getTime() - date.getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+    if (days > 0) {
+      return `${days}d ago`;
+    }
+
+    return date.toLocaleTimeString([], {
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  if (loading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" p={4}>
+        <CircularProgress />
+      </Box>
+    );
+  }
+
   return (
-    <div className="bg-base-100 rounded-lg shadow-lg overflow-hidden">
-      <div className="p-4 border-b border-base-300">
-        <h2 className="text-lg font-semibold">Conversations</h2>
-      </div>
+    <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
+      {conversations.map((conversation) => {
+        const otherParticipant = getOtherParticipant(conversation);
 
-      <div className="divide-y divide-base-300">
-        {conversations.map(conversation => {
-          const otherParticipant = getOtherParticipant(conversation);
-          const isActive = conversation.id === activeConversationId;
-
-          return (
-            <div
-              key={conversation.id}
-              className={`p-4 cursor-pointer hover:bg-base-200 transition-colors ${
-                isActive ? 'bg-base-200' : ''
-              }`}
-              onClick={() => onSelectConversation(conversation)}
-            >
-              <div className="flex items-center space-x-3">
-                <div className="avatar">
-                  <div className="w-12 h-12 rounded-full">
-                    <img src={otherParticipant?.user.avatar} alt={otherParticipant?.user.username} />
-                  </div>
-                </div>
-
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold truncate">{otherParticipant?.user.username}</h3>
+        return (
+          <ListItem
+            key={conversation.id}
+            button
+            selected={selectedConversation === conversation.id}
+            onClick={() => onSelectConversation(conversation.id)}
+            sx={{
+              '&.Mui-selected': {
+                backgroundColor: 'action.selected',
+              },
+            }}
+          >
+            <ListItemAvatar>
+              <Avatar
+                src={
+                  otherParticipant?.picture ||
+                  otherParticipant?.avatar ||
+                  `https://api.dicebear.com/7.x/initials/svg?seed=${otherParticipant?.username}`
+                }
+                alt={otherParticipant?.username}
+              />
+            </ListItemAvatar>
+            <ListItemText
+              primary={conversation.title || otherParticipant?.username}
+              secondary={
+                <Box
+                  component="span"
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                >
+                  <Typography
+                    component="span"
+                    variant="body2"
+                    color="text.primary"
+                    sx={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                      whiteSpace: 'nowrap',
+                      maxWidth: '70%',
+                    }}
+                  >
+                    {conversation.lastMessage?.content}
+                  </Typography>
                   {conversation.lastMessage && (
-                    <div className="flex items-center space-x-1">
-                      <p className="text-sm text-base-content/60 truncate">
-                        {conversation.lastMessage.content}
-                      </p>
-                      <span className="text-xs text-base-content/40">
-                        • {new Date(conversation.lastMessage.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
+                    <Typography
+                      component="span"
+                      variant="caption"
+                      color="text.secondary"
+                    >
+                      {getLastMessageTime(conversation.lastMessage.createdAt)}
+                    </Typography>
                   )}
-                </div>
-
-                {conversation.unreadCount > 0 && (
-                  <div className="badge badge-primary badge-sm">{conversation.unreadCount}</div>
-                )}
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {conversations.length === 0 && (
-        <div className="p-4 text-center text-base-content/60">No conversations yet</div>
-      )}
-    </div>
+                </Box>
+              }
+            />
+          </ListItem>
+        );
+      })}
+    </List>
   );
-};
-
-export default ConversationsList;
+}

@@ -24,6 +24,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useAuth } from '../context/AuthContext';
 import { messagesApi } from '../services/api';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useUser } from '../hooks/useUser';
 
 interface IMessage {
   id: string;
@@ -113,7 +114,7 @@ const MessageBubble = styled(Box)<{ isOwn: boolean }>(({ theme, isOwn }) => ({
 }));
 
 const Messaging: React.FC = () => {
-  const { user } = useAuth();
+  const { user } = useUser();
   const { conversationId } = useParams<{ conversationId: string }>();
   const navigate = useNavigate();
   const [conversations, setConversations] = useState<IConversation[]>([]);
@@ -206,6 +207,14 @@ const Messaging: React.FC = () => {
   const selectedConversation = conversationId
     ? conversations.find(c => c.id === conversationId)
     : null;
+
+  if (!user) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-600">Please sign in to view messages</p>
+      </div>
+    );
+  }
 
   return (
     <Container maxWidth="lg">

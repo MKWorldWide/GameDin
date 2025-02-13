@@ -1,7 +1,7 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box } from '@mui/material';
-import { useAuth } from './context/AuthContext';
+import { useUser } from './hooks/useUser';
 
 // Pages
 import Home from './pages/Home';
@@ -11,6 +11,8 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Profile from './pages/Profile';
 import NotificationSettings from './pages/NotificationSettings';
+import Games from './pages/Games';
+import GameDetails from './pages/GameDetails';
 
 // Components
 import Feed from './components/Feed';
@@ -26,8 +28,8 @@ interface IPrivateRouteProps {
 }
 
 const PrivateRoute: React.FC<IPrivateRouteProps> = ({ children }) => {
-  const { user } = useAuth();
-  return user ? <>{children}</> : <Navigate to="/login" />;
+  const { isAuthenticated } = useUser();
+  return isAuthenticated ? <>{children}</> : <Navigate to="/" />;
 };
 
 const AppRoutes: React.FC = () => {
@@ -108,7 +110,7 @@ const AppRoutes: React.FC = () => {
           }
         />
         <Route
-          path="/profile/:username"
+          path="/profile"
           element={
             <PrivateRoute>
               <Profile />
@@ -125,6 +127,8 @@ const AppRoutes: React.FC = () => {
             </PrivateRoute>
           }
         />
+        <Route path="/games" element={<Games />} />
+        <Route path="/games/:id" element={<GameDetails />} />
       </Routes>
     </Box>
   );

@@ -16,16 +16,16 @@ Amplify.configure(awsconfig);
 function App() {
   return (
     <Authenticator>
-      {({ signOut, user }) => (
+      {({ signOut }) => (
         <Router>
           <div className="min-h-screen bg-gray-100">
-            <Navigation user={user} signOut={signOut} />
+            <Navigation signOut={signOut} />
             <main className="container mx-auto px-4 py-8">
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/games" element={<Games />} />
                 <Route path="/games/:id" element={<GameDetails />} />
-                <Route path="/profile" element={<Profile user={user} />} />
+                <Route path="/profile" element={<Profile />} />
               </Routes>
             </main>
           </div>

@@ -1,330 +1,155 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useWebSocket } from '../hooks/useWebSocket';
-import useStore from '../store/useStore';
-import { IConversation, IMessage, IUser, ExtendedConversation } from '../types/social';
+import { Box, Container, Grid, Paper } from '@mui/material';
+import { useEffect, useState } from 'react';
+import { useAuth } from '../hooks/useAuth';
+import { IConversation, IMessage } from '../types/social';
 import ConversationsList from '../components/messaging/ConversationsList';
 import MessageList from '../components/messaging/MessageList';
 import MessageInput from '../components/messaging/MessageInput';
-import GroupChatDialog from '../components/messaging/GroupChatDialog';
+import { API, graphqlOperation } from 'aws-amplify';
+import { GraphQLResult } from '@aws-amplify/api-graphql';
+import { listConversations, listMessages } from '../graphql/queries';
+import { onCreateMessage } from '../graphql/subscriptions';
+import { createMessage } from '../graphql/mutations';
 
-const Messaging: React.FC = () => {
-  const { conversationId } = useParams<{ conversationId: string }>();
-  const [conversations, setConversations] = useState<ExtendedConversation[]>([]);
-  const [selectedConversation, setSelectedConversation] = useState<ExtendedConversation | null>(null);
+const Messaging = () => {
+  const { user } = useAuth();
+  const [conversations, setConversations] = useState<IConversation[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   const [messages, setMessages] = useState<IMessage[]>([]);
-  const [isGroupDialogOpen, setIsGroupDialogOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const user = useStore(state => state.user);
-  const { subscribe, send } = useWebSocket();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchConversations = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch('/api/conversations');
-        const data = await response.json();
-        setConversations(data.conversations);
-        setError(null);
-      } catch (err) {
-        setError('Failed to load conversations');
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchConversations();
   }, []);
 
   useEffect(() => {
-    if (!conversationId) return;
-
-    const fetchMessages = async () => {
-      try {
-        setLoading(true);
-        const response = await fetch(`/api/conversations/${conversationId}/messages`);
-        const data = await response.json();
-        setMessages(data.messages);
-        setError(null);
-      } catch (err) {
-        setError('Failed to load messages');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const conversation = conversations.find(c => c.id === conversationId);
-    if (conversation) {
-      setSelectedConversation(conversation);
-      fetchMessages();
+    if (selectedConversation) {
+      fetchMessages(selectedConversation);
     }
-  }, [conversationId, conversations]);
+  }, [selectedConversation]);
+
+  const fetchConversations = async () => {
+    try {
+      const response = (await API.graphql(
+        graphqlOperation(listConversations)
+      )) as GraphQLResult<{
+        listConversations: {
+          items: IConversation[];
+        };
+      }>;
+
+      if (response.data) {
+        setConversations(response.data.listConversations.items);
+      }
+    } catch (error) {
+      console.error('Error fetching conversations:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchMessages = async (conversationId: string) => {
+    try {
+      const response = (await API.graphql(
+        graphqlOperation(listMessages, {
+          filter: { conversationId: { eq: conversationId } },
+        })
+      )) as GraphQLResult<{
+        listMessages: {
+          items: IMessage[];
+        };
+      }>;
+
+      if (response.data) {
+        setMessages(response.data.listMessages.items);
+      }
+    } catch (error) {
+      console.error('Error fetching messages:', error);
+    }
+  };
+
+  const handleNewMessage = async (content: string) => {
+    if (!selectedConversation || !user) return;
+
+    try {
+      const newMessage = {
+        conversationId: selectedConversation,
+        content,
+        author: {
+          id: user.username,
+          username: user.username,
+          picture: user.attributes?.picture,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        },
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      await API.graphql(
+        graphqlOperation(createMessage, { input: newMessage })
+      );
+
+      setMessages((prev) => [...prev, newMessage as IMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+    }
+  };
 
   useEffect(() => {
-    const unsubscribeMessage = subscribe('MESSAGE_CREATE', message => {
-      if (message.data.message && selectedConversation) {
-        if (message.data.message.conversation === selectedConversation.id) {
-          setMessages(prev => [...prev, message.data.message!]);
-        }
-      }
-    });
+    if (!selectedConversation) return;
 
-    const unsubscribeMessageUpdate = subscribe('MESSAGE_UPDATE', message => {
-      if (message.data.message && selectedConversation) {
-        if (message.data.message.conversation === selectedConversation.id) {
-          setMessages(prev =>
-            prev.map(m =>
-              m.id === message.data.message!.id ? { ...m, ...message.data.message } : m
-            )
-          );
-        }
-      }
-    });
-
-    const unsubscribeMessageDelete = subscribe('MESSAGE_DELETE', message => {
-      if (message.data.messageId && selectedConversation) {
-        setMessages(prev => prev.filter(m => m.id !== message.data.messageId));
-      }
+    const subscription = (API.graphql(
+      graphqlOperation(onCreateMessage, {
+        filter: { conversationId: { eq: selectedConversation } },
+      })
+    ) as any).subscribe({
+      next: ({ value }: { value: { data: { onCreateMessage: IMessage } } }) => {
+        setMessages((prev) => [...prev, value.data.onCreateMessage]);
+      },
+      error: (error: Error) => console.error('Subscription error:', error),
     });
 
     return () => {
-      unsubscribeMessage();
-      unsubscribeMessageUpdate();
-      unsubscribeMessageDelete();
+      subscription.unsubscribe();
     };
-  }, [selectedConversation?.id, subscribe]);
+  }, [selectedConversation]);
 
-  const handleSendMessage = async (content: string) => {
-    if (!selectedConversation || !user) return;
-
-    const newMessage: IMessage = {
-      id: Date.now().toString(), // Temporary ID until server response
-      content,
-      sender: {
-        id: user.id,
-        username: user.username,
-        avatar: user.avatar || '',
-      },
-      conversation: selectedConversation.id,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    try {
-      setMessages(prev => [...prev, newMessage]);
-      await fetch('/api/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          content,
-          conversationId: selectedConversation.id,
-        }),
-      });
-    } catch (error) {
-      console.error('Failed to send message:', error);
-      setMessages(prev => prev.filter(m => m.id !== newMessage.id));
-    }
-  };
-
-  const handleWebSocketMessage = (message: {
-    type: string;
-    data: {
-      message?: IMessage;
-      messageId?: string;
-    };
-  }) => {
-    if (!selectedConversation) return;
-
-    if (message.type === 'MESSAGE_CREATE' && message.data.message) {
-      if (message.data.message.conversation === selectedConversation.id) {
-        setMessages(prev => [...prev, message.data.message!]);
-      }
-    } else if (message.type === 'MESSAGE_DELETE' && message.data.messageId) {
-      setMessages(prev => prev.filter(m => m.id !== message.data.messageId));
-    }
-  };
-
-  const handleCreateGroup = async (name: string, participants: IUser[], admins: IUser[]) => {
-    try {
-      const response = await fetch('/api/conversations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          participants: participants.map(p => p.id),
-          admins: admins.map(a => a.id),
-        }),
-      });
-
-      const newConversation = await response.json();
-      setConversations(prev => [...prev, newConversation]);
-      setSelectedConversation(newConversation);
-      setIsGroupDialogOpen(false);
-    } catch (error) {
-      console.error('Failed to create group:', error);
-    }
-  };
-
-  const handleUpdateGroup = async (
-    name: string,
-    addedUsers: IUser[],
-    removedUsers: IUser[],
-    addedAdmins: IUser[],
-    removedAdmins: IUser[]
-  ) => {
-    if (!selectedConversation) return;
-
-    try {
-      const response = await fetch(`/api/conversations/${selectedConversation.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          addedUsers: addedUsers.map(u => u.id),
-          removedUsers: removedUsers.map(u => u.id),
-          addedAdmins: addedAdmins.map(u => u.id),
-          removedAdmins: removedAdmins.map(u => u.id),
-        }),
-      });
-
-      const updatedConversation = await response.json();
-      setConversations(prev =>
-        prev.map(c => (c.id === updatedConversation.id ? updatedConversation : c))
-      );
-      setSelectedConversation(updatedConversation);
-      setIsGroupDialogOpen(false);
-    } catch (error) {
-      console.error('Failed to update group:', error);
-    }
-  };
-
-  const handleEditMessage = async (message: IMessage, newContent: string) => {
-    try {
-      await fetch(`/api/messages/${message.id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content: newContent }),
-      });
-
-      setMessages(prev =>
-        prev.map(m => (m.id === message.id ? { ...m, content: newContent } : m))
-      );
-    } catch (error) {
-      console.error('Failed to edit message:', error);
-    }
-  };
-
-  const handleDeleteMessage = async (message: IMessage) => {
-    try {
-      await fetch(`/api/messages/${message.id}`, {
-        method: 'DELETE',
-      });
-
-      setMessages(prev => prev.filter(m => m.id !== message.id));
-    } catch (error) {
-      console.error('Failed to delete message:', error);
-    }
-  };
-
-  const handleReplyMessage = (message: IMessage) => {
-    // Implement reply functionality
-    console.log('Reply to message:', message);
-  };
-
-  const handleSelectConversation = (conversation: IConversation) => {
-    const extendedConversation: ExtendedConversation = {
-      ...conversation,
-      name: conversation.participants[0]?.user.username || 'Unnamed Conversation'
-    };
-    setSelectedConversation(extendedConversation);
-  };
-
-  if (error) {
+  if (!user) {
     return (
-      <div className="alert alert-error">
-        <span>{error}</span>
+      <div className="flex items-center justify-center h-screen">
+        <p>Please sign in to access messaging.</p>
       </div>
     );
   }
 
   return (
-    <div className="flex h-screen">
-      <div className="w-80 border-r border-base-300">
-        <div className="p-4 border-b border-base-300">
-          <button
-            className="btn btn-primary w-full"
-            onClick={() => setIsGroupDialogOpen(true)}
-          >
-            New Group Chat
-          </button>
-        </div>
+    <div className="flex h-screen bg-gray-100">
+      <div className="w-1/3 border-r border-gray-200 bg-white">
         <ConversationsList
           conversations={conversations}
-          activeConversationId={selectedConversation?.id}
-          onSelectConversation={handleSelectConversation}
+          selectedConversation={selectedConversation}
+          onSelectConversation={setSelectedConversation}
+          loading={loading}
         />
       </div>
-
       <div className="flex-1 flex flex-col">
         {selectedConversation ? (
           <>
-            <div className="p-4 border-b border-base-300">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-4">
-                  <div className="avatar">
-                    <div className="w-12 h-12 rounded-full">
-                      <img
-                        src={selectedConversation.participants[0].user.avatar}
-                        alt={selectedConversation.participants[0].user.username}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-semibold">
-                      {selectedConversation.name || selectedConversation.participants[0].user.username}
-                    </h2>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <MessageList
               messages={messages}
-              onEdit={handleEditMessage}
-              onDelete={handleDeleteMessage}
-              onReply={handleReplyMessage}
+              currentUser={user}
             />
-
-            <div className="p-4 border-t border-base-300">
-              <MessageInput onSubmit={handleSendMessage} />
+            <div className="p-4 border-t border-gray-200 bg-white">
+              <MessageInput onSubmit={handleNewMessage} />
             </div>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-base-content/60">
+          <div className="flex items-center justify-center h-full text-gray-500">
             Select a conversation to start messaging
           </div>
         )}
       </div>
-
-      <GroupChatDialog
-        isOpen={isGroupDialogOpen}
-        onClose={() => setIsGroupDialogOpen(false)}
-        onSubmit={handleCreateGroup}
-        existingGroup={selectedConversation ? {
-          ...selectedConversation,
-          name: selectedConversation.name
-        } : undefined}
-        onUpdateGroup={handleUpdateGroup}
-      />
     </div>
   );
 };

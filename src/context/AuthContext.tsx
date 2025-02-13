@@ -1,28 +1,17 @@
 import React, { createContext, useContext, ReactNode } from 'react';
-import { IUser } from '../types/social';
+import { AmplifyUser } from '@aws-amplify/ui';
 import store from '../store/useStore';
 import { Store } from '../types/store';
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: Store['user'];
+  user: AmplifyUser | null;
   login: (credentials: { email: string; password: string }) => Promise<void>;
-  register: (userData: Partial<IUser> & { password: string }) => Promise<void>;
+  register: (userData: Partial<AmplifyUser> & { password: string }) => Promise<void>;
   logout: () => void;
   loading: boolean;
   error: string | null;
 }
-
-// Mock user for testing
-const mockUser: IUser = {
-  id: '1',
-  username: 'TestUser',
-  email: 'test@example.com',
-  avatar: 'https://api.dicebear.com/7.x/avataaars/svg?seed=TestUser',
-  presence: 'online',
-  rank: 'Gold',
-  level: 42
-};
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -55,18 +44,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError: state.setError
   }));
 
-  const register = async (userData: Partial<IUser> & { password: string }) => {
+  const register = async (userData: Partial<AmplifyUser> & { password: string }) => {
     try {
-      const newUser: IUser = {
-        id: Math.random().toString(36).substr(2, 9),
-        username: userData.username || 'User',
-        email: userData.email || '',
-        avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.email}`,
-        presence: 'online' as const,
-        rank: 'Beginner',
-        level: 1,
-      };
-      setUser(newUser);
+      // Implementation will be handled by Amplify
+      throw new Error('Not implemented');
     } catch (error) {
       throw new Error('Registration failed');
     }
@@ -74,7 +55,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     isAuthenticated: !!user,
-    user,
+    user: user as AmplifyUser | null,
     login,
     register,
     logout: storeLogout,

@@ -76,6 +76,9 @@ const useStore = create<Store>()(
       logout: () => {
         set({ user: null, isAuthenticated: false });
       },
+
+      darkMode: false,
+      toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
     }),
     {
       name: 'app-store',

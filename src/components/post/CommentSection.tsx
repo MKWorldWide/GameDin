@@ -24,6 +24,7 @@ import {
 } from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
 import { useAuth } from '../../context/AuthContext';
+import { useUser } from '../../hooks/useUser';
 
 export interface IComment {
   id: string;
@@ -176,7 +177,7 @@ const Comment: React.FC<CommentProps> = ({
                 Reply
               </Button>
             )}
-            {user?.id === comment.author.id && (
+            {user?.username === comment.author.id && (
               <>
                 <IconButton size="small" onClick={e => setAnchorEl(e.currentTarget)}>
                   <MoreIcon fontSize="small" />
@@ -292,6 +293,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   onDeleteComment,
   onLikeComment,
 }) => {
+  const { user } = useUser();
   const [newComment, setNewComment] = useState('');
   const commentInputRef = useRef<HTMLInputElement>(null);
 
@@ -301,6 +303,14 @@ const CommentSection: React.FC<CommentSectionProps> = ({
     await onAddComment(newComment);
     setNewComment('');
   };
+
+  if (!user) {
+    return (
+      <div className="text-center py-4">
+        <p className="text-gray-600">Please sign in to comment</p>
+      </div>
+    );
+  }
 
   return (
     <Box sx={{ mt: 2 }}>
