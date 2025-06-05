@@ -48,7 +48,11 @@ const Messaging: React.FC = () => {
     if (selectedConversation) {
       fetchMessages(selectedConversation);
       const subscription = subscribeToNewMessages(selectedConversation);
-      return () => subscription.unsubscribe();
+      return () => {
+        if (subscription) {
+          subscription.unsubscribe();
+        }
+      };
     }
   }, [selectedConversation]);
 
@@ -113,32 +117,37 @@ const Messaging: React.FC = () => {
   };
 
   const subscribeToNewMessages = (conversationId: string) => {
-    const subscription = client.graphql({
-      query: `
-        subscription OnNewMessage($conversationId: ID!) {
-          onNewMessage(conversationId: $conversationId) {
-            id
-            content
-            sender {
+    try {
+      const subscription = client.graphql({
+        query: `
+          subscription OnNewMessage($conversationId: ID!) {
+            onNewMessage(conversationId: $conversationId) {
               id
-              username
-              picture
+              content
+              sender {
+                id
+                username
+                picture
+              }
+              createdAt
             }
-            createdAt
           }
-        }
-      `,
-      variables: { conversationId }
-    });
+        `,
+        variables: { conversationId }
+      }).subscribe({
+        next: (result: { data?: { onNewMessage: Message } }) => {
+          if (result.data?.onNewMessage) {
+            setMessages(prev => [...prev, result.data!.onNewMessage]);
+          }
+        },
+        error: (error: Error) => console.error('Subscription error:', error)
+      });
 
-    return subscription.subscribe({
-      next: (result: { data?: { onNewMessage: Message } }) => {
-        if (result.data?.onNewMessage) {
-          setMessages(prev => [...prev, result.data!.onNewMessage]);
-        }
-      },
-      error: (error: Error) => console.error('Subscription error:', error)
-    });
+      return subscription;
+    } catch (error) {
+      console.error('Error setting up subscription:', error);
+      return null;
+    }
   };
 
   const handleSendMessage = async () => {
@@ -249,9 +258,11 @@ const Messaging: React.FC = () => {
                 </Box>
               </>
             ) : (
-              <Typography variant="body1" sx={{ textAlign: 'center', mt: 4 }}>
-                Select a conversation to start messaging
-              </Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%' }}>
+                <Typography variant="h6" color="text.secondary">
+                  Select a conversation to start messaging
+                </Typography>
+              </Box>
             )}
           </Paper>
         </Grid>
