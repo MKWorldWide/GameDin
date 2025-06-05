@@ -1,4 +1,5 @@
 {
+<<<<<<< HEAD
   "name": "gamedin-frontend",
   "private": true,
   "version": "0.1.0",
@@ -91,5 +92,53 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-pwa": "^0.17.5",
     "workbox-window": "^7.0.0"
+=======
+  "name": "gamedin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GameDin - A Social Platform for Gamers",
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build",
+    "start": "cd frontend && npm run preview",
+    "dev": "cd frontend && npm run dev",
+    "test": "cd frontend && npm run test",
+    "test:ci": "cd frontend && npm run test:ci",
+    "test:e2e": "cd frontend && npm run test:e2e",
+    "test:e2e:ci": "cd frontend && npm run test:e2e:ci",
+    "lint": "cd frontend && npm run lint",
+    "typecheck": "cd frontend && npm run typecheck",
+    "prepare": "husky install",
+    "amplify:push": "amplify push --yes",
+    "amplify:publish": "amplify publish --yes",
+    "amplify:status": "amplify status",
+    "clean": "rimraf .next out dist build coverage",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
+    "validate": "npm-run-all --parallel lint typecheck test"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@aws-amplify/cli": "^12.10.1",
+    "@types/node": "^22.13.4",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "husky": "^8.0.0",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.2.5",
+    "rimraf": "^5.0.5"
+  },
+  "dependencies": {
+    "dexie": "^4.0.11",
+    "framer-motion": "^12.4.10",
+    "swr": "^2.3.2",
+    "workbox-core": "^7.3.0",
+    "workbox-expiration": "^7.3.0",
+    "workbox-precaching": "^7.3.0",
+    "workbox-routing": "^7.3.0",
+    "workbox-strategies": "^7.3.0",
+    "workbox-window": "^7.3.0",
+    "zod": "^3.24.2"
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
   }
 }

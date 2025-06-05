@@ -1,0 +1,112 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  GameDinUsersTable:
+    Type: AWS::DynamoDB::GlobalTable
+    Properties:
+      TableName: GameDinUsers
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Replicas:
+        - Region: us-east-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+        - Region: eu-west-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  GameDinGamesTable:
+    Type: AWS::DynamoDB::GlobalTable
+    Properties:
+      TableName: GameDinGames
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Replicas:
+        - Region: us-east-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+        - Region: eu-west-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+
+  GameDinReviewsTable:
+    Type: AWS::DynamoDB::GlobalTable
+    Properties:
+      TableName: GameDinReviews
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Replicas:
+        - Region: us-east-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+        - Region: eu-west-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: id
+          AttributeType: S
+        - AttributeName: gameId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: id
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: GameReviews
+          KeySchema:
+            - AttributeName: gameId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+        - IndexName: UserReviews
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL
+
+  ConnectionsTable:
+    Type: AWS::DynamoDB::GlobalTable
+    Properties:
+      TableName: GameDinConnections
+      BillingMode: PAY_PER_REQUEST
+      StreamSpecification:
+        StreamViewType: NEW_AND_OLD_IMAGES
+      Replicas:
+        - Region: us-east-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+        - Region: eu-west-1
+          PointInTimeRecoverySpecification:
+            PointInTimeRecoveryEnabled: true
+      AttributeDefinitions:
+        - AttributeName: connectionId
+          AttributeType: S
+        - AttributeName: userId
+          AttributeType: S
+      KeySchema:
+        - AttributeName: connectionId
+          KeyType: HASH
+      GlobalSecondaryIndexes:
+        - IndexName: UserIdIndex
+          KeySchema:
+            - AttributeName: userId
+              KeyType: HASH
+          Projection:
+            ProjectionType: ALL 

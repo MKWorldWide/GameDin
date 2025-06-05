@@ -1,0 +1,26 @@
+# This file contains the information needed for Shopify to authenticate your app.
+# For more information, refer to the Shopify documentation:
+# https://shopify.dev/docs/apps/tools/cli/configuration
+
+name = "GameDin"
+client_id = "YOUR_CLIENT_ID" # Set this in your .env file
+application_url = "YOUR_APPLICATION_URL" # Set this in your .env file
+embedded = true
+
+[access_scopes]
+# Define the scopes your app needs
+scopes = "write_products,read_products,write_customers,read_customers,write_orders,read_orders,read_content,write_content,read_themes,write_themes,read_inventory,write_inventory,read_shipping,write_shipping,read_analytics"
+
+[auth]
+redirect_urls = [
+  "YOUR_REDIRECT_URL" # Set this in your .env file
+]
+
+[webhooks]
+api_version = "2023-07"
+
+[pos]
+embedded = false
+
+[build]
+dev_store_url = "YOUR_DEV_STORE_URL" # Set this in your .env file 

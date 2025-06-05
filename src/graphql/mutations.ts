@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 export const createMessage = /* GraphQL */ `
   mutation CreateMessage($input: CreateMessageInput!) {
     createMessage(input: $input) {
@@ -15,10 +16,26 @@ export const createMessage = /* GraphQL */ `
       }
       createdAt
       updatedAt
+=======
+import { gql } from '@apollo/client';
+
+export const createMessageMutation = gql`
+  mutation CreateMessage($input: CreateMessageInput!) {
+    createMessage(input: $input) {
+      id
+      content
+      userId
+      userName
+      userAvatar
+      timestamp
+      read
+      conversationId
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     }
   }
 `;
 
+<<<<<<< HEAD
 export const createConversation = /* GraphQL */ `
   mutation CreateConversation($input: CreateConversationInput!) {
     createConversation(input: $input) {
@@ -64,6 +81,19 @@ export const createConversation = /* GraphQL */ `
       }
       createdAt
       updatedAt
+=======
+export const onCreateMessageSubscription = gql`
+  subscription OnCreateMessage {
+    onCreateMessage {
+      id
+      content
+      userId
+      userName
+      userAvatar
+      timestamp
+      read
+      conversationId
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     }
   }
 `; 

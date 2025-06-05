@@ -1,0 +1,14 @@
+.git
+.gitignore
+node_modules
+dist
+*.log
+.env*
+.DS_Store
+coverage
+.vscode
+.idea
+*.swp
+*.swo
+.npmrc
+amplify.yml 

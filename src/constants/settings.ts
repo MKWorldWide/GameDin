@@ -6,7 +6,11 @@ export const defaultSettings: ISettings = {
     push: true,
     email: true,
     emailNotifications: {
+<<<<<<< HEAD
       frequency: 'none',
+=======
+      frequency: 'daily',
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
       types: {
         friendRequests: true,
         messages: true,
@@ -27,5 +31,14 @@ export const defaultSettings: ISettings = {
     colorScheme: 'default'
   },
   language: 'en',
+<<<<<<< HEAD
   soundEffects: true
 };
+=======
+  soundEffects: true,
+  showGameActivity: true,
+  matchmakingEnabled: true,
+  allowMessages: true,
+  themeColor: '#7289da'
+}; 
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

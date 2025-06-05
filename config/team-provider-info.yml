@@ -1,0 +1,89 @@
+environments:
+  staging:
+    awscloudformation:
+      Region: us-east-1
+      StackName: gamedin-staging
+      StackId: arn:aws:cloudformation:us-east-1:123456789:stack/gamedin-staging
+      AmplifyAppId: d123456789
+      AuthRoleName: amplify-gamedin-staging-authRole
+      UnauthRoleName: amplify-gamedin-staging-unauthRole
+    categories:
+      auth:
+        userPoolId: us-east-1_abc123
+        userPoolName: gamedin-staging-users
+        webClientId: abc123def456
+        nativeClientId: def456ghi789
+      api:
+        GraphQLAPIIdOutput: abc123def456
+        GraphQLAPIEndpointOutput: https://api-staging.gamedin.xyz/graphql
+        GraphQLAPIKeyOutput: da2-abc123def456
+      hosting:
+        S3AndCloudFront:
+          hostingBucketName: gamedin-staging-hosting
+          region: us-east-1
+          s3Bucket: gamedin-staging-hosting-123456
+          cloudFrontDistributionID: E123456789
+      function:
+        environment:
+          STAGE: staging
+          LOG_LEVEL: debug
+          ENABLE_XRAY: true
+          ENABLE_DEBUG: true
+
+  production:
+    awscloudformation:
+      Region: us-east-1
+      StackName: gamedin-prod
+      StackId: arn:aws:cloudformation:us-east-1:123456789:stack/gamedin-prod
+      AmplifyAppId: d987654321
+      AuthRoleName: amplify-gamedin-prod-authRole
+      UnauthRoleName: amplify-gamedin-prod-unauthRole
+    categories:
+      auth:
+        userPoolId: us-east-1_xyz789
+        userPoolName: gamedin-prod-users
+        webClientId: xyz789abc123
+        nativeClientId: abc123def456
+      api:
+        GraphQLAPIIdOutput: xyz789abc123
+        GraphQLAPIEndpointOutput: https://api.gamedin.xyz/graphql
+        GraphQLAPIKeyOutput: da2-xyz789abc123
+      hosting:
+        S3AndCloudFront:
+          hostingBucketName: gamedin-prod-hosting
+          region: us-east-1
+          s3Bucket: gamedin-prod-hosting-123456
+          cloudFrontDistributionID: E987654321
+      function:
+        environment:
+          STAGE: production
+          LOG_LEVEL: info
+          ENABLE_XRAY: true
+          ENABLE_DEBUG: false
+
+  shared:
+    awscloudformation:
+      tags:
+        project: GameDin
+        environment: ${self:custom.stage}
+        managedBy: amplify
+    categories:
+      monitoring:
+        alarms:
+          errorRate:
+            threshold: ${self:custom.stage == 'production' ? 1 : 5}
+            evaluationPeriods: ${self:custom.stage == 'production' ? 2 : 1}
+          latency:
+            threshold: ${self:custom.stage == 'production' ? 500 : 1000}
+            evaluationPeriods: ${self:custom.stage == 'production' ? 3 : 1}
+      security:
+        waf:
+          rateLimit: ${self:custom.stage == 'production' ? 2000 : 5000}
+          blockPeriod: ${self:custom.stage == 'production' ? 240 : 120}
+        shield:
+          enabled: ${self:custom.stage == 'production' ? true : false}
+      cache:
+        ttl:
+          default: ${self:custom.stage == 'production' ? 3600 : 300}
+          api: ${self:custom.stage == 'production' ? 1800 : 60}
+          static: ${self:custom.stage == 'production' ? 86400 : 3600} 

@@ -1,0 +1,80 @@
+/* GameDin Shopify App Styles */
+
+:root {
+  --gamedin-primary: #5c6ac4;
+  --gamedin-secondary: #47c1bf;
+  --gamedin-accent: #9c6ade;
+  --gamedin-surface: #f4f6f8;
+  --gamedin-text: #212b36;
+  --gamedin-success: #50b83c;
+  --gamedin-warning: #ffb800;
+  --gamedin-error: #de3618;
+  --gamedin-border: #dfe3e8;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: var(--gamedin-surface);
+  color: var(--gamedin-text);
+}
+
+.Polaris-Page {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.GameDin-Card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
+}
+
+.GameDin-Card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.GameDin-ProductGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+
+.GameDin-RecommendationList {
+  margin-top: 20px;
+}
+
+.GameDin-Loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 200px;
+}
+
+.GameDin-Error {
+  padding: 16px;
+  background-color: rgba(222, 54, 24, 0.1);
+  border-radius: 4px;
+  border-left: 4px solid var(--gamedin-error);
+  margin-bottom: 16px;
+}
+
+.GameDin-Error h3 {
+  margin-top: 0;
+  color: var(--gamedin-error);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .GameDin-ProductGrid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 480px) {
+  .GameDin-ProductGrid {
+    grid-template-columns: 1fr;
+  }
+} 

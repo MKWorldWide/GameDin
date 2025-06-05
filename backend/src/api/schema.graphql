@@ -1,0 +1,117 @@
+type User @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  username: String!
+  email: String!
+  profile: Profile @hasOne
+  reviews: [Review] @hasMany
+  favorites: [Game] @manyToMany(relationName: "UserFavorites")
+  achievements: [Achievement] @hasMany
+  connections: [Connection] @hasMany
+  stats: UserStats @hasOne
+  leaderboardEntry: LeaderboardEntry @hasOne
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Profile @model @auth(rules: [{allow: owner}]) {
+  id: ID!
+  userId: ID!
+  user: User @belongsTo
+  bio: String
+  avatar: String
+  preferences: AWSJSON
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Game @model @auth(rules: [{allow: public, operations: [read]}, {allow: groups, groups: ["admin"]}]) {
+  id: ID!
+  title: String!
+  description: String!
+  coverImage: String
+  genre: [String!]!
+  platform: [String!]!
+  releaseDate: AWSDate
+  developer: String!
+  publisher: String!
+  rating: Float
+  reviews: [Review] @hasMany
+  favoritedBy: [User] @manyToMany(relationName: "UserFavorites")
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Review @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}]) {
+  id: ID!
+  gameId: ID!
+  userId: ID!
+  rating: Int!
+  content: String!
+  game: Game @belongsTo
+  user: User @belongsTo
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type Achievement @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}]) {
+  id: ID!
+  userId: ID!
+  title: String!
+  description: String!
+  points: Int!
+  unlockedAt: AWSDateTime!
+  user: User @belongsTo
+}
+
+type Connection @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}]) {
+  id: ID!
+  userId: ID!
+  friendId: ID!
+  status: ConnectionStatus!
+  user: User @belongsTo
+  friend: User @belongsTo
+  createdAt: AWSDateTime!
+  updatedAt: AWSDateTime!
+}
+
+type UserStats @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}]) {
+  id: ID!
+  userId: ID!
+  reviewCount: Int!
+  connectionCount: Int!
+  uniqueGenresPlayed: Int!
+  totalAchievements: Int!
+  totalPoints: Int!
+  user: User @belongsTo
+}
+
+type LeaderboardEntry @model @auth(rules: [{allow: owner}, {allow: public, operations: [read]}]) {
+  id: ID!
+  userId: ID!
+  username: String!
+  points: Int!
+  rank: Int
+  user: User @belongsTo
+}
+
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+type Subscription {
+  onCreateReview: Review @aws_subscribe(mutations: ["createReview"])
+  onUpdateGame: Game @aws_subscribe(mutations: ["updateGame"])
+  onNewAchievement(userId: ID!): Achievement @aws_subscribe(mutations: ["createAchievement"])
+  onLeaderboardUpdate: LeaderboardEntry @aws_subscribe(mutations: ["updateLeaderboardEntry"])
+}
+
+type Query {
+  searchGames(searchTerm: String!): [Game] @function(name: "searchGamesFunction")
+  getGameRecommendations(userId: ID!): [Game] @function(name: "recommendGamesFunction")
+  getLeaderboard(limit: Int): [LeaderboardEntry] @function(name: "leaderboardFunction")
+  getUserAchievements(userId: ID!): [Achievement] @function(name: "leaderboardFunction")
+  getUserStats(userId: ID!): UserStats @function(name: "leaderboardFunction")
+} 

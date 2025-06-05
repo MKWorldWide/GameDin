@@ -1,9 +1,20 @@
 version: 1
+<<<<<<< HEAD
 frontend:
+=======
+appRoot: frontend
+env:
+  variables:
+    NODE_OPTIONS: --max-old-space-size=4096
+    NODE_ENV: production
+    NODE_VERSION: 20
+backend:
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
   phases:
     preBuild:
       commands:
         - npm ci
+<<<<<<< HEAD
         - npm install -g typescript
     build:
       commands:
@@ -12,10 +23,88 @@ frontend:
         - npm run build
   artifacts:
     baseDirectory: dist
+=======
+        - npm install -g @aws-amplify/cli@latest
+    build:
+      commands:
+        - amplify push --yes
+  artifacts:
+    baseDirectory: amplify/backend
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     files:
       - '**/*'
   cache:
     paths:
       - node_modules/**/*
+<<<<<<< HEAD
       - dist/**/*
       - .npm-cache/**/* 
+=======
+      - ~/.npm/**/*
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd frontend
+        - npm ci --prefer-offline --no-audit
+        - npm cache clean --force
+    build:
+      commands:
+        - echo "VITE_API_URL=$VITE_API_URL" >> .env
+        - echo "VITE_WS_URL=$VITE_WS_URL" >> .env
+        - echo "VITE_APP_ENV=$VITE_APP_ENV" >> .env
+        - npm run build
+    postBuild:
+      commands:
+        - npm run test:ci
+  artifacts:
+    baseDirectory: frontend/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - frontend/node_modules/**/*
+      - ~/.npm/**/*
+      - .npm-cache/**/*
+      - frontend/.npm-cache/**/*
+  customHeaders:
+    - pattern: '**/*'
+      headers:
+        - key: 'Strict-Transport-Security'
+          value: 'max-age=31536000; includeSubDomains; preload'
+        - key: 'X-Frame-Options'
+          value: 'DENY'
+        - key: 'X-Content-Type-Options'
+          value: 'nosniff'
+        - key: 'X-XSS-Protection'
+          value: '1; mode=block'
+        - key: 'Referrer-Policy'
+          value: 'strict-origin-when-cross-origin'
+        - key: 'Content-Security-Policy'
+          value: "default-src 'self'; connect-src 'self' https://*.amazonaws.com https://*.amazoncognito.com; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.amazonaws.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+    - pattern: '**/*.js'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=31536000, immutable'
+    - pattern: '**/*.css'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=31536000, immutable'
+    - pattern: '**/*.html'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=0, must-revalidate'
+    - pattern: '*.html'
+      headers:
+        - key: 'Cache-Control'
+          value: 'no-cache'
+    - pattern: '/index.html'
+      headers:
+        - key: 'Cache-Control'
+          value: 'no-store, must-revalidate'
+    - pattern: '/assets/*'
+      headers:
+        - key: 'Cache-Control'
+          value: 'public, max-age=31536000, immutable'
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

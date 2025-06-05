@@ -1,0 +1,21 @@
+version: 1
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - npm install -g typescript
+    build:
+      commands:
+        - echo "VITE_API_URL=$VITE_API_URL" >> .env
+        - echo "VITE_WS_URL=$VITE_WS_URL" >> .env
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - dist/**/*
+      - .npm-cache/**/* 

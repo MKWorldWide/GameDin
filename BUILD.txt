@@ -1,0 +1,133 @@
+2025-02-12T04:00:57.345Z [INFO]: # Cloning repository: git@github.com:M-K-World-Wide/GameDin.git
+2025-02-12T04:01:02.676Z [INFO]: 
+2025-02-12T04:01:02.780Z [INFO]: Cloning into 'GameDin'...
+2025-02-12T04:01:02.781Z [INFO]: # Switching to commit: 6462ae317b1ca1ef485d4f22f619d834330e1c4b
+2025-02-12T04:01:02.816Z [INFO]: Note: switching to '6462ae317b1ca1ef485d4f22f619d834330e1c4b'.
+                                 You are in 'detached HEAD' state. You can look around, make experimental
+                                 changes and commit them, and you can discard any commits you make in this
+                                 state without impacting any branches by switching back to a branch.
+                                 If you want to create a new branch to retain commits you create, you may
+                                 do so (now or later) by using -c with the switch command. Example:
+                                 git switch -c <new-branch-name>
+                                 Or undo this operation with:
+                                 git switch -
+                                 Turn off this advice by setting config variable advice.detachedHead to false
+                                 HEAD is now at 6462ae317 fix: resolve TypeScript errors in messaging and social types
+2025-02-12T04:01:02.899Z [INFO]: Successfully cleaned up Git credentials
+2025-02-12T04:01:02.900Z [INFO]: # Checking for Git submodules at: /codebuild/output/src248654996/src/GameDin/.gitmodules
+2025-02-12T04:01:02.907Z [INFO]: # Retrieving environment cache...
+2025-02-12T04:01:02.949Z [WARNING]: ! Unable to write cache: {"code":"ERR_BAD_REQUEST","message":"Request failed with status code 404"})}
+2025-02-12T04:01:02.950Z [INFO]: ---- Setting Up SSM Secrets ----
+2025-02-12T04:01:02.950Z [INFO]: SSM params {"Path":"/amplify/d9u1bwp83dlcc/main/","WithDecryption":true}
+2025-02-12T04:01:03.005Z [WARNING]: !Failed to set up process.env.secrets
+2025-02-12T04:01:03.900Z [INFO]: # No package override configuration found.
+2025-02-12T04:01:03.903Z [INFO]: # Retrieving cache...
+2025-02-12T04:01:03.950Z [INFO]: # Retrieved cache
+2025-02-12T04:01:07.999Z [INFO]: ## Starting Backend Build
+                                 ## Checking for associated backend environment...
+                                 ## No backend environment association found, continuing...
+                                 ## Completed Backend Build
+2025-02-12T04:01:08.005Z [INFO]: ## Starting Frontend Build
+                                 # Starting phase: preBuild
+2025-02-12T04:01:08.005Z [INFO]: # Executing command: npm ci --cache .npm --prefer-offline
+2025-02-12T04:01:23.800Z [WARNING]: npm WARN deprecated
+2025-02-12T04:01:23.808Z [WARNING]: uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:01:23.940Z [WARNING]: npm
+2025-02-12T04:01:23.940Z [WARNING]: WARN deprecated querystring@0.2.0: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+2025-02-12T04:01:25.167Z [WARNING]: npm WARN deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2025-02-12T04:01:25.370Z [WARNING]: npm
+2025-02-12T04:01:25.371Z [WARNING]: WARN deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-02-12T04:01:26.037Z [WARNING]: npm WARN
+2025-02-12T04:01:26.038Z [WARNING]: deprecated domexception@4.0.0: Use your platform's native DOMException instead
+2025-02-12T04:01:26.860Z [WARNING]: npm WARN deprecated
+2025-02-12T04:01:26.861Z [WARNING]: abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+2025-02-12T04:01:27.678Z [WARNING]: npm WARN
+2025-02-12T04:01:27.685Z [WARNING]: deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2025-02-12T04:01:27.711Z [WARNING]: npm
+2025-02-12T04:01:27.712Z [WARNING]: WARN deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2025-02-12T04:01:30.280Z [WARNING]: npm WARN
+2025-02-12T04:01:30.280Z [WARNING]: deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-02-12T04:01:30.447Z [WARNING]: npm WARN
+2025-02-12T04:01:30.447Z [WARNING]: deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-02-12T04:01:30.448Z [WARNING]: npm
+2025-02-12T04:01:30.448Z [WARNING]: WARN deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-02-12T04:01:36.194Z [WARNING]: npm WARN
+2025-02-12T04:01:36.200Z [WARNING]: deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2025-02-12T04:02:01.529Z [INFO]: > gamedin.xyz@1.0.0 prepare
+                                 > husky install
+2025-02-12T04:02:01.602Z [INFO]: husky - Git hooks installed
+2025-02-12T04:02:01.629Z [INFO]: added 1830 packages, and audited 1831 packages in 46s
+2025-02-12T04:02:01.629Z [INFO]: 1 package is looking for funding
+                                 run `npm fund` for details
+2025-02-12T04:02:01.642Z [INFO]: 4 moderate severity vulnerabilities
+                                 To address all issues, run:
+                                 npm audit fix
+                                 Run `npm audit` for details.
+2025-02-12T04:02:01.674Z [INFO]: # Completed phase: preBuild
+                                 # Starting phase: build
+                                 # Executing command: npm run build
+2025-02-12T04:02:02.046Z [INFO]: > gamedin.xyz@1.0.0 build
+                                 > cd frontend && npm install && npm run build
+2025-02-12T04:02:08.970Z [WARNING]: npm
+2025-02-12T04:02:08.976Z [WARNING]: WARN deprecated inflight@1.0.6: This module is not supported, and leaks memory. Do not use it. Check out lru-cache if you want a good and tested way to coalesce async requests by a key value, which is much more comprehensive and powerful.
+2025-02-12T04:02:09.346Z [WARNING]: npm WARN deprecated rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-02-12T04:02:09.351Z [WARNING]: npm WARN deprecated
+2025-02-12T04:02:09.351Z [WARNING]: rimraf@3.0.2: Rimraf versions prior to v4 are no longer supported
+2025-02-12T04:02:09.537Z [WARNING]: npm WARN deprecated glob@7.2.3: Glob versions prior to v9 are no longer supported
+2025-02-12T04:02:09.989Z [WARNING]: npm WARN deprecated querystring@0.2.0: The querystring API is considered Legacy. new code should use the URLSearchParams API instead.
+2025-02-12T04:02:10.391Z [WARNING]: npm WARN deprecated
+2025-02-12T04:02:10.392Z [WARNING]: uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+                                    npm WARN
+2025-02-12T04:02:10.392Z [WARNING]: deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:02:10.392Z [WARNING]: npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:02:10.393Z [WARNING]: npm WARN
+2025-02-12T04:02:10.393Z [WARNING]: deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:02:10.393Z [WARNING]: npm
+2025-02-12T04:02:10.394Z [WARNING]: WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:02:10.394Z [WARNING]: npm
+2025-02-12T04:02:10.395Z [WARNING]: WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+                                    npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:02:10.395Z [WARNING]: npm WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:02:10.395Z [WARNING]: npm
+2025-02-12T04:02:10.396Z [WARNING]: WARN deprecated uuid@3.4.0: Please upgrade  to version 7 or higher.  Older versions may use Math.random() in certain circumstances, which is known to be problematic.  See https://v8.dev/blog/math-random for details.
+2025-02-12T04:02:11.225Z [WARNING]: npm WARN deprecated domexception@4.0.0: Use your platform's native DOMException instead
+2025-02-12T04:02:12.627Z [WARNING]: npm WARN deprecated abab@2.0.6: Use your platform's native atob() and btoa() methods instead
+2025-02-12T04:02:13.093Z [WARNING]: npm WARN deprecated @humanwhocodes/object-schema@2.0.3: Use @eslint/object-schema instead
+2025-02-12T04:02:13.178Z [WARNING]: npm WARN deprecated @humanwhocodes/config-array@0.13.0: Use @eslint/config-array instead
+2025-02-12T04:02:23.739Z [WARNING]: npm WARN deprecated eslint@8.57.1: This version is no longer supported. Please see https://eslint.org/version-support for other options.
+2025-02-12T04:02:48.999Z [INFO]: > gamedin-react@0.1.0 postinstall
+                                 > tsc
+2025-02-12T04:02:59.715Z [INFO]: src/components/chat/MessageBubble.tsx(15,24): error TS2339: Property 'sender' does not exist on type 'IMessage'.
+2025-02-12T04:02:59.721Z [INFO]: src/components/chat/MessageBubble.tsx(16,24): error TS2339: Property 'sender' does not exist on type 'IMessage'.
+                                 src/components/messaging/ConversationsList.tsx(56,62): error TS2339: Property 'createdAt' does not exist on type 'IMessage'.
+                                 src/components/messaging/MessageList.tsx(42,53): error TS2339: Property 'id' does not exist on type 'AmplifyUser'.
+                                 src/components/messaging/MessageList.tsx(47,58): error TS2339: Property 'id' does not exist on type 'AmplifyUser'.
+                                 src/components/messaging/MessageList.tsx(53,57): error TS2339: Property 'id' does not exist on type 'AmplifyUser'.
+                                 src/components/messaging/MessageList.tsx(63,49): error TS2339: Property 'id' does not exist on type 'AmplifyUser'.
+                                 src/components/messaging/MessageList.tsx(66,49): error TS2339: Property 'id' does not exist on type 'AmplifyUser'.
+                                 src/pages/Messaging.tsx(67,34): error TS2339: Property 'conversation' does not exist on type 'IMessage'.
+                                 src/pages/Messaging.tsx(75,34): error TS2339: Property 'conversation' does not exist on type 'IMessage'.
+                                 src/pages/Messaging.tsx(104,7): error TS2353: Object literal may only specify known properties, and 'sender' does not exist in type 'IMessage'.
+                                 src/pages/Messaging.tsx(142,32): error TS2339: Property 'conversation' does not exist on type 'IMessage'.
+                                 src/pages/Messaging.tsx(308,29): error TS2322: Type '{ onSubmit: (content: string) => Promise<void>; }' is not assignable to type 'IntrinsicAttributes & MessageInputProps'.
+                                 Property 'onSubmit' does not exist on type 'IntrinsicAttributes & MessageInputProps'.
+                                 src/pages/Profile.tsx(33,25): error TS2339: Property 'picture' does not exist on type 'AmplifyUser'.
+                                 src/pages/Profile.tsx(34,25): error TS2339: Property 'name' does not exist on type 'AmplifyUser'.
+                                 src/pages/Profile.tsx(38,46): error TS2339: Property 'name' does not exist on type 'AmplifyUser'.
+                                 src/pages/Profile.tsx(40,23): error TS2339: Property 'email' does not exist on type 'AmplifyUser'.
+                                 src/types/social.ts(282,3): error TS2717: Subsequent property declarations must have the same type.  Property 'content' must be of type 'PostContent', but here has type 'string'.
+                                 src/types/social.ts(285,3): error TS2717: Subsequent property declarations must have the same type.  Property 'comments' must be of type 'Comment[]', but here has type 'number'.
+                                 src/types/social.ts(287,3): error TS2717: Subsequent property declarations must have the same type.  Property 'author' must be of type 'User', but here has type '{ id: string; username: string; avatar: string; }'.
+2025-02-12T04:02:59.755Z [WARNING]: npm
+2025-02-12T04:02:59.756Z [WARNING]: ERR! code 2
+                                    npm ERR! path /codebuild/output/src248654996/src/GameDin/frontend
+2025-02-12T04:02:59.757Z [WARNING]: npm ERR!
+2025-02-12T04:02:59.757Z [WARNING]: command failed
+                                    npm ERR! command sh -c tsc
+2025-02-12T04:02:59.758Z [WARNING]: 
+2025-02-12T04:02:59.759Z [WARNING]: npm ERR! A complete log of this run can be found in: /root/.npm/_logs/2025-02-12T04_02_02_267Z-debug-0.log
+2025-02-12T04:02:59.848Z [ERROR]: !!! Build failed
+2025-02-12T04:02:59.848Z [ERROR]: !!! Error: Command failed with exit code 2
+2025-02-12T04:02:59.848Z [INFO]: # Starting environment caching...
+2025-02-12T04:02:59.848Z [INFO]: # Environment caching completed
+

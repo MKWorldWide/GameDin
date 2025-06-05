@@ -1,0 +1,200 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'CloudWatch Alarms for GameDin'
+
+Resources:
+  # Lambda Function Alarms
+  LambdaErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: GameDin-Lambda-Errors
+      AlarmDescription: Alert when Lambda functions have errors
+      MetricName: Errors
+      Namespace: AWS/Lambda
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertsTopic
+      Dimensions:
+        - Name: FunctionName
+          Value: '*'
+
+  LambdaLatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: GameDin-Lambda-Latency
+      AlarmDescription: Alert when Lambda functions have high latency
+      MetricName: Duration
+      Namespace: AWS/Lambda
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 3
+      Threshold: 1000
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertsTopic
+      Dimensions:
+        - Name: FunctionName
+          Value: '*'
+
+  # API Gateway Alarms
+  ApiGateway5xxErrorsAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: GameDin-ApiGateway-5xxErrors
+      AlarmDescription: Alert when API Gateway has 5xx errors
+      MetricName: 5XXError
+      Namespace: AWS/ApiGateway
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 5
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertsTopic
+
+  ApiGatewayLatencyAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: GameDin-ApiGateway-Latency
+      AlarmDescription: Alert when API Gateway has high latency
+      MetricName: Latency
+      Namespace: AWS/ApiGateway
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 3
+      Threshold: 1000
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertsTopic
+
+  # DynamoDB Alarms
+  DynamoDBReadThrottlesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: GameDin-DynamoDB-ReadThrottles
+      AlarmDescription: Alert when DynamoDB has read throttles
+      MetricName: ReadThrottleEvents
+      Namespace: AWS/DynamoDB
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 10
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertsTopic
+
+  DynamoDBWriteThrottlesAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: GameDin-DynamoDB-WriteThrottles
+      AlarmDescription: Alert when DynamoDB has write throttles
+      MetricName: WriteThrottleEvents
+      Namespace: AWS/DynamoDB
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 10
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertsTopic
+
+  # Cognito Alarms
+  CognitoSignInFailuresAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: GameDin-Cognito-SignInFailures
+      AlarmDescription: Alert when there are multiple sign-in failures
+      MetricName: SignInFailures
+      Namespace: AWS/Cognito
+      Statistic: Sum
+      Period: 300
+      EvaluationPeriods: 1
+      Threshold: 10
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertsTopic
+
+  # Custom Metrics Dashboard
+  GameDinDashboard:
+    Type: AWS::CloudWatch::Dashboard
+    Properties:
+      DashboardName: GameDin-Metrics
+      DashboardBody: !Sub |
+        {
+          "widgets": [
+            {
+              "type": "metric",
+              "properties": {
+                "metrics": [
+                  ["AWS/Lambda", "Errors", "FunctionName", "*"],
+                  [".", "Duration", ".", "."],
+                  [".", "Invocations", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "Lambda Metrics"
+              }
+            },
+            {
+              "type": "metric",
+              "properties": {
+                "metrics": [
+                  ["AWS/ApiGateway", "5XXError", "ApiName", "GameDinAPI"],
+                  [".", "Latency", ".", "."],
+                  [".", "Count", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "API Gateway Metrics"
+              }
+            },
+            {
+              "type": "metric",
+              "properties": {
+                "metrics": [
+                  ["AWS/DynamoDB", "ReadThrottleEvents", "TableName", "*"],
+                  [".", "WriteThrottleEvents", ".", "."],
+                  [".", "ConsumedReadCapacityUnits", ".", "."],
+                  [".", "ConsumedWriteCapacityUnits", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "${AWS::Region}",
+                "title": "DynamoDB Metrics"
+              }
+            }
+          ]
+        }
+
+  # SNS Topic for Alerts
+  AlertsTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: GameDin-Alerts
+      DisplayName: GameDin Alerts
+
+  AlertsTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: cloudwatch.amazonaws.com
+            Action: sns:Publish
+            Resource: !Ref AlertsTopic
+      Topics:
+        - !Ref AlertsTopic
+
+Outputs:
+  AlertsTopicArn:
+    Description: ARN of the SNS topic for alerts
+    Value: !Ref AlertsTopic
+    Export:
+      Name: GameDin-AlertsTopicArn 

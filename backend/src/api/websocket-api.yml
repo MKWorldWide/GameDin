@@ -1,0 +1,43 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  WebSocketAPI:
+    Type: AWS::ApiGatewayV2::Api
+    Properties:
+      Name: GameDinWebSocketAPI
+      ProtocolType: WEBSOCKET
+      RouteSelectionExpression: $request.body.action
+  
+  ConnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketAPI
+      RouteKey: $connect
+      AuthorizationType: CUSTOM
+      OperationName: ConnectRoute
+      Target: !Join ['/', ['integrations', !Ref ConnectIntegration]]
+  
+  DisconnectRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketAPI
+      RouteKey: $disconnect
+      AuthorizationType: NONE
+      OperationName: DisconnectRoute
+      Target: !Join ['/', ['integrations', !Ref DisconnectIntegration]]
+  
+  SendMessageRoute:
+    Type: AWS::ApiGatewayV2::Route
+    Properties:
+      ApiId: !Ref WebSocketAPI
+      RouteKey: sendmessage
+      AuthorizationType: NONE
+      OperationName: SendMessageRoute
+      Target: !Join ['/', ['integrations', !Ref SendMessageIntegration]]
+  
+  WebSocketStage:
+    Type: AWS::ApiGatewayV2::Stage
+    Properties:
+      ApiId: !Ref WebSocketAPI
+      StageName: prod
+      AutoDeploy: true 

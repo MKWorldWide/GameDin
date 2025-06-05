@@ -15,6 +15,10 @@
     "noUnusedLocals": false,
     "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
+<<<<<<< HEAD
+=======
+    "types": ["vite/client", "node", "react", "react-dom"],
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     "allowJs": true,
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,

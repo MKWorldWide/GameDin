@@ -1,0 +1,127 @@
+{
+  "environments": {
+    "development": {
+      "branch": "development",
+      "domain": "dev.gamedin.com",
+      "autoBuild": true,
+      "pullRequestPreview": true,
+      "environmentVariables": {
+        "VITE_APP_ENV": "development",
+        "NODE_ENV": "development",
+        "ENABLE_DEBUG": "true"
+      },
+      "buildSpec": {
+        "version": 1,
+        "frontend": {
+          "phases": {
+            "build": {
+              "commands": [
+                "npm run build:development"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "staging": {
+      "branch": "staging",
+      "domain": "staging.gamedin.com",
+      "autoBuild": true,
+      "pullRequestPreview": true,
+      "environmentVariables": {
+        "VITE_APP_ENV": "staging",
+        "NODE_ENV": "production",
+        "ENABLE_DEBUG": "false"
+      },
+      "buildSpec": {
+        "version": 1,
+        "frontend": {
+          "phases": {
+            "build": {
+              "commands": [
+                "npm run build:staging"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "production": {
+      "branch": "main",
+      "domain": "gamedin.com",
+      "autoBuild": false,
+      "pullRequestPreview": false,
+      "environmentVariables": {
+        "VITE_APP_ENV": "production",
+        "NODE_ENV": "production",
+        "ENABLE_DEBUG": "false"
+      },
+      "buildSpec": {
+        "version": 1,
+        "frontend": {
+          "phases": {
+            "build": {
+              "commands": [
+                "npm run build:production"
+              ]
+            }
+          }
+        }
+      }
+    }
+  },
+  "commonSettings": {
+    "framework": "vite",
+    "buildCommand": "npm run build",
+    "startCommand": "npm run start",
+    "nodeVersion": "20",
+    "outputDirectory": "dist",
+    "amplifyConfiguration": {
+      "enableAutoBranchCreation": true,
+      "enableBasicAuth": false,
+      "enableBranchAutoBuild": true,
+      "enableBranchAutoDeletion": true
+    }
+  },
+  "security": {
+    "enableWAF": true,
+    "enableShieldAdvanced": true,
+    "enableGuardDuty": true,
+    "enableSecurityHub": true,
+    "headers": {
+      "/*": {
+        "Strict-Transport-Security": "max-age=31536000; includeSubDomains; preload",
+        "X-Frame-Options": "DENY",
+        "X-Content-Type-Options": "nosniff",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=(), interest-cohort=()",
+        "Content-Security-Policy": "default-src 'self'; connect-src 'self' https://*.amazonaws.com https://*.amazoncognito.com; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.amazonaws.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+      }
+    }
+  },
+  "monitoring": {
+    "alerts": [
+      {
+        "name": "HighErrorRate",
+        "metric": "5XXError",
+        "threshold": 5,
+        "evaluationPeriods": 2,
+        "period": 300,
+        "statistic": "Average",
+        "comparison": "GreaterThanThreshold",
+        "notifyEmail": "alerts@gamedin.com"
+      },
+      {
+        "name": "HighLatency",
+        "metric": "Latency",
+        "threshold": 1000,
+        "evaluationPeriods": 2,
+        "period": 300,
+        "statistic": "Average",
+        "comparison": "GreaterThanThreshold",
+        "notifyEmail": "alerts@gamedin.com"
+      }
+    ]
+  }
+} 

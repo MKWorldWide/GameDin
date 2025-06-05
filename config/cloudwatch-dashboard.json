@@ -1,0 +1,96 @@
+{
+    "widgets": [
+        {
+            "type": "metric",
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    ["AWS/ElastiCache", "CPUUtilization", "CacheClusterId", "${RedisClusterId}"],
+                    [".", "DatabaseMemoryUsagePercentage", ".", "."],
+                    [".", "CacheHits", ".", "."],
+                    [".", "CacheMisses", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "Redis Performance"
+            }
+        },
+        {
+            "type": "metric",
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    ["AWS/CloudFront", "Requests", "DistributionId", "${CloudFrontDistributionId}"],
+                    [".", "BytesDownloaded", ".", "."],
+                    [".", "TotalErrorRate", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "us-east-1",
+                "title": "CloudFront Metrics"
+            }
+        },
+        {
+            "type": "metric",
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    ["AWS/WAF", "BlockedRequests", "WebACL", "${WebACLName}", "Rule", "ALL"],
+                    [".", "AllowedRequests", ".", ".", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "${AWS::Region}",
+                "title": "WAF Statistics"
+            }
+        },
+        {
+            "type": "metric",
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    ["AWS/ApiGateway", "Count", "ApiName", "${ApiGatewayName}"],
+                    [".", "Latency", ".", "."],
+                    [".", "4XXError", ".", "."],
+                    [".", "5XXError", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Average",
+                "region": "${AWS::Region}",
+                "title": "API Gateway Metrics"
+            }
+        },
+        {
+            "type": "log",
+            "width": 24,
+            "height": 6,
+            "properties": {
+                "query": "SOURCE '/aws/elasticache/redis/${Environment}' | fields @timestamp, @message\n| sort @timestamp desc\n| limit 100",
+                "region": "${AWS::Region}",
+                "title": "Redis Logs",
+                "view": "table"
+            }
+        },
+        {
+            "type": "metric",
+            "width": 12,
+            "height": 6,
+            "properties": {
+                "metrics": [
+                    ["AWS/DynamoDB", "ConsumedReadCapacityUnits", "TableName", "${DynamoDBTableName}"],
+                    [".", "ConsumedWriteCapacityUnits", ".", "."],
+                    [".", "ThrottledRequests", ".", "."]
+                ],
+                "period": 300,
+                "stat": "Sum",
+                "region": "${AWS::Region}",
+                "title": "DynamoDB Metrics"
+            }
+        }
+    ]
+} 

@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+<<<<<<< HEAD
     <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="theme-color" content="#000000" />
@@ -16,9 +17,101 @@
       href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Poppins:wght@300;400;500;600;700&display=swap"
     />
     <title>GameDin</title>
+=======
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#6200EA" />
+    <meta name="description" content="GameDin - Connect with gamers, find game groups, and manage your gaming events" />
+    
+    <!-- PWA Support -->
+    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
+    <link rel="apple-touch-icon" href="%PUBLIC_URL%/icons/apple-icon-180x180.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="GameDin" />
+    
+    <!-- Splash Screens for iOS -->
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/icons/apple-splash-2048-2732.png" media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/icons/apple-splash-1668-2388.png" media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/icons/apple-splash-1536-2048.png" media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/icons/apple-splash-1125-2436.png" media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/icons/apple-splash-1242-2688.png" media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/icons/apple-splash-750-1334.png" media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    <link rel="apple-touch-startup-image" href="%PUBLIC_URL%/icons/apple-splash-640-1136.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)" />
+    
+    <!-- Favicons -->
+    <link rel="icon" type="image/png" sizes="32x32" href="%PUBLIC_URL%/icons/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="%PUBLIC_URL%/icons/favicon-16x16.png" />
+    <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico" />
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://gamedin.app" />
+    <meta property="og:title" content="GameDin" />
+    <meta property="og:description" content="Connect with gamers, find game groups, and manage your gaming events" />
+    <meta property="og:image" content="%PUBLIC_URL%/social-preview.jpg" />
+    
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="GameDin" />
+    <meta name="twitter:description" content="Connect with gamers, find game groups, and manage your gaming events" />
+    <meta name="twitter:image" content="%PUBLIC_URL%/social-preview.jpg" />
+    
+    <!-- Preconnect to API domains for faster loading -->
+    <link rel="preconnect" href="https://api.gamedin.app" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    
+    <title>GameDin - Connect with Gamers</title>
+    
+    <!-- Site verification -->
+    <meta name="google-site-verification" content="VERIFICATION_CODE" />
+    
+    <!-- Service Worker loader (for browsers that don't support import in preload) -->
+    <script>
+      // Check if service workers are supported
+      if ('serviceWorker' in navigator) {
+        // Use the window load event to keep the page load performant
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/serviceWorker.js')
+            .then(registration => {
+              console.log('ServiceWorker registration successful with scope: ', registration.scope);
+            })
+            .catch(error => {
+              console.log('ServiceWorker registration failed: ', error);
+            });
+        });
+      }
+    </script>
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+<<<<<<< HEAD
   </body>
 </html>
+=======
+    
+    <!-- Offline status notification that's shown when the user is offline -->
+    <div id="offline-notification" style="display: none; position: fixed; bottom: 16px; left: 16px; right: 16px; background: #2D2D2D; color: white; padding: 16px; border-radius: 8px; text-align: center; z-index: 9999; box-shadow: 0 4px 12px rgba(0,0,0,0.15);">
+      You are currently offline. Some features may be limited.
+    </div>
+    
+    <script>
+      // Simple offline detection script
+      function updateOfflineStatus() {
+        const notification = document.getElementById('offline-notification');
+        if (!navigator.onLine) {
+          notification.style.display = 'block';
+        } else {
+          notification.style.display = 'none';
+        }
+      }
+      
+      window.addEventListener('online', updateOfflineStatus);
+      window.addEventListener('offline', updateOfflineStatus);
+      updateOfflineStatus(); // Initial check
+    </script>
+  </body>
+</html> 
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

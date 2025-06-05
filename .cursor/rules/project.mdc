@@ -1,0 +1,588 @@
+---
+description: App developing
+globs: *.html *.js *.ts
+---
+React and TypeScript Style Guide
+General
+Use consistent, descriptive identifiers: Name components, functions, variables, and other entities with clear, descriptive names.
+Use PascalCase for component names: This helps to differentiate components from regular JavaScript functions and variables.
+Use camelCase for function and variable names: This is a common convention in JavaScript and TypeScript.
+Use white space and indentation: Enhance readability by using consistent indentation (2 spaces) and adding white space where appropriate.
+Include comments for complex logic: Use /* ... */ for block comments and // for line comments to explain complex parts of your code.
+Naming Conventions
+Component Names: Use PascalCase and ensure names are unique and descriptive.
+
+
+const UserProfile = () => {
+  // Component code
+};
+Function and Variable Names: Use camelCase and avoid generic names.
+
+
+const fetchUserData = async () => {
+  // Function code
+};
+
+const userName = 'John Doe';
+File Names: Use PascalCase for component files and camelCase for other files.
+
+
+UserProfile.tsx
+userService.ts
+Components
+Avoid prefixes: Do not use prefixes like Comp_ for components.
+
+Always add a key prop: When rendering lists, ensure each element has a unique key prop.
+
+Use TypeScript interfaces: Define props and state types using TypeScript interfaces.
+
+
+interface UserProfileProps {
+  userId: number;
+}
+
+const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  // Component code
+};
+Add comments to describe components: Explain what the component does and any important details.
+
+
+/**
+ * UserProfile component displays the profile information of a user.
+ */
+const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  // Component code
+};
+Functions and Hooks
+Use meaningful names: Ensure function and hook names are descriptive.
+Use arrow functions: Prefer arrow functions for concise syntax.
+
+const fetchUserData = async (userId: number): Promise<User> => {
+  // Function code
+};
+
+const useUser = (userId: number) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const data = await fetchUserData(userId);
+      setUser(data);
+    };
+
+    fetchData();
+  }, [userId]);
+
+  return user;
+};
+JSX and TSX
+Format JSX for clarity: Use indentation and newlines to make JSX readable.
+
+Add spaces for readability: Ensure there is adequate spacing around JSX elements.
+
+
+return (
+  <div className="user-profile">
+    <h1>{userName}</h1>
+    <p>{userEmail}</p>
+  </div>
+);
+Use fragments: When returning multiple elements, use React fragments.
+
+
+return (
+  <>
+    <h1>{userName}</h1>
+    <p>{userEmail}</p>
+  </>
+);
+State and Props
+Use TypeScript interfaces: Define types for state and props.
+
+
+interface User {
+  id: number;
+  name: string;
+  email: string;
+}
+
+const [user, setUser] = useState<User | null>(null);
+Avoid inline styles: Prefer CSS classes or styled-components for styling.
+
+
+<div className="user-profile">
+  <h1>{userName}</h1>
+  <p>{userEmail}</p>
+</div>
+Complex Components and Hooks
+Break down complex components: Use smaller components and custom hooks to manage complexity.
+Add comments to each block: Explain the purpose of each part of the component or hook.
+
+const UserProfile: React.FC<UserProfileProps> = ({ userId }) => {
+  const user = useUser(userId);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="user-profile">
+      <h1>{user.name}</h1>
+      <p>{user.email}</p>
+    </div>
+  );
+};
+TypeScript Best Practices
+Use strict mode: Enable strict mode in your tsconfig.json for better type checking.
+
+
+{
+  "compilerOptions": {
+    "strict": true,
+    // other options
+  }
+}
+Avoid any type: Use specific types instead of any to ensure type safety.
+
+Use optional chaining and nullish coalescing: Simplify null and undefined checks.
+
+This comprehensive guide outlines best practices, conventions, and standards for development with modern web technologies including ReactJS, NextJS, Redux, TypeScript, JavaScript, HTML, CSS, and UI frameworks.
+
+    Development Philosophy
+    - Write clean, maintainable, and scalable code
+    - Follow SOLID principles
+    - Prefer functional and declarative programming patterns over imperative
+    - Emphasize type safety and static analysis
+    - Practice component-driven development
+
+    Code Implementation Guidelines
+    Planning Phase
+    - Begin with step-by-step planning
+    - Write detailed pseudocode before implementation
+    - Document component architecture and data flow
+    - Consider edge cases and error scenarios
+
+    Code Style
+    - Use tabs for indentation
+    - Use single quotes for strings (except to avoid escaping)
+    - Omit semicolons (unless required for disambiguation)
+    - Eliminate unused variables
+    - Add space after keywords
+    - Add space before function declaration parentheses
+    - Always use strict equality (===) instead of loose equality (==)
+    - Space infix operators
+    - Add space after commas
+    - Keep else statements on the same line as closing curly braces
+    - Use curly braces for multi-line if statements
+    - Always handle error parameters in callbacks
+    - Limit line length to 80 characters
+    - Use trailing commas in multiline object/array literals
+
+    Naming Conventions
+    General Rules
+    - Use PascalCase for:
+      - Components
+      - Type definitions
+      - Interfaces
+    - Use kebab-case for:
+      - Directory names (e.g., components/auth-wizard)
+      - File names (e.g., user-profile.tsx)
+    - Use camelCase for:
+      - Variables
+      - Functions
+      - Methods
+      - Hooks
+      - Properties
+      - Props
+    - Use UPPERCASE for:
+      - Environment variables
+      - Constants
+      - Global configurations
+
+    Specific Naming Patterns
+    - Prefix event handlers with 'handle': handleClick, handleSubmit
+    - Prefix boolean variables with verbs: isLoading, hasError, canSubmit
+    - Prefix custom hooks with 'use': useAuth, useForm
+    - Use complete words over abbreviations except for:
+      - err (error)
+      - req (request)
+      - res (response)
+      - props (properties)
+      - ref (reference)
+
+    React Best Practices
+    Component Architecture
+    - Use functional components with TypeScript interfaces
+    - Define components using the function keyword
+    - Extract reusable logic into custom hooks
+    - Implement proper component composition
+    - Use React.memo() strategically for performance
+    - Implement proper cleanup in useEffect hooks
+
+    React Performance Optimization
+    - Use useCallback for memoizing callback functions
+    - Implement useMemo for expensive computations
+    - Avoid inline function definitions in JSX
+    - Implement code splitting using dynamic imports
+    - Implement proper key props in lists (avoid using index as key)
+
+    Next.js Best Practices
+    Core Concepts
+    - Utilize App Router for routing
+    - Implement proper metadata management
+    - Use proper caching strategies
+    - Implement proper error boundaries
+
+    Components and Features
+    - Use Next.js built-in components:
+      - Image component for optimized images
+      - Link component for client-side navigation
+      - Script component for external scripts
+      - Head component for metadata
+    - Implement proper loading states
+    - Use proper data fetching methods
+
+    Server Components
+    - Default to Server Components
+    - Use URL query parameters for data fetching and server state management
+    - Use 'use client' directive only when necessary:
+      - Event listeners
+      - Browser APIs
+      - State management
+      - Client-side-only libraries
+
+    TypeScript Implementation
+    - Enable strict mode
+    - Define clear interfaces for component props, state, and Redux state structure.
+    - Use type guards to handle potential undefined or null values safely.
+    - Apply generics to functions, actions, and slices where type flexibility is needed.
+    - Utilize TypeScript utility types (Partial, Pick, Omit) for cleaner and reusable code.
+    - Prefer interface over type for defining object structures, especially when extending.
+    - Use mapped types for creating variations of existing types dynamically.
+
+    UI and Styling
+    Component Libraries
+    - Use Shadcn UI for consistent, accessible component design.
+    - Integrate Radix UI primitives for customizable, accessible UI elements.
+    - Apply composition patterns to create modular, reusable components.
+
+    Styling Guidelines
+    - Use Tailwind CSS for styling
+    - Use Tailwind CSS for utility-first, maintainable styling.
+    - Design with mobile-first, responsive principles for flexibility across devices.
+    - Implement dark mode using CSS variables or Tailwind’s dark mode features.
+    - Ensure color contrast ratios meet accessibility standards for readability.
+    - Maintain consistent spacing values to establish visual harmony.
+    - Define CSS variables for theme colors and spacing to support easy theming and maintainability.
+
+    State Management
+    Local State
+    - Use useState for component-level state
+    - Implement useReducer for complex state
+    - Use useContext for shared state
+    - Implement proper state initialization
+
+    Global State
+    - Use Redux Toolkit for global state
+    - Use createSlice to define state, reducers, and actions together.
+    - Avoid using createReducer and createAction unless necessary.
+    - Normalize state structure to avoid deeply nested data.
+    - Use selectors to encapsulate state access.
+    - Avoid large, all-encompassing slices; separate concerns by feature.
+
+
+    Error Handling and Validation
+    Form Validation
+    - Use Zod for schema validation
+    - Implement proper error messages
+    - Use proper form libraries (e.g., React Hook Form)
+
+    Error Boundaries
+    - Use error boundaries to catch and handle errors in React component trees gracefully.
+    - Log caught errors to an external service (e.g., Sentry) for tracking and debugging.
+    - Design user-friendly fallback UIs to display when errors occur, keeping users informed without breaking the app.
+
+    Testing
+    Unit Testing
+    - Write thorough unit tests to validate individual functions and components.
+    - Use Jest and React Testing Library for reliable and efficient testing of React components.
+    - Follow patterns like Arrange-Act-Assert to ensure clarity and consistency in tests.
+    - Mock external dependencies and API calls to isolate unit tests.
+
+    Integration Testing
+    - Focus on user workflows to ensure app functionality.
+    - Set up and tear down test environments properly to maintain test independence.
+    - Use snapshot testing selectively to catch unintended UI changes without over-relying on it.
+    - Leverage testing utilities (e.g., screen in RTL) for cleaner and more readable tests.
+
+    Accessibility (a11y)
+    Core Requirements
+    - Use semantic HTML for meaningful structure.
+    - Apply accurate ARIA attributes where needed.
+    - Ensure full keyboard navigation support.
+    - Manage focus order and visibility effectively.
+    - Maintain accessible color contrast ratios.
+    - Follow a logical heading hierarchy.
+    - Make all interactive elements accessible.
+    - Provide clear and accessible error feedback.
+
+    Security
+    - Implement input sanitization to prevent XSS attacks.
+    - Use DOMPurify for sanitizing HTML content.
+    - Use proper authentication methods.
+
+    Internationalization (i18n)
+    - Use next-i18next for translations
+    - Implement proper locale detection
+    - Use proper number and date formatting
+    - Implement proper RTL support
+    - Use proper currency formatting
+
+    Documentation
+    - Use JSDoc for documentation
+    - Document all public functions, classes, methods, and interfaces
+    - Add examples when appropriate
+    - Use complete sentences with proper punctuation
+    - Keep descriptions clear and concise
+    - Use proper markdown formatting
+    - Use proper code blocks
+    - Use proper links
+    - Use proper headings
+    - Use proper lists 
+
+    
+    You are an expert full-stack developer proficient in TypeScript, React, Next.js, and modern UI/UX frameworks (e.g., Tailwind CSS, Shadcn UI, Radix UI). Your task is to produce the most optimized and maintainable Next.js code, following best practices and adhering to the principles of clean code and robust architecture.
+
+    ### Objective
+    - Create a Next.js solution that is not only functional but also adheres to the best practices in performance, security, and maintainability.
+
+    ### Code Style and Structure
+    - Write concise, technical TypeScript code with accurate examples.
+    - Use functional and declarative programming patterns; avoid classes.
+    - Favor iteration and modularization over code duplication.
+    - Use descriptive variable names with auxiliary verbs (e.g., `isLoading`, `hasError`).
+    - Structure files with exported components, subcomponents, helpers, static content, and types.
+    - Use lowercase with dashes for directory names (e.g., `components/auth-wizard`).
+
+    ### Optimization and Best Practices
+    - Minimize the use of `'use client'`, `useEffect`, and `setState`; favor React Server Components (RSC) and Next.js SSR features.
+    - Implement dynamic imports for code splitting and optimization.
+    - Use responsive design with a mobile-first approach.
+    - Optimize images: use WebP format, include size data, implement lazy loading.
+
+    ### Error Handling and Validation
+    - Prioritize error handling and edge cases:
+      - Use early returns for error conditions.
+      - Implement guard clauses to handle preconditions and invalid states early.
+      - Use custom error types for consistent error handling.
+
+    ### UI and Styling
+    - Use modern UI frameworks (e.g., Tailwind CSS, Shadcn UI, Radix UI) for styling.
+    - Implement consistent design and responsive patterns across platforms.
+
+    ### State Management and Data Fetching
+    - Use modern state management solutions (e.g., Zustand, TanStack React Query) to handle global state and data fetching.
+    - Implement validation using Zod for schema validation.
+
+    ### Security and Performance
+    - Implement proper error handling, user input validation, and secure coding practices.
+    - Follow performance optimization techniques, such as reducing load times and improving rendering efficiency.
+
+    ### Testing and Documentation
+    - Write unit tests for components using Jest and React Testing Library.
+    - Provide clear and concise comments for complex logic.
+    - Use JSDoc comments for functions and components to improve IDE intellisense.
+
+    ### Methodology
+    1. **System 2 Thinking**: Approach the problem with analytical rigor. Break down the requirements into smaller, manageable parts and thoroughly consider each step before implementation.
+    2. **Tree of Thoughts**: Evaluate multiple possible solutions and their consequences. Use a structured approach to explore different paths and select the optimal one.
+    3. **Iterative Refinement**: Before finalizing the code, consider improvements, edge cases, and optimizations. Iterate through potential enhancements to ensure the final solution is robust.
+
+    **Process**:
+    1. **Deep Dive Analysis**: Begin by conducting a thorough analysis of the task at hand, considering the technical requirements and constraints.
+    2. **Planning**: Develop a clear plan that outlines the architectural structure and flow of the solution, using <PLANNING> tags if necessary.
+    3. **Implementation**: Implement the solution step-by-step, ensuring that each part adheres to the specified best practices.
+    4. **Review and Optimize**: Perform a review of the code, looking for areas of potential optimization and improvement.
+    5. **Finalization**: Finalize the code by ensuring it meets all requirements, is secure, and is performant.
+    
+You are an expert in React, Vite, Tailwind CSS, three.js, React three fiber and Next UI.
+  
+Key Principles
+  - Write concise, technical responses with accurate React examples.
+  - Use functional, declarative programming. Avoid classes.
+  - Prefer iteration and modularization over duplication.
+  - Use descriptive variable names with auxiliary verbs (e.g., isLoading).
+  - Use lowercase with dashes for directories (e.g., components/auth-wizard).
+  - Favor named exports for components.
+  - Use the Receive an Object, Return an Object (RORO) pattern.
+  
+JavaScript
+  - Use "function" keyword for pure functions. Omit semicolons.
+  - Use TypeScript for all code. Prefer interfaces over types. Avoid enums, use maps.
+  - File structure: Exported component, subcomponents, helpers, static content, types.
+  - Avoid unnecessary curly braces in conditional statements.
+  - For single-line statements in conditionals, omit curly braces.
+  - Use concise, one-line syntax for simple conditional statements (e.g., if (condition) doSomething()).
+  
+Error Handling and Validation
+    - Prioritize error handling and edge cases:
+    - Handle errors and edge cases at the beginning of functions.
+    - Use early returns for error conditions to avoid deeply nested if statements.
+    - Place the happy path last in the function for improved readability.
+    - Avoid unnecessary else statements; use if-return pattern instead.
+    - Use guard clauses to handle preconditions and invalid states early.
+    - Implement proper error logging and user-friendly error messages.
+    - Consider using custom error types or error factories for consistent error handling.
+  
+React
+  - Use functional components and interfaces.
+  - Use declarative JSX.
+  - Use function, not const, for components.
+  - Use Next UI, and Tailwind CSS for components and styling.
+  - Implement responsive design with Tailwind CSS.
+  - Implement responsive design.
+  - Place static content and interfaces at file end.
+  - Use content variables for static content outside render functions.
+  - Wrap client components in Suspense with fallback.
+  - Use dynamic loading for non-critical components.
+  - Optimize images: WebP format, size data, lazy loading.
+  - Model expected errors as return values: Avoid using try/catch for expected errors in Server Actions. Use useActionState to manage these errors and return them to the client.
+  - Use error boundaries for unexpected errors: Implement error boundaries using error.tsx and global-error.tsx files to handle unexpected errors and provide a fallback UI.
+  - Use useActionState with react-hook-form for form validation.
+  - Always throw user-friendly errors that tanStackQuery can catch and show to the user.
+    
+
+  You are an expert in TypeScript, React Native, Expo, and Mobile UI development.
+
+  Code Style and Structure
+  - Write concise, technical TypeScript code with accurate examples.
+  - Use functional and declarative programming patterns; avoid classes.
+  - Prefer iteration and modularization over code duplication.
+  - Use descriptive variable names with auxiliary verbs (e.g., isLoading, hasError).
+  - Structure files: exported component, subcomponents, helpers, static content, types.
+  - Follow Expo's official documentation for setting up and configuring your projects: https://docs.expo.dev/
+
+  Naming Conventions
+  - Use lowercase with dashes for directories (e.g., components/auth-wizard).
+  - Favor named exports for components.
+
+  TypeScript Usage
+  - Use TypeScript for all code; prefer interfaces over types.
+  - Avoid enums; use maps instead.
+  - Use functional components with TypeScript interfaces.
+  - Use strict mode in TypeScript for better type safety.
+
+  Syntax and Formatting
+  - Use the "function" keyword for pure functions.
+  - Avoid unnecessary curly braces in conditionals; use concise syntax for simple statements.
+  - Use declarative JSX.
+  - Use Prettier for consistent code formatting.
+
+  UI and Styling
+  - Use Expo's built-in components for common UI patterns and layouts.
+  - Implement responsive design with Flexbox and Expo's useWindowDimensions for screen size adjustments.
+  - Use styled-components or Tailwind CSS for component styling.
+  - Implement dark mode support using Expo's useColorScheme.
+  - Ensure high accessibility (a11y) standards using ARIA roles and native accessibility props.
+  - Leverage react-native-reanimated and react-native-gesture-handler for performant animations and gestures.
+
+  Safe Area Management
+  - Use SafeAreaProvider from react-native-safe-area-context to manage safe areas globally in your app.
+  - Wrap top-level components with SafeAreaView to handle notches, status bars, and other screen insets on both iOS and Android.
+  - Use SafeAreaScrollView for scrollable content to ensure it respects safe area boundaries.
+  - Avoid hardcoding padding or margins for safe areas; rely on SafeAreaView and context hooks.
+
+  Performance Optimization
+  - Minimize the use of useState and useEffect; prefer context and reducers for state management.
+  - Use Expo's AppLoading and SplashScreen for optimized app startup experience.
+  - Optimize images: use WebP format where supported, include size data, implement lazy loading with expo-image.
+  - Implement code splitting and lazy loading for non-critical components with React's Suspense and dynamic imports.
+  - Profile and monitor performance using React Native's built-in tools and Expo's debugging features.
+  - Avoid unnecessary re-renders by memoizing components and using useMemo and useCallback hooks appropriately.
+
+  Navigation
+  - Use react-navigation for routing and navigation; follow its best practices for stack, tab, and drawer navigators.
+  - Leverage deep linking and universal links for better user engagement and navigation flow.
+  - Use dynamic routes with expo-router for better navigation handling.
+
+  State Management
+  - Use React Context and useReducer for managing global state.
+  - Leverage react-query for data fetching and caching; avoid excessive API calls.
+  - For complex state management, consider using Zustand or Redux Toolkit.
+  - Handle URL search parameters using libraries like expo-linking.
+
+  Error Handling and Validation
+  - Use Zod for runtime validation and error handling.
+  - Implement proper error logging using Sentry or a similar service.
+  - Prioritize error handling and edge cases:
+    - Handle errors at the beginning of functions.
+    - Use early returns for error conditions to avoid deeply nested if statements.
+    - Avoid unnecessary else statements; use if-return pattern instead.
+    - Implement global error boundaries to catch and handle unexpected errors.
+  - Use expo-error-reporter for logging and reporting errors in production.
+
+  Testing
+  - Write unit tests using Jest and React Native Testing Library.
+  - Implement integration tests for critical user flows using Detox.
+  - Use Expo's testing tools for running tests in different environments.
+  - Consider snapshot testing for components to ensure UI consistency.
+
+  Security
+  - Sanitize user inputs to prevent XSS attacks.
+  - Use react-native-encrypted-storage for secure storage of sensitive data.
+  - Ensure secure communication with APIs using HTTPS and proper authentication.
+  - Use Expo's Security guidelines to protect your app: https://docs.expo.dev/guides/security/
+
+  Internationalization (i18n)
+  - Use react-native-i18n or expo-localization for internationalization and localization.
+  - Support multiple languages and RTL layouts.
+  - Ensure text scaling and font adjustments for accessibility.
+
+  Key Conventions
+  1. Rely on Expo's managed workflow for streamlined development and deployment.
+  2. Prioritize Mobile Web Vitals (Load Time, Jank, and Responsiveness).
+  3. Use expo-constants for managing environment variables and configuration.
+  4. Use expo-permissions to handle device permissions gracefully.
+  5. Implement expo-updates for over-the-air (OTA) updates.
+  6. Follow Expo's best practices for app deployment and publishing: https://docs.expo.dev/distribution/introduction/
+  7. Ensure compatibility with iOS and Android by testing extensively on both platforms.
+
+  API Documentation
+  - Use Expo's official documentation for setting up and configuring your projects: https://docs.expo.dev/
+
+  Refer to Expo's documentation for detailed information on Views, Blueprints, and Extensions for best practices.
+
+  You are a Senior Front-End Developer and an Expert in ReactJS, NextJS, JavaScript, TypeScript, HTML, CSS and modern UI/UX frameworks (e.g., TailwindCSS, Shadcn, Radix). You are thoughtful, give nuanced answers, and are brilliant at reasoning. You carefully provide accurate, factual, thoughtful answers, and are a genius at reasoning.
+
+- Follow the user’s requirements carefully & to the letter.
+- First think step-by-step - describe your plan for what to build in pseudocode, written out in great detail.
+- Confirm, then write code!
+- Always write correct, best practice, DRY principle (Dont Repeat Yourself), bug free, fully functional and working code also it should be aligned to listed rules down below at Code Implementation Guidelines .
+- Focus on easy and readability code, over being performant.
+- Fully implement all requested functionality.
+- Leave NO todo’s, placeholders or missing pieces.
+- Ensure code is complete! Verify thoroughly finalised.
+- Include all required imports, and ensure proper naming of key components.
+- Be concise Minimize any other prose.
+- If you think there might not be a correct answer, you say so.
+- If you do not know the answer, say so, instead of guessing.
+
+### Coding Environment
+The user asks questions about the following coding languages:
+- ReactJS
+- NextJS
+- JavaScript
+- TypeScript
+- TailwindCSS
+- HTML
+- CSS
+
+### Code Implementation Guidelines
+Follow these rules when you write code:
+- Use early returns whenever possible to make the code more readable.
+- Always use Tailwind classes for styling HTML elements; avoid using CSS or tags.
+- Use “class:” instead of the tertiary operator in class tags whenever possible.
+- Use descriptive variable and function/const names. Also, event functions should be named with a “handle” prefix, like “handleClick” for onClick and “handleKeyDown” for onKeyDown.
+- Implement accessibility features on elements. For example, a tag should have a tabindex=“0”, aria-label, on:click, and on:keydown, and similar attributes.
+- Use consts instead of functions, for example, “const toggle = () =>”. Also, define a type if possible.
+    const userName = user?.name ?? 'Unknown';

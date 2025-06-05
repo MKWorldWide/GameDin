@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getCurrentUser, signIn, signOut } from '@aws-amplify/auth';
 import useToast from '../hooks/useToast';
@@ -87,6 +88,38 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, error, login, logout, setUser, setLoading, setError }}>
+=======
+import React, { createContext, useContext } from 'react';
+import { useStore } from '../store/useStore';
+import { Store } from '../types/store';
+
+const AuthContext = createContext<Store | null>(null);
+
+export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const store = useStore(state => ({
+    user: state.user,
+    settings: state.settings,
+    isAuthenticated: state.isAuthenticated,
+    loading: state.loading,
+    error: state.error,
+    darkMode: state.darkMode,
+    setUser: state.setUser,
+    setIsAuthenticated: state.setIsAuthenticated,
+    setLoading: state.setLoading,
+    setError: state.setError,
+    updateSettings: state.updateSettings,
+    toggleDarkMode: state.toggleDarkMode,
+    login: state.login,
+    register: state.register,
+    logout: state.logout,
+    resetPassword: state.resetPassword,
+    confirmResetPassword: state.confirmResetPassword,
+    resendConfirmationCode: state.resendConfirmationCode
+  }));
+
+  return (
+    <AuthContext.Provider value={store}>
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
       {children}
     </AuthContext.Provider>
   );
@@ -94,6 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
+<<<<<<< HEAD
   if (context === undefined) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
@@ -101,3 +135,10 @@ export const useAuth = () => {
 };
 
 export default AuthContext;
+=======
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthContextProvider');
+  }
+  return context;
+}; 
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

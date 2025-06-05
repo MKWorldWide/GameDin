@@ -1,0 +1,62 @@
+{
+  "features": {
+    "realTimeChat": {
+      "enabled": true,
+      "description": "Enable real-time chat functionality",
+      "rolloutPercentage": 100,
+      "dependencies": ["auth"]
+    },
+    "gameRecommendations": {
+      "enabled": true,
+      "description": "Enable game recommendations feature",
+      "rolloutPercentage": 100,
+      "dependencies": ["auth"]
+    },
+    "achievements": {
+      "enabled": true,
+      "description": "Enable achievements system",
+      "rolloutPercentage": 100,
+      "dependencies": ["auth"]
+    },
+    "socialFeatures": {
+      "enabled": true,
+      "description": "Enable social features like friends and groups",
+      "rolloutPercentage": 100,
+      "dependencies": ["auth"]
+    },
+    "darkMode": {
+      "enabled": true,
+      "description": "Enable dark mode theme",
+      "rolloutPercentage": 100,
+      "dependencies": []
+    },
+    "betaFeatures": {
+      "enabled": false,
+      "description": "Enable beta features",
+      "rolloutPercentage": 0,
+      "dependencies": ["auth"],
+      "allowlist": ["beta-testers"]
+    }
+  },
+  "environments": {
+    "development": {
+      "overrides": {
+        "betaFeatures": {
+          "enabled": true,
+          "rolloutPercentage": 100
+        }
+      }
+    },
+    "staging": {
+      "overrides": {
+        "betaFeatures": {
+          "enabled": true,
+          "rolloutPercentage": 50
+        }
+      }
+    },
+    "production": {
+      "overrides": {}
+    }
+  }
+} 

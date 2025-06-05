@@ -1,0 +1,337 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'GameDin Infrastructure Stack'
+
+Parameters:
+  Environment:
+    Type: String
+    Default: production
+    AllowedValues:
+      - development
+      - staging
+      - production
+    Description: Environment name
+
+  RedisNodeType:
+    Type: String
+    Default: cache.t3.micro
+    Description: Redis node type
+
+  AlertEmail:
+    Type: String
+    Description: Email address for alerts
+    Default: admin@gamedin.com
+
+Resources:
+  # VPC Configuration
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      Tags:
+        - Key: Name
+          Value: !Sub gamedin-vpc-${Environment}
+
+  # Private Subnets
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.1.0/24
+      AvailabilityZone: !Select [0, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: !Sub gamedin-private-1-${Environment}
+
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      CidrBlock: 10.0.2.0/24
+      AvailabilityZone: !Select [1, !GetAZs '']
+      Tags:
+        - Key: Name
+          Value: !Sub gamedin-private-2-${Environment}
+
+  # Security Features
+  GuardDuty:
+    Type: AWS::GuardDuty::Detector
+    Properties:
+      Enable: true
+      FindingPublishingFrequency: FIFTEEN_MINUTES
+
+  SecurityHub:
+    Type: AWS::SecurityHub::Hub
+    Properties: {}
+
+  # SNS Topic for Alerts
+  AlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: !Sub GameDin-Alerts-${Environment}
+      TopicName: !Sub gamedin-alerts-${Environment}
+
+  AlertTopicSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      TopicArn: !Ref AlertTopic
+      Protocol: email
+      Endpoint: !Ref AlertEmail
+
+  # Enhanced WAF Rules
+  WebACL:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      Name: !Sub gamedin-web-acl-${Environment}
+      Description: Web ACL for GameDin application
+      Scope: CLOUDFRONT
+      DefaultAction:
+        Allow: {}
+      Rules:
+        - Name: AWSManagedRulesCommonRuleSet
+          Priority: 1
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: CommonRuleMetric
+        - Name: AWSManagedRulesKnownBadInputsRuleSet
+          Priority: 2
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: KnownBadInputsMetric
+        - Name: AWSManagedRulesSQLiRuleSet
+          Priority: 3
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesSQLiRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: SQLiMetric
+        - Name: RateLimit
+          Priority: 4
+          Action:
+            Block: {}
+          Statement:
+            RateBasedStatement:
+              Limit: 2000
+              AggregateKeyType: IP
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: RateLimitMetric
+
+  # Redis Cluster with Enhanced Configuration
+  RedisCluster:
+    Type: AWS::ElastiCache::ReplicationGroup
+    Properties:
+      ReplicationGroupId: !Sub gamedin-redis-${Environment}
+      ReplicationGroupDescription: GameDin Redis cluster
+      Engine: redis
+      EngineVersion: '7.0'
+      CacheNodeType: !Ref RedisNodeType
+      NumNodeGroups: 2
+      ReplicasPerNodeGroup: 2
+      AutomaticFailoverEnabled: true
+      MultiAZEnabled: true
+      CacheSubnetGroupName: !Ref RedisSubnetGroup
+      SecurityGroupIds: 
+        - !Ref RedisSecurityGroup
+      AtRestEncryptionEnabled: true
+      TransitEncryptionEnabled: true
+      SnapshotRetentionLimit: 7
+      SnapshotWindow: '00:00-01:00'
+      PreferredMaintenanceWindow: 'sun:01:00-sun:02:00'
+      AutoMinorVersionUpgrade: true
+      LogDeliveryConfigurations:
+        - DestinationType: cloudwatch-logs
+          LogFormat: json
+          LogType: slow-log
+          DestinationDetails:
+            CloudWatchLogsDetails:
+              LogGroup: !Ref RedisLogGroup
+
+  # CloudWatch Resources
+  RedisLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/elasticache/redis/${Environment}
+      RetentionInDays: 30
+
+  # CloudWatch Alarms
+  RedisHighCPUAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub gamedin-redis-cpu-${Environment}
+      AlarmDescription: Redis cluster CPU utilization
+      MetricName: CPUUtilization
+      Namespace: AWS/ElastiCache
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 75
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertTopic
+
+  RedisMemoryAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      AlarmName: !Sub gamedin-redis-memory-${Environment}
+      AlarmDescription: Redis cluster memory usage
+      MetricName: DatabaseMemoryUsagePercentage
+      Namespace: AWS/ElastiCache
+      Statistic: Average
+      Period: 300
+      EvaluationPeriods: 2
+      Threshold: 80
+      ComparisonOperator: GreaterThanThreshold
+      AlarmActions:
+        - !Ref AlertTopic
+
+  # CloudFront Distribution with WAF
+  CloudFrontDistribution:
+    Type: AWS::CloudFront::Distribution
+    Properties:
+      DistributionConfig:
+        Enabled: true
+        DefaultRootObject: index.html
+        PriceClass: PriceClass_100
+        WebACLId: !GetAtt WebACL.Arn
+        ViewerCertificate:
+          CloudFrontDefaultCertificate: true
+        Origins:
+          - DomainName: !Sub ${AmplifyApp}.amplifyapp.com
+            Id: AmplifyOrigin
+            CustomOriginConfig:
+              HTTPPort: 80
+              HTTPSPort: 443
+              OriginProtocolPolicy: https-only
+              OriginSSLProtocols: [TLSv1.2]
+        DefaultCacheBehavior:
+          TargetOriginId: AmplifyOrigin
+          ViewerProtocolPolicy: redirect-to-https
+          CachePolicyId: 658327ea-f89d-4fab-a63d-7e88639e58f6
+          OriginRequestPolicyId: 88a5eaf4-2fd4-4709-b370-b4c650ea3fcf
+          FunctionAssociations:
+            - EventType: viewer-request
+              FunctionARN: !GetAtt SecurityHeadersFunction.FunctionARN
+
+  # Lambda@Edge for Security Headers
+  SecurityHeadersFunction:
+    Type: AWS::CloudFront::Function
+    Properties:
+      Name: !Sub gamedin-security-headers-${Environment}
+      AutoPublish: true
+      FunctionConfig:
+        Comment: Add security headers to all responses
+        Runtime: cloudfront-js-1.0
+      FunctionCode: |
+        function handler(event) {
+          var response = event.response;
+          var headers = response.headers;
+          
+          headers['strict-transport-security'] = { value: 'max-age=31536000; includeSubDomains; preload'};
+          headers['x-content-type-options'] = { value: 'nosniff'};
+          headers['x-frame-options'] = { value: 'DENY'};
+          headers['x-xss-protection'] = { value: '1; mode=block'};
+          headers['referrer-policy'] = { value: 'strict-origin-when-cross-origin'};
+          headers['permissions-policy'] = { value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'};
+          headers['content-security-policy'] = {
+            value: "default-src 'self'; connect-src 'self' https://*.amazonaws.com https://*.amazoncognito.com; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.amazonaws.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+          };
+          
+          return response;
+        }
+
+  # IAM Role for Amplify
+  AmplifyServiceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: !Sub gamedin-amplify-role-${Environment}
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: amplify.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmplifyBackendDeploymentRolePolicy
+
+  # Redis Cluster
+  RedisSubnetGroup:
+    Type: AWS::ElastiCache::SubnetGroup
+    Properties:
+      Description: Subnet group for Redis cluster
+      SubnetIds: 
+        - !Ref PrivateSubnet1
+        - !Ref PrivateSubnet2
+
+  RedisSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for Redis cluster
+      VpcId: !Ref VPC
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 6379
+          ToPort: 6379
+          SourceSecurityGroupId: !Ref AmplifySecurityGroup
+
+  # Secrets Manager
+  ApplicationSecrets:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub gamedin/${Environment}/secrets
+      Description: Application secrets for GameDin
+      GenerateSecretString:
+        SecretStringTemplate: '{"REDIS_PASSWORD":"","JWT_SECRET":"","SESSION_SECRET":"","COOKIE_SECRET":"","ENCRYPTION_KEY":""}'
+        GenerateStringKey: REDIS_PASSWORD
+        PasswordLength: 32
+        ExcludeCharacters: '"@/\'
+
+  # CloudWatch Logs
+  AmplifyLogGroup:
+    Type: AWS::Logs::LogGroup
+    Properties:
+      LogGroupName: !Sub /aws/amplify/gamedin-${Environment}
+      RetentionInDays: 30
+
+Outputs:
+  RedisEndpoint:
+    Description: Redis cluster endpoint
+    Value: !GetAtt RedisCluster.PrimaryEndPoint.Address
+
+  CloudFrontDomain:
+    Description: CloudFront distribution domain name
+    Value: !GetAtt CloudFrontDistribution.DomainName
+
+  SecretsARN:
+    Description: ARN of the secrets in Secrets Manager
+    Value: !Ref ApplicationSecrets
+
+  AlertTopicARN:
+    Description: ARN of the SNS topic for alerts
+    Value: !Ref AlertTopic
+
+  WebACLArn:
+    Description: ARN of the WAF Web ACL
+    Value: !GetAtt WebACL.Arn 

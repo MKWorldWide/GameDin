@@ -1,1 +1,84 @@
+<<<<<<< HEAD
 node_modules
+=======
+# Dependencies
+node_modules/
+frontend/node_modules/
+/.pnp
+.pnp.js
+
+# Testing
+/coverage
+
+# Build
+/dist
+/build
+frontend/dist
+frontend/build
+/out/
+.next/
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.env*.local
+
+# Debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# AWS Amplify
+amplify/.config/local-*
+amplify/logs
+amplify/mock-data
+amplify/backend/amplify-meta.json
+amplify/backend/awscloudformation
+aws-exports.js
+awsconfiguration.json
+amplifyconfiguration.json
+amplifyconfiguration.dart
+amplify-build-config.json
+amplify-gradle-config.json
+amplifytools.xcconfig
+.secret-*
+
+# Misc
+.cache/
+.temp/
+.tmp/
+*.log
+tmp/
+temp/
+deployment.zip
+>>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

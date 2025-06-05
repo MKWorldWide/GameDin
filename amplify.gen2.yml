@@ -1,0 +1,246 @@
+name: GameDin
+enableBranchAutoBuild: true
+environmentVariables:
+  AMPLIFY_MONOREPO_APP_ROOT: frontend
+  NODE_OPTIONS: --max-old-space-size=4096
+  NODE_ENV: production
+  NODE_VERSION: 20
+  REDIS_TLS_ENABLED: true
+  REDIS_CLUSTER_MODE: true
+  VITE_APP_ENV: production
+  VITE_API_URL: ${API_URL}
+  VITE_WS_URL: ${WS_URL}
+  VITE_AMPLIFY_VERSION: gen2
+
+backend:
+  phases:
+    preBuild:
+      commands:
+        - npm ci
+        - npm install -g @aws-amplify/cli@latest
+    build:
+      commands:
+        - amplify push --yes
+  artifacts:
+    baseDirectory: amplify/backend
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - ~/.npm/**/*
+
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - cd frontend
+        - npm ci --prefer-offline --no-audit
+        - npm run type-check
+    build:
+      commands:
+        - npm run build
+    postBuild:
+      commands:
+        - npm run test:ci
+        - npm run analyze
+  artifacts:
+    baseDirectory: frontend/dist
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - frontend/node_modules/**/*
+      - frontend/.next/cache/**/*
+      - .npm-cache/**/*
+
+test:
+  phases:
+    test:
+      commands:
+        - cd frontend && npm run test:ci -- --coverage
+  artifacts:
+    baseDirectory: frontend/coverage
+    files:
+      - '**/*'
+    configFilePath: '**/jest-*.json'
+
+customHeaders:
+  - pattern: '**/*'
+    headers:
+      - key: Strict-Transport-Security
+        value: max-age=31536000; includeSubDomains; preload
+      - key: X-Frame-Options
+        value: DENY
+      - key: X-Content-Type-Options
+        value: nosniff
+      - key: X-XSS-Protection
+        value: 1; mode=block
+      - key: Referrer-Policy
+        value: strict-origin-when-cross-origin
+      - key: Permissions-Policy
+        value: camera=(), microphone=(), geolocation=(), interest-cohort=()
+      - key: Content-Security-Policy
+        value: "default-src 'self'; connect-src 'self' https://*.amazonaws.com https://*.amazoncognito.com; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.amazonaws.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+  - pattern: '**/*.js'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.css'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=31536000, immutable'
+  - pattern: '**/*.html'
+    headers:
+      - key: Cache-Control
+        value: 'public, max-age=0, must-revalidate'
+
+  - pattern: '*.html'
+    headers:
+      - key: Cache-Control
+        value: no-cache
+  
+  - pattern: '/index.html'
+    headers:
+      - key: Cache-Control
+        value: no-store, must-revalidate
+  
+  - pattern: '/assets/*'
+    headers:
+      - key: Cache-Control
+        value: public, max-age=31536000, immutable
+
+performance:
+  maxConcurrentUsers: 1000
+  autoscaling:
+    computeType: large
+    minSize: 1
+    maxSize: 10
+    targetUtilization: 70
+  caching:
+    ttl: 3600
+    queryStringBehavior: ignore
+    cookieBehavior: none
+  compression:
+    enabled: true
+    types:
+      - text/html
+      - text/css
+      - text/javascript
+      - application/javascript
+      - application/json
+      - image/svg+xml
+      - font/woff2
+
+security:
+  enableWAF: true
+  wafRules:
+    - name: AWSManagedRulesCommonRuleSet
+      priority: 1
+      overrideAction: none
+    - name: AWSManagedRulesKnownBadInputsRuleSet
+      priority: 2
+      overrideAction: none
+    - name: AWSManagedRulesSQLiRuleSet
+      priority: 3
+      overrideAction: none
+    - name: RateLimit
+      priority: 4
+      action: block
+      rateLimit:
+        limit: 2000
+        aggregateBy: IP
+  enableShieldAdvanced: true
+  enableGuardDuty: true
+  enableSecurityHub: true
+  enableDDoSProtection: true
+
+monitoring:
+  alerts:
+    - name: HighErrorRate
+      metric: 5XXError
+      threshold: 5
+      evaluationPeriods: 2
+      period: 300
+      statistic: Average
+      comparison: GreaterThanThreshold
+      notifyEmail: alerts@gamedin.com
+    - name: HighLatency
+      metric: Latency
+      threshold: 1000
+      evaluationPeriods: 2
+      period: 300
+      statistic: Average
+      comparison: GreaterThanThreshold
+      notifyEmail: alerts@gamedin.com
+    - name: HighCPUUtilization
+      metric: CPUUtilization
+      threshold: 80
+      evaluationPeriods: 2
+      period: 300
+      statistic: Average
+      comparison: GreaterThanThreshold
+      notifyEmail: alerts@gamedin.com
+    - name: HighMemoryUtilization
+      metric: MemoryUtilization
+      threshold: 80
+      evaluationPeriods: 2
+      period: 300
+      statistic: Average
+      comparison: GreaterThanThreshold
+      notifyEmail: alerts@gamedin.com
+
+branches:
+  main:
+    framework: vite
+    stage: production
+    environmentVariables:
+      - name: VITE_APP_ENV
+        value: production
+    cache:
+      paths:
+        - node_modules/**/*
+        - frontend/node_modules/**/*
+        - ~/.npm/**/*
+    build:
+      commands:
+        - cd frontend
+        - npm ci
+        - npm run build
+    deploy:
+      - type: cloudfront
+        distributionId: ${CLOUDFRONT_DISTRIBUTION_ID}
+        invalidatePaths: 
+          - '/*'
+          - '/index.html'
+          - '/assets/*'
+      - type: s3
+        bucket: ${DEPLOYMENT_BUCKET}
+        path: /
+    postDeploy:
+      - npm run post-deploy-hooks
+      - npm run notify-deployment
+
+  develop:
+    framework: vite
+    stage: development
+    environmentVariables:
+      - name: VITE_APP_ENV
+        value: development
+    cache:
+      paths:
+        - node_modules/**/*
+        - frontend/node_modules/**/*
+        - ~/.npm/**/*
+    build:
+      commands:
+        - cd frontend
+        - npm ci
+        - npm run build:development
+
+routingRules:
+  - source: '</^[^.]+$|\\.(?!(css|gif|ico|jpg|js|png|txt|svg|woff|woff2|ttf|map|json|webp)$)([^.]+$)/>'
+    target: '/index.html'
+    status: '200'
+    condition: null 

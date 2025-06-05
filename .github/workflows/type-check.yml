@@ -1,0 +1,112 @@
+name: Type Check & Lint
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  type-check:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        node-version: [16.x, 18.x]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Type check
+      run: npm run type-check
+      
+    - name: ESLint check
+      run: npm run lint
+      
+    - name: Generate type coverage report
+      run: npx type-coverage
+      
+    - name: Check for type-related test failures
+      run: npm run test:types
+      
+    - name: Upload type check results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: type-check-results
+        path: |
+          tsconfig.tsbuildinfo
+          coverage/
+          type-coverage/
+          
+  type-regression:
+    needs: type-check
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+    
+    - name: Use Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18.x'
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Check for type regression
+      run: |
+        # Compare type coverage with main branch
+        git checkout main
+        npx type-coverage > main-coverage.txt
+        git checkout ${{ github.sha }}
+        npx type-coverage > current-coverage.txt
+        
+        # Check if coverage decreased
+        MAIN_COVERAGE=$(cat main-coverage.txt | grep -oP '\d+\.\d+(?=% types)')
+        CURRENT_COVERAGE=$(cat current-coverage.txt | grep -oP '\d+\.\d+(?=% types)')
+        
+        if (( $(echo "$CURRENT_COVERAGE < $MAIN_COVERAGE" | bc -l) )); then
+          echo "Type coverage regression detected!"
+          echo "Main branch: $MAIN_COVERAGE%"
+          echo "Current branch: $CURRENT_COVERAGE%"
+          exit 1
+        fi
+        
+    - name: Upload regression results
+      if: always()
+      uses: actions/upload-artifact@v3
+      with:
+        name: type-regression-results
+        path: |
+          main-coverage.txt
+          current-coverage.txt
+
+  report:
+    needs: [type-check, type-regression]
+    runs-on: ubuntu-latest
+    if: always()
+    
+    steps:
+    - name: Download all workflow run artifacts
+      uses: actions/download-artifact@v3
+      
+    - name: Generate summary
+      run: |
+        echo "## Type Check Summary" >> $GITHUB_STEP_SUMMARY
+        echo "### Type Coverage" >> $GITHUB_STEP_SUMMARY
+        cat current-coverage.txt >> $GITHUB_STEP_SUMMARY
+        echo "### Regression Analysis" >> $GITHUB_STEP_SUMMARY
+        diff main-coverage.txt current-coverage.txt || true >> $GITHUB_STEP_SUMMARY 

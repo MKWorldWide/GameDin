@@ -1,0 +1,152 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'WAF Configuration for GameDin'
+
+Resources:
+  GameDinWebACL:
+    Type: AWS::WAFv2::WebACL
+    Properties:
+      Name: GameDinWebACL
+      Description: Web ACL for GameDin API and Web Application
+      Scope: REGIONAL
+      DefaultAction:
+        Allow: {}
+      VisibilityConfig:
+        SampledRequestsEnabled: true
+        CloudWatchMetricsEnabled: true
+        MetricName: GameDinWebACLMetrics
+      Rules:
+        - Name: AWSManagedRulesCommonRuleSet
+          Priority: 1
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesCommonRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: AWSManagedRulesCommonRuleSetMetric
+
+        - Name: AWSManagedRulesKnownBadInputsRuleSet
+          Priority: 2
+          OverrideAction:
+            None: {}
+          Statement:
+            ManagedRuleGroupStatement:
+              VendorName: AWS
+              Name: AWSManagedRulesKnownBadInputsRuleSet
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: AWSManagedRulesKnownBadInputsRuleSetMetric
+
+        - Name: IPRateLimit
+          Priority: 3
+          Action:
+            Block: {}
+          Statement:
+            RateBasedStatement:
+              Limit: 2000
+              AggregateKeyType: IP
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: IPRateLimitMetric
+
+        - Name: GeoBlockRule
+          Priority: 4
+          Action:
+            Block: {}
+          Statement:
+            GeoMatchStatement:
+              CountryCodes:
+                - NK
+                - IR
+                - CU
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: GeoBlockMetric
+
+        - Name: SQLInjectionRule
+          Priority: 5
+          Action:
+            Block: {}
+          Statement:
+            SqliMatchStatement:
+              FieldToMatch:
+                AllQueryArguments: {}
+              TextTransformations:
+                - Priority: 1
+                  Type: URL_DECODE
+                - Priority: 2
+                  Type: HTML_ENTITY_DECODE
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: SQLInjectionMetric
+
+        - Name: XSSRule
+          Priority: 6
+          Action:
+            Block: {}
+          Statement:
+            XssMatchStatement:
+              FieldToMatch:
+                Body: {}
+              TextTransformations:
+                - Priority: 1
+                  Type: HTML_ENTITY_DECODE
+                - Priority: 2
+                  Type: URL_DECODE
+          VisibilityConfig:
+            SampledRequestsEnabled: true
+            CloudWatchMetricsEnabled: true
+            MetricName: XSSMetric
+
+  IPSet:
+    Type: AWS::WAFv2::IPSet
+    Properties:
+      Name: GameDinBlockedIPs
+      Description: IP addresses to block
+      Scope: REGIONAL
+      IPAddressVersion: IPV4
+      Addresses: []
+
+  LoggingConfiguration:
+    Type: AWS::WAFv2::LoggingConfiguration
+    Properties:
+      LogDestinationConfigs:
+        - !Sub arn:aws:firehose:${AWS::Region}:${AWS::AccountId}:deliverystream/aws-waf-logs-gamedin
+      ResourceArn: !GetAtt GameDinWebACL.Arn
+      RedactedFields:
+        - SingleHeader:
+            Name: authorization
+        - SingleHeader:
+            Name: x-api-key
+
+  WebACLAssociation:
+    Type: AWS::WAFv2::WebACLAssociation
+    Properties:
+      ResourceArn: !Sub arn:aws:apigateway:${AWS::Region}::/restapis/${GameDinAPI}/stages/prod
+      WebACLArn: !GetAtt GameDinWebACL.Arn
+
+Outputs:
+  WebACLId:
+    Description: Web ACL ID
+    Value: !GetAtt GameDinWebACL.Id
+    Export:
+      Name: GameDin-WebACLId
+
+  WebACLArn:
+    Description: Web ACL ARN
+    Value: !GetAtt GameDinWebACL.Arn
+    Export:
+      Name: GameDin-WebACLArn
+
+  IPSetId:
+    Description: IP Set ID
+    Value: !GetAtt IPSet.Id
+    Export:
+      Name: GameDin-IPSetId 

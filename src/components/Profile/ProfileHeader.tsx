@@ -1,27 +1,55 @@
-import React from 'react';
-import { Box, Avatar, Typography } from '@mui/material';
 import { IUser } from '../../types/social';
 
 interface ProfileHeaderProps {
   user: IUser;
+  isCurrentUser: boolean;
+  onEditProfile?: () => void;
 }
 
-const ProfileHeader: React.FC<ProfileHeaderProps> = ({ user }) => {
+export const ProfileHeader = ({ user, isCurrentUser, onEditProfile }: ProfileHeaderProps) => {
   return (
-    <Box sx={{ display: 'flex', alignItems: 'center', gap: 2 }}>
-      <Avatar
-        src={user.avatar}
-        alt={user.username}
-        sx={{ width: 120, height: 120 }}
-      />
-      <Box>
-        <Typography variant="h4">{user.username}</Typography>
-        <Typography variant="body1" color="text.secondary">
-          {user.bio}
-        </Typography>
-      </Box>
-    </Box>
-  );
-};
+    <div className="profile-header">
+      <div className="profile-image">
+        <img
+          src={user.picture || user.avatar}
+          alt={user.username}
+          className="avatar"
+        />
+      </div>
+      
+      <div className="profile-info">
+        <h1>{user.name || user.username}</h1>
+        <p className="username">@{user.username}</p>
+        <p className="bio">{user.bio}</p>
+        
+        <div className="stats">
+          <div className="stat">
+            <span className="label">Level</span>
+            <span className="value">{user.level}</span>
+          </div>
+          <div className="stat">
+            <span className="label">Rank</span>
+            <span className="value">{user.rank}</span>
+          </div>
+          <div className="stat">
+            <span className="label">Games Won</span>
+            <span className="value">{user.gameStats.gamesWon}</span>
+          </div>
+          <div className="stat">
+            <span className="label">Win Rate</span>
+            <span className="value">{user.gameStats.winRate}%</span>
+          </div>
+        </div>
 
-export default ProfileHeader; 
+        {isCurrentUser && (
+          <button
+            onClick={onEditProfile}
+            className="edit-profile-button"
+          >
+            Edit Profile
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}; 

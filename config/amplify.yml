@@ -1,0 +1,103 @@
+version: 1
+env:
+  variables:
+    AMPLIFY_MONOREPO_APP_ROOT: frontend
+    AMPLIFY_DIFF_DEPLOY: false
+    AMPLIFY_DIFF_BACKEND: false
+    NODE_OPTIONS: ${NODE_OPTIONS}
+    AWS_APP_ID: ${AWS_APP_ID}
+    AWS_BRANCH: ${AWS_BRANCH}
+    AWS_REGION: ${AWS_REGION}
+    NODE_VERSION: ${NODE_VERSION}
+    REDIS_URL: ${REDIS_URL}
+    REDIS_PORT: ${REDIS_PORT}
+    REDIS_PASSWORD: ${REDIS_PASSWORD}
+
+frontend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install $NODE_VERSION
+        - nvm use $NODE_VERSION
+        - npm install -g npm@latest
+        - npm install -g @aws-amplify/cli@latest
+        - npm install -g rimraf@5.0.5 glob@10.3.10
+        - npm config set legacy-peer-deps true
+        - npm ci --production --no-audit
+        - npm run test:ci
+    build:
+      commands:
+        - npm run build
+    postBuild:
+      commands:
+        - npm run generate-sitemap
+        - npm run build:redis-config
+  artifacts:
+    baseDirectory: build
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+  customHeaders:
+    - pattern: '**/*'
+      headers:
+        - key: 'Strict-Transport-Security'
+          value: 'max-age=31536000; includeSubDomains; preload'
+        - key: 'X-Frame-Options'
+          value: 'DENY'
+        - key: 'X-Content-Type-Options'
+          value: 'nosniff'
+        - key: 'X-XSS-Protection'
+          value: '1; mode=block'
+        - key: 'Referrer-Policy'
+          value: 'strict-origin-when-cross-origin'
+        - key: 'Permissions-Policy'
+          value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+        - key: 'Content-Security-Policy'
+          value: "default-src 'self'; connect-src 'self' https://*.amazonaws.com https://*.amazoncognito.com; img-src 'self' data: https: blob:; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.amazonaws.com; style-src 'self' 'unsafe-inline'; font-src 'self' data:; object-src 'none'; frame-ancestors 'none'; base-uri 'self'; form-action 'self';"
+
+backend:
+  phases:
+    preBuild:
+      commands:
+        - nvm install $NODE_VERSION
+        - nvm use $NODE_VERSION
+        - npm install -g npm@latest
+        - npm install -g @aws-amplify/cli@latest
+        - npm install -g rimraf@5.0.5 glob@10.3.10
+        - aws configure set aws_access_key_id ${AWS_ACCESS_KEY_ID}
+        - aws configure set aws_secret_access_key ${AWS_SECRET_ACCESS_KEY}
+        - aws configure set region ${AWS_REGION}
+        - aws configure set output json
+    build:
+      commands:
+        - amplify init --json --amplify "{\"envName\":\"${AWS_BRANCH}\",\"defaultEditor\":\"code\"}" --providers "{\"awscloudformation\":{\"configLevel\":\"project\",\"useProfile\":false,\"profileName\":\"default\",\"region\":\"${AWS_REGION}\"}}" --yes
+        - amplify pull --appId ${AWS_APP_ID} --envName ${AWS_BRANCH} --yes
+        - amplify push --yes
+  artifacts:
+    baseDirectory: amplify/backend
+    files:
+      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+
+test:
+  phases:
+    preTest:
+      commands:
+        - npm ci --production --no-audit
+        - npm run test:setup
+    test:
+      commands:
+        - npm run test:ci -- --maxWorkers=2 --ci --coverage
+        - npm run test:e2e:ci -- --maxWorkers=2 --ci
+  artifacts:
+    baseDirectory: coverage
+    files:
+      - '**/*'
+    configFilePath: '**/jest-*.json'
+  cache:
+    paths:
+      - node_modules/.cache/**/* 
