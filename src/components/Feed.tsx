@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { websocketService, WebSocketMessage } from '../services/websocket';
 import useStore from '../store/useStore';
@@ -218,4 +218,4 @@ const Feed: React.FC = () => {
   );
 };
 
-export default Feed;
+export default memo(Feed);

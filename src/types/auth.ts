@@ -1,25 +1,22 @@
-import { CognitoUser } from '@aws-amplify/auth';
+import { AuthUser } from '@aws-amplify/auth';
 
 export interface CognitoAttributes {
-  email: string;
-  phone_number: string;
-  [key: string]: string;
+  email?: string;
+  email_verified?: boolean;
+  name?: string;
+  picture?: string;
+  sub?: string;
 }
 
-export interface AmplifyUser extends CognitoUser {
+export interface IAuthUser extends AuthUser {
   attributes: CognitoAttributes;
 }
 
 export interface AuthContextType {
-  user: AmplifyUser | null;
-  isAuthenticated: boolean;
+  user: IAuthUser | null;
   loading: boolean;
   error: string | null;
-  login: (email: string, password: string) => Promise<void>;
-  register: (data: { email: string; password: string; attributes: CognitoAttributes }) => Promise<void>;
-  logout: () => Promise<void>;
-  setUser: (user: AmplifyUser | null) => void;
-  setIsAuthenticated: (value: boolean) => void;
+  setUser: (user: IAuthUser | null) => void;
   setLoading: (value: boolean) => void;
   setError: (error: string | null) => void;
 } 

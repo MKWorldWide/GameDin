@@ -42,20 +42,20 @@ export default function Profile({}: ProfileProps) {
               />
               <Typography variant="h5" gutterBottom>
                 {user.attributes?.name || user.username}
-              </Typography>
+                </Typography>
               <Typography variant="body2" color="textSecondary" gutterBottom>
                 {user.attributes?.email}
               </Typography>
               <Button variant="contained" color="primary" onClick={handleEditProfile}>
-                Edit Profile
-              </Button>
+                  Edit Profile
+                </Button>
             </Box>
           </Grid>
           <Grid item xs={12} md={8}>
             {/* Add profile content here */}
-          </Grid>
-        </Grid>
-      </Paper>
+                </Grid>
+            </Grid>
+                  </Paper>
 
       <EditProfileDialog
         open={isEditDialogOpen}

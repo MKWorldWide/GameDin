@@ -92,7 +92,7 @@ const GroupChatDialog: React.FC<GroupChatDialogProps> = ({
         <List sx={{ width: '100%', maxHeight: 300, overflow: 'auto' }}>
           {availableUsers.map((user) => (
             <ListItem
-              key={user.id}
+                        key={user.id}
               dense
               button
               onClick={() => handleToggleUser(user.id)}

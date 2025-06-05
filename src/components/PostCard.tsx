@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react';
+import React, { forwardRef, memo } from 'react';
 import {
   Card,
   CardContent,
@@ -141,4 +141,4 @@ const PostCard = forwardRef<HTMLDivElement, IPostCardProps>(
 
 PostCard.displayName = 'PostCard';
 
-export default PostCard;
+export default memo(PostCard);

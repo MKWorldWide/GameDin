@@ -1,3 +1,4 @@
+import React, { memo } from 'react';
 import useStore from '../store/useStore';
 
 const ProfileCard = () => {
@@ -39,4 +40,4 @@ const ProfileCard = () => {
   );
 };
 
-export default ProfileCard;
+export default memo(ProfileCard);

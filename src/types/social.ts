@@ -133,14 +133,21 @@ export interface CacheConfig {
 export interface IUser {
   id: string;
   username: string;
-  email?: string;
-  name?: string;
+  email: string;
+  name: string;
   picture?: string;
   avatar?: string;
   bio?: string;
-  presence?: 'online' | 'offline' | 'away';
+  rank?: string;
   createdAt: string;
   updatedAt: string;
+  attributes?: {
+    email?: string;
+    name?: string;
+    picture?: string;
+    rank?: string;
+    [key: string]: any;
+  };
 }
 
 export interface IConversationParticipant {
@@ -178,10 +185,13 @@ export interface IMessageInput {
 
 export interface IConversation {
   id: string;
-  title: string;
+  title?: string;
   description?: string;
-  type: 'private' | 'group';
-  participants: GroupParticipant[];
+  type: 'PRIVATE' | 'GROUP';
+  participants: {
+    user: IUser;
+    role: 'ADMIN' | 'MEMBER';
+  }[];
   lastMessage?: IMessage;
   createdAt: string;
   updatedAt: string;
@@ -208,7 +218,7 @@ export interface IComment {
   id: string;
   content: string;
   author: IUser;
-  post: IPost;
+  post: Post;
   createdAt: string;
   updatedAt: string;
 }
@@ -274,4 +284,19 @@ export interface GroupParticipant {
   conversation: IConversation;
   createdAt: string;
   updatedAt: string;
+}
+
+export interface INotification {
+  id: string;
+  type: 'MESSAGE' | 'FRIEND_REQUEST' | 'ACHIEVEMENT' | 'SYSTEM';
+  title: string;
+  description: string;
+  read: boolean;
+  createdAt: string;
+  data?: {
+    conversationId?: string;
+    userId?: string;
+    achievementId?: string;
+    post?: Post;
+  };
 }

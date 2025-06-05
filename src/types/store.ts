@@ -1,50 +1,84 @@
 import { IUser } from './social';
 
 export interface ISettings {
-  profileVisibility: 'public' | 'private';
-  showOnlineStatus: boolean;
-  showGameActivity: boolean;
-  emailNotifications: {
-    frequency: 'none' | 'real-time' | 'daily-digest' | 'weekly-digest';
-    friendRequests: boolean;
-    messages: boolean;
-    gameInvites: boolean;
-    achievements: boolean;
-    newsAndUpdates: boolean;
-    security: boolean;
-    teamInvites: boolean;
-    matchmaking: boolean;
-    marketing: boolean;
+  profileVisibility: 'public' | 'friends' | 'private';
+  notifications: {
+    push: boolean;
+    email: boolean;
+    emailNotifications: {
+      frequency: 'daily' | 'weekly' | 'real-time' | 'none';
+      types: {
+        friendRequests: boolean;
+        messages: boolean;
+        gameInvites: boolean;
+        achievements: boolean;
+      };
+    };
   };
-  emailDigestTime: string;
+  privacy: {
+    showOnlineStatus: boolean;
+    showLastSeen: boolean;
+    allowFriendRequests: boolean;
+    showGameStats: boolean;
+  };
   theme: {
-    mode: 'light' | 'dark';
-    color: string;
+    darkMode: boolean;
+    fontSize: 'small' | 'medium' | 'large';
+    colorScheme: 'default' | 'dark' | 'light';
   };
-  pushNotifications: boolean;
-  matchmakingEnabled: boolean;
-  allowFriendRequests: boolean;
-  allowMessages: boolean;
-  darkMode: boolean;
-  themeColor: string;
+  language: string;
+  soundEffects: boolean;
+  showGameActivity?: boolean;
+  pushNotifications?: boolean;
+  matchmakingEnabled?: boolean;
+  allowMessages?: boolean;
+  themeColor?: string;
+  emailDigestTime?: string;
 }
 
-export interface StoreState {
+export interface Store {
+  darkMode: boolean;
+  toggleDarkMode: () => void;
   user: IUser | null;
   isAuthenticated: boolean;
-  settings: ISettings;
   loading: boolean;
   error: string | null;
-}
-
-export interface StoreActions {
+  settings: ISettings;
   setUser: (user: IUser | null) => void;
   setIsAuthenticated: (value: boolean) => void;
-  setLoading: (loading: boolean) => void;
+  setLoading: (value: boolean) => void;
   setError: (error: string | null) => void;
   updateSettings: (settings: Partial<ISettings>) => void;
   login: (credentials: { email: string; password: string }) => Promise<void>;
   logout: () => void;
 }
 
-export type Store = StoreState & StoreActions; 
+export const defaultSettings: ISettings = {
+  profileVisibility: 'public',
+  notifications: {
+    push: true,
+    email: true,
+    emailNotifications: {
+      frequency: 'none',
+      types: {
+        friendRequests: true,
+        messages: true,
+        gameInvites: true,
+        achievements: true
+      }
+    }
+  },
+  privacy: {
+    showOnlineStatus: true,
+    showLastSeen: true,
+    allowFriendRequests: true,
+    showGameStats: true
+  },
+  theme: {
+    darkMode: false,
+    fontSize: 'medium',
+    colorScheme: 'default'
+  },
+  language: 'en',
+  soundEffects: true
+}; 

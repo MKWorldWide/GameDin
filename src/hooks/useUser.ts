@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Auth } from 'aws-amplify';
+import { getCurrentUser, signOut } from '@aws-amplify/auth';
+import useToast from './useToast';
 import { mapCognitoUserToIUser } from '../utils/userMapper';
 import { IUser } from '../types/social';
 
@@ -12,7 +13,7 @@ export function useUser() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const cognitoUser = await Auth.currentAuthenticatedUser();
+        const cognitoUser = await getCurrentUser();
         const mappedUser = mapCognitoUserToIUser(cognitoUser);
         setUser(mappedUser);
         setIsAuthenticated(true);
