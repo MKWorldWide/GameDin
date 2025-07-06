@@ -129,8 +129,6 @@ export class GameDinBlockchainService {
    */
   private async processWithConsensus(transaction: BlockchainTransaction): Promise<void> {
     try {
-      const startTime = Date.now();
-      
       // Simulate consensus process
       const consensusResult = await this.runConsensus(transaction);
       
@@ -173,7 +171,7 @@ export class GameDinBlockchainService {
   /**
    * Run consensus algorithm
    */
-  private async runConsensus(transaction: BlockchainTransaction): Promise<ConsensusResult> {
+  private async runConsensus(_transaction: BlockchainTransaction): Promise<ConsensusResult> {
     const startTime = Date.now();
     
     // Simulate BFT consensus
@@ -182,7 +180,7 @@ export class GameDinBlockchainService {
     
     // Simulate validator voting
     const votes = await Promise.all(
-      validators.map(async (validator) => {
+      validators.map(async (_validator) => {
         await new Promise(resolve => setTimeout(resolve, Math.random() * 50));
         return Math.random() > 0.1; // 90% success rate
       })
@@ -223,7 +221,11 @@ export class GameDinBlockchainService {
     try {
       const response = await this.aiService.batchProcess([request]);
       transaction.status = 'confirmed';
-      return response[0];
+      const aiResponse = response[0];
+      if (!aiResponse) {
+        throw new Error('No AI response received');
+      }
+      return aiResponse;
     } catch (error) {
       transaction.status = 'failed';
       throw error;

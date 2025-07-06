@@ -118,7 +118,7 @@ export const developmentConfig: BlockchainConfig = {
   ai: {
     novaSanctumEnabled: true,
     modelEndpoint: 'https://api.novasanctum.ai/v1',
-    apiKey: process.env.NOVASANCTUM_API_KEY || '',
+    apiKey: process.env['NOVASANCTUM_API_KEY'] || '',
     features: {
       antiCheat: true,
       matchmaking: true,
@@ -175,7 +175,7 @@ export const productionConfig: BlockchainConfig = {
   ai: {
     novaSanctumEnabled: true,
     modelEndpoint: 'https://api.novasanctum.ai/v1',
-    apiKey: process.env.NOVASANCTUM_API_KEY || '',
+    apiKey: process.env['NOVASANCTUM_API_KEY'] || '',
     features: {
       antiCheat: true,
       matchmaking: true,
@@ -226,6 +226,6 @@ export class BlockchainConfigFactory {
 }
 
 // Export default configuration
-export const defaultConfig = BlockchainConfigFactory.getConfig(process.env.NODE_ENV || 'development');
+export const defaultConfig = BlockchainConfigFactory.getConfig(process.env['NODE_ENV'] || 'development');
 
 export default defaultConfig; 

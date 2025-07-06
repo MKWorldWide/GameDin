@@ -140,13 +140,13 @@ export class NovaSanctumAIService {
         body: JSON.stringify(data)
       });
 
-      const responseData = await response.json();
+      const responseData = await response.json() as Record<string, unknown>;
       const latency = Date.now() - startTime;
 
       return {
         success: response.ok,
         data: responseData,
-        confidence: responseData.confidence || 0,
+        confidence: (responseData['confidence'] as number) || 0,
         latency,
         timestamp: Date.now()
       };
