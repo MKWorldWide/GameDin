@@ -19,7 +19,6 @@
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "lint:fix": "eslint src --ext ts,tsx --fix",
     "typecheck": "tsc --noEmit",
-    "prepare": "husky install",
     "amplify:push": "amplify push --yes",
     "amplify:publish": "amplify publish --yes",
     "amplify:status": "amplify status",
@@ -49,8 +48,8 @@
     "deploy:production": "npm run build:production && npm run security:audit && npm run performance:audit"
   },
   "engines": {
-    "node": ">=20.0.0",
-    "npm": ">=10.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "dependencies": {
     "@aws-amplify/api": "^6.3.15",
@@ -80,7 +79,7 @@
     "react-router-dom": "^6.22.3",
     "swr": "^2.3.2",
     "typescript": "^4.9.5",
-    "vite": "^7.0.2",
+    "vite": "^5.0.0",
     "workbox-core": "^7.3.0",
     "workbox-expiration": "^7.3.0",
     "workbox-precaching": "^7.3.0",
@@ -99,16 +98,11 @@
     "@typescript-eslint/eslint-plugin": "^7.1.1",
     "@typescript-eslint/parser": "^7.1.1",
     "@vitejs/plugin-react": "^4.2.1",
-    "@vitest/ui": "^3.2.4",
     "autoprefixer": "^10.4.18",
-    "cypress": "^13.6.0",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
-    "husky": "^8.0.0",
-    "jsdom": "^23.0.0",
-    "lighthouse": "^12.7.1",
     "npm-run-all": "^4.1.5",
     "postcss": "^8.4.35",
     "prettier": "^3.2.5",
@@ -118,7 +112,11 @@
     "vite-plugin-compression": "^0.5.1",
     "vite-plugin-pwa": "^1.0.1",
     "vite-tsconfig-paths": "^4.3.1",
-    "vitest": "^3.2.4"
+    "lighthouse": "^11.6.0",
+    "cypress": "^13.6.0",
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "jsdom": "^23.0.0"
   },
   "browserslist": {
     "production": [

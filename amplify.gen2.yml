@@ -4,7 +4,7 @@ environmentVariables:
   AMPLIFY_MONOREPO_APP_ROOT: frontend
   NODE_OPTIONS: --max-old-space-size=8192
   NODE_ENV: production
-  NODE_VERSION: 20
+  NODE_VERSION: 18
   REDIS_TLS_ENABLED: true
   REDIS_CLUSTER_MODE: true
   VITE_APP_ENV: production
@@ -53,7 +53,7 @@ frontend:
     preBuild:
       commands:
         - cd frontend
-        - npm ci --prefer-offline --no-audit
+        - npm ci --prefer-offline --no-audit --ignore-scripts
         - npm cache clean --force
         - npm run type-check
         - echo "Frontend optimization: Pre-build phase completed"
@@ -368,7 +368,7 @@ branches:
     build:
       commands:
         - cd frontend
-        - npm ci --prefer-offline --no-audit
+        - npm ci --prefer-offline --no-audit --ignore-scripts
         - npm run build:production
         - npm run optimize:assets
     deploy:
@@ -410,7 +410,7 @@ branches:
     build:
       commands:
         - cd frontend
-        - npm ci --prefer-offline --no-audit
+        - npm ci --prefer-offline --no-audit --ignore-scripts
         - npm run build:development
     deploy:
       - type: s3
@@ -439,7 +439,7 @@ branches:
     build:
       commands:
         - cd frontend
-        - npm ci --prefer-offline --no-audit
+        - npm ci --prefer-offline --no-audit --ignore-scripts
         - npm run build:staging
     deploy:
       - type: s3
@@ -462,7 +462,7 @@ routingRules:
 
 functions:
   - name: optimizationEngine
-    runtime: nodejs20.x
+    runtime: nodejs18.x
     handler: index.handler
     timeout: 30
     memorySize: 512
@@ -479,7 +479,7 @@ functions:
       - arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:layer:optimization-layer:1
 
   - name: performanceMonitor
-    runtime: nodejs20.x
+    runtime: nodejs18.x
     handler: index.handler
     timeout: 60
     memorySize: 1024
@@ -494,7 +494,7 @@ functions:
       - arn:aws:lambda:${AWS_REGION}:${AWS_ACCOUNT_ID}:layer:monitoring-layer:1
 
   - name: securityScanner
-    runtime: nodejs20.x
+    runtime: nodejs18.x
     handler: index.handler
     timeout: 300
     memorySize: 2048

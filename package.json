@@ -13,7 +13,6 @@
     "test:e2e:ci": "cd frontend && npm run test:e2e:ci",
     "lint": "cd frontend && npm run lint",
     "typecheck": "cd frontend && npm run typecheck",
-    "prepare": "husky install",
     "amplify:push": "amplify push --yes",
     "amplify:publish": "amplify publish --yes",
     "amplify:status": "amplify status",
@@ -22,14 +21,14 @@
     "validate": "npm-run-all --parallel lint typecheck test"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
   },
   "devDependencies": {
-    "@aws-amplify/cli": "^14.0.0",
+    "@aws-amplify/cli": "^12.14.4",
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "husky": "^8.0.0",
     "npm-run-all": "^4.1.5",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5"
