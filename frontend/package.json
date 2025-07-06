@@ -1,30 +1,60 @@
 {
   "name": "gamedin-frontend",
-  "version": "1.0.0",
+  "version": "4.0.0",
   "private": true,
-  "description": "GameDin - A Social Platform for Gamers",
+  "description": "GameDin - A Social Platform for Gamers with AWS Amplify Optimization",
   "scripts": {
     "build": "vite build",
+    "build:production": "vite build --mode production",
+    "build:development": "vite build --mode development",
+    "build:staging": "vite build --mode staging",
+    "build:optimized": "vite build --mode production && npm run optimize:assets",
     "start": "vite preview",
     "dev": "vite",
     "test": "vitest",
-    "test:ci": "vitest run",
+    "test:ci": "vitest run --coverage --reporter=verbose",
     "test:e2e": "cypress run",
     "test:e2e:ci": "cypress run --headless",
+    "test:performance": "npm run lighthouse:ci && npm run bundle:analyze",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+    "lint:fix": "eslint src --ext ts,tsx --fix",
     "typecheck": "tsc --noEmit",
     "prepare": "husky install",
     "amplify:push": "amplify push --yes",
     "amplify:publish": "amplify publish --yes",
     "amplify:status": "amplify status",
-    "clean": "rimraf .next out dist build coverage",
+    "clean": "rimraf .next out dist build coverage .cache",
     "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,md}\"",
-    "validate": "npm-run-all --parallel lint typecheck test"
+    "validate": "npm-run-all --parallel lint typecheck test",
+    "optimize:assets": "npm run optimize:images && npm run optimize:fonts && npm run optimize:bundles",
+    "optimize:images": "node scripts/optimize-images.js",
+    "optimize:fonts": "node scripts/optimize-fonts.js",
+    "optimize:bundles": "node scripts/optimize-bundles.js",
+    "analyze:bundle": "vite build --mode production && npm run bundle:analyze",
+    "bundle:analyze": "node scripts/analyze-bundle.js",
+    "lighthouse:ci": "lighthouse http://localhost:3000 --output=json --output-path=./lighthouse-report.json --chrome-flags='--headless'",
+    "security:audit": "npm audit --audit-level=moderate && npm run security:scan",
+    "security:scan": "node scripts/security-scan.js",
+    "performance:test": "node scripts/performance-test.js",
+    "performance:audit": "npm run lighthouse:ci && npm run performance:test",
+    "health:check": "node scripts/health-check.js",
+    "post-deploy:hooks": "node scripts/post-deploy.js",
+    "notify:deployment": "node scripts/notify-deployment.js",
+    "optimization:profile": "node scripts/generate-optimization-profile.js",
+    "cache:clear": "npm run clean && npm cache clean --force",
+    "deps:update": "npm update && npm audit fix",
+    "deps:audit": "npm audit --audit-level=moderate",
+    "build:analyze": "npm run build:optimized && npm run analyze:bundle",
+    "deploy:preview": "npm run build:optimized && npm run health:check",
+    "deploy:production": "npm run build:production && npm run security:audit && npm run performance:audit"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0",
+    "npm": ">=10.0.0"
   },
   "dependencies": {
+    "@aws-amplify/api": "^6.3.15",
+    "@aws-amplify/auth": "^6.13.3",
     "@aws-amplify/ui-react": "^6.11.2",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
@@ -51,7 +81,6 @@
     "swr": "^2.3.2",
     "typescript": "^4.9.5",
     "vite": "^5.0.0",
-    "vite-plugin-pwa": "^0.17.5",
     "workbox-core": "^7.3.0",
     "workbox-expiration": "^7.3.0",
     "workbox-precaching": "^7.3.0",
@@ -80,9 +109,55 @@
     "postcss": "^8.4.35",
     "prettier": "^3.2.5",
     "rimraf": "^5.0.5",
-    "rollup-plugin-visualizer": "^5.12.0",
+    "rollup-plugin-visualizer": "^5.14.0",
     "tailwindcss": "^3.4.1",
     "vite-plugin-compression": "^0.5.1",
-    "vite-tsconfig-paths": "^4.3.1"
+    "vite-plugin-pwa": "^1.0.1",
+    "vite-tsconfig-paths": "^4.3.1",
+    "lighthouse": "^11.6.0",
+    "cypress": "^13.6.0",
+    "vitest": "^1.0.0",
+    "@vitest/ui": "^1.0.0",
+    "jsdom": "^23.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "optimization": {
+    "profiles": {
+      "ultra": {
+        "description": "Maximum performance for high-end devices",
+        "imageQuality": "ultra",
+        "compression": "advanced",
+        "caching": "aggressive"
+      },
+      "high": {
+        "description": "High performance for good devices",
+        "imageQuality": "high",
+        "compression": "advanced",
+        "caching": "balanced"
+      },
+      "balanced": {
+        "description": "Balanced performance for average devices",
+        "imageQuality": "medium",
+        "compression": "basic",
+        "caching": "balanced"
+      },
+      "minimal": {
+        "description": "Minimal performance for limited devices",
+        "imageQuality": "low",
+        "compression": "none",
+        "caching": "minimal"
+      }
+    }
   }
 }

@@ -25,7 +25,7 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
-    "@aws-amplify/cli": "^12.14.4",
+    "@aws-amplify/cli": "^14.0.0",
     "@types/node": "^22.13.4",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
