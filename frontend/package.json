@@ -1,14 +1,15 @@
 {
   "name": "gamedin-frontend",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "private": true,
-  "description": "GameDin - A Social Platform for Gamers with AWS Amplify Optimization",
+  "description": "GameDin - A Social Platform for Gamers with Advanced AWS Optimization",
   "scripts": {
     "build": "vite build",
     "build:production": "vite build --mode production",
     "build:development": "vite build --mode development",
     "build:staging": "vite build --mode staging",
     "build:optimized": "vite build --mode production && npm run optimize:assets",
+    "build:aws": "npm run build:production && npm run aws:optimize",
     "start": "vite preview",
     "dev": "vite",
     "test": "vitest",
@@ -47,7 +48,15 @@
     "deps:audit": "npm audit --audit-level=moderate",
     "build:analyze": "npm run build:optimized && npm run analyze:bundle",
     "deploy:preview": "npm run build:optimized && npm run health:check",
-    "deploy:production": "npm run build:production && npm run security:audit && npm run performance:audit"
+    "deploy:production": "npm run build:production && npm run security:audit && npm run performance:audit",
+    "aws:optimize": "npm run aws:monitoring && npm run aws:cost-optimization && npm run aws:performance",
+    "aws:monitoring": "node scripts/aws-monitoring-setup.js",
+    "aws:cost-optimization": "node scripts/aws-cost-optimization.js",
+    "aws:performance": "node scripts/aws-performance-test.js",
+    "aws:deploy": "npm run build:aws && npm run aws:validate",
+    "aws:validate": "node scripts/aws-validation.js",
+    "aws:monitor": "node scripts/aws-monitor.js",
+    "aws:analyze": "npm run aws:cost-optimization && npm run aws:performance"
   },
   "engines": {
     "node": ">=18.0.0",
@@ -57,6 +66,11 @@
     "@aws-amplify/api": "^6.3.15",
     "@aws-amplify/auth": "^6.13.3",
     "@aws-amplify/ui-react": "^6.11.2",
+    "@aws-sdk/client-cloudfront": "^3.540.0",
+    "@aws-sdk/client-cloudwatch": "^3.540.0",
+    "@aws-sdk/client-lambda": "^3.540.0",
+    "@aws-sdk/client-s3": "^3.540.0",
+    "@aws-sdk/client-xray": "^3.540.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@headlessui/react": "^2.0.0",
@@ -135,28 +149,55 @@
   "optimization": {
     "profiles": {
       "ultra": {
-        "description": "Maximum performance for high-end devices",
+        "description": "Maximum performance for high-end devices with AWS optimization",
         "imageQuality": "ultra",
         "compression": "advanced",
-        "caching": "aggressive"
+        "caching": "aggressive",
+        "awsFeatures": ["cloudFront", "lambdaEdge", "monitoring", "costOptimization"]
       },
       "high": {
-        "description": "High performance for good devices",
+        "description": "High performance for good devices with AWS optimization",
         "imageQuality": "high",
         "compression": "advanced",
-        "caching": "balanced"
+        "caching": "balanced",
+        "awsFeatures": ["cloudFront", "monitoring"]
       },
       "balanced": {
         "description": "Balanced performance for average devices",
         "imageQuality": "medium",
         "compression": "basic",
-        "caching": "balanced"
+        "caching": "balanced",
+        "awsFeatures": ["cloudFront"]
       },
       "minimal": {
         "description": "Minimal performance for limited devices",
         "imageQuality": "low",
         "compression": "none",
-        "caching": "minimal"
+        "caching": "minimal",
+        "awsFeatures": []
+      }
+    },
+    "aws": {
+      "services": {
+        "cloudFront": {
+          "enabled": true,
+          "optimization": "ultra",
+          "caching": "aggressive"
+        },
+        "lambdaEdge": {
+          "enabled": true,
+          "optimization": "performance"
+        },
+        "monitoring": {
+          "enabled": true,
+          "cloudWatch": true,
+          "xRay": true
+        },
+        "costOptimization": {
+          "enabled": true,
+          "compression": "aggressive",
+          "caching": "optimal"
+        }
       }
     }
   }
