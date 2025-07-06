@@ -164,6 +164,8 @@
 
 [2024-07-06 05:30] Vite Build Configuration: Issue: AWS Amplify deployment failing due to missing cssnano dependency and incorrect rollup configuration → Solution: Removed cssnano dependency, corrected manualChunks placement in rollupOptions, removed invalid [optimization] placeholders, and configured PWA to handle large files with proper cache exclusions → Why: Critical for successful AWS Amplify deployment. The cssnano dependency was not installed but referenced in Vite config, manualChunks was in wrong location causing build warnings, invalid placeholders caused rollup errors, and large files exceeded service worker cache limits. These fixes ensure clean builds and successful deployment to AWS Amplify.
 
+[2024-07-06 06:00] Store Initialization & AWS Amplify Auth: Issue: Blank page caused by merge conflicts in TypeScript types and incorrect AWS Amplify Auth v6 API usage → Solution: Resolved merge conflicts in settings.ts and store.ts, updated Auth imports to use v6 API (signIn, signOut, getCurrentUser, signUp, fetchAuthSession), disabled problematic auto-initialization, and added proper store initialization in main.tsx → Why: Critical for application functionality. Merge conflicts prevented TypeScript compilation, AWS Amplify Auth v6 has completely different API than v5, auto-initialization caused circular dependencies, and missing store initialization prevented state management. These fixes ensure proper application loading and state management.
+
 # KEY TAKEAWAYS AND RECOMMENDATIONS
 
 ## 🛡️ Security Best Practices

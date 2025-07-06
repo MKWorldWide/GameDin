@@ -1,17 +1,36 @@
 version: 1
-frontend:
-  phases:
-    preBuild:
-      commands:
-        - cd frontend
-        - npm ci --legacy-peer-deps
-    build:
-      commands:
-        - npm run build
-  artifacts:
-    baseDirectory: frontend/dist
-    files:
-      - '**/*'
-  cache:
-    paths:
-      - frontend/node_modules/**/*
+applications:
+  - frontend:
+      phases:
+        preBuild:
+          commands:
+            - echo "🚀 Starting GameDin build process..."
+            - echo "📦 Installing dependencies..."
+            - cd frontend
+            - npm ci --ignore-scripts
+            - echo "✅ Dependencies installed successfully"
+        build:
+          commands:
+            - echo "🔨 Building GameDin application..."
+            - npm run lint
+            - npm run type-check
+            - npm run test:ci
+            - npm run build
+            - echo "✅ Build completed successfully"
+        postBuild:
+          commands:
+            - echo "📊 Generating build report..."
+            - npm run build:analyze
+            - echo "🔍 Running security audit..."
+            - npm audit --audit-level=moderate
+            - echo "✅ Post-build tasks completed"
+      artifacts:
+        baseDirectory: frontend/dist
+        files:
+          - '**/*'
+        discard-paths: no
+      cache:
+        paths:
+          - frontend/node_modules/**/*
+          - frontend/.cache/**/*
+    appRoot: .
