@@ -35,26 +35,6 @@ export default defineConfig(({ mode }) => {
                            isStaging ? 'high' : 
                            isDevelopment ? 'balanced' : 'minimal';
   
-  // AWS Amplify specific optimizations
-  const amplifyOptimizations = {
-    // Enhanced chunk splitting for better caching
-    manualChunks: {
-      vendor: ['react', 'react-dom'],
-      router: ['react-router-dom'],
-      ui: ['@mui/material', '@mui/icons-material', '@headlessui/react', '@heroicons/react'],
-      utils: ['date-fns', 'zod', 'swr', 'framer-motion'],
-      amplify: ['aws-amplify', '@aws-amplify/ui-react', '@aws-amplify/auth'],
-      workbox: ['workbox-core', 'workbox-expiration', 'workbox-precaching', 'workbox-routing', 'workbox-strategies']
-    },
-    
-    // Optimized file naming for AWS CloudFront
-    output: {
-      chunkFileNames: isProduction ? 'assets/[name]-[hash]-[optimization].js' : 'assets/[name].js',
-      entryFileNames: isProduction ? 'assets/[name]-[hash]-[optimization].js' : 'assets/[name].js',
-      assetFileNames: isProduction ? 'assets/[name]-[hash]-[optimization].[ext]' : 'assets/[name].[ext]'
-    }
-  };
-  
   return {
     plugins: [
       react(),
@@ -63,6 +43,9 @@ export default defineConfig(({ mode }) => {
         registerType: 'autoUpdate',
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,woff2,webp}'],
+          // Exclude large files from service worker cache
+          globIgnores: ['**/stats.html', '**/stats.html.gz', '**/stats.html.br'],
+          maximumFileSizeToCacheInBytes: 5 * 1024 * 1024, // 5MB limit
           runtimeCaching: [
             {
               urlPattern: /^https:\/\/api\./,
@@ -212,7 +195,20 @@ export default defineConfig(({ mode }) => {
         }
       } : undefined,
       rollupOptions: {
-        ...amplifyOptimizations,
+        // Enhanced chunk splitting for better caching
+        output: {
+          chunkFileNames: isProduction ? 'assets/[name]-[hash].js' : 'assets/[name].js',
+          entryFileNames: isProduction ? 'assets/[name]-[hash].js' : 'assets/[name].js',
+          assetFileNames: isProduction ? 'assets/[name]-[hash].[ext]' : 'assets/[name].[ext]',
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+            router: ['react-router-dom'],
+            ui: ['@mui/material', '@mui/icons-material', '@headlessui/react', '@heroicons/react'],
+            utils: ['date-fns', 'zod', 'swr', 'framer-motion'],
+            amplify: ['aws-amplify', '@aws-amplify/ui-react', '@aws-amplify/auth'],
+            workbox: ['workbox-core', 'workbox-expiration', 'workbox-precaching', 'workbox-routing', 'workbox-strategies']
+          }
+        },
         // Enhanced tree shaking for AWS Amplify
         treeshake: {
           moduleSideEffects: false,
@@ -275,17 +271,8 @@ export default defineConfig(({ mode }) => {
       postcss: {
         plugins: [
           require('autoprefixer'),
-          require('tailwindcss'),
-          // AWS Amplify specific CSS optimizations
-          isProduction && require('cssnano')({
-            preset: ['default', {
-              discardComments: { removeAll: true },
-              normalizeWhitespace: true,
-              colormin: true,
-              minifyFontValues: true
-            }]
-          })
-        ].filter(Boolean)
+          require('tailwindcss')
+        ]
       }
     }
   };
