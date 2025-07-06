@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+
 import { useUser } from '../hooks/useUser';
 
 interface NavigationProps {
@@ -8,7 +9,7 @@ interface NavigationProps {
 
 /**
  * Galaxy Navigation Component
- * 
+ *
  * Features Apple-inspired design with:
  * - Glassmorphism navigation bar
  * - Smooth hover animations
@@ -51,15 +52,15 @@ const Navigation: React.FC<NavigationProps> = ({ signOut }) => {
 
   return (
     <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-      isScrolled 
-        ? 'bg-cosmic-glass/80 backdrop-blur-xl border-b border-white/10 shadow-glass' 
+      isScrolled
+        ? 'bg-cosmic-glass/80 backdrop-blur-xl border-b border-white/10 shadow-glass'
         : 'bg-transparent'
     }`}>
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16 lg:h-20">
           {/* Logo */}
-          <Link 
-            to="/" 
+          <Link
+            to="/"
             className="flex items-center space-x-3 group"
             aria-label="GameDin Home"
           >
@@ -170,4 +171,4 @@ const Navigation: React.FC<NavigationProps> = ({ signOut }) => {
   );
 };
 
-export default Navigation; 
+export default Navigation;

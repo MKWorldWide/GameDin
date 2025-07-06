@@ -51,7 +51,7 @@ class ErrorTracker {
     error: Error | IApplicationError,
     category: ErrorCategory,
     severity: ErrorSeverity,
-    context: ErrorContext
+    context: ErrorContext,
   ): void {
     const errorMetrics: ErrorMetrics = {
       timestamp: Date.now(),
@@ -114,7 +114,7 @@ class ErrorTracker {
 
   private sendToErrorTrackingService(
     error: Error | IApplicationError,
-    metrics: ErrorMetrics
+    metrics: ErrorMetrics,
   ): void {
     // Implementation would depend on your error tracking service (e.g., Sentry, LogRocket)
     // This is a placeholder for the actual implementation
@@ -143,7 +143,7 @@ export const errorTracker = ErrorTracker.getInstance();
 export const trackTypeValidationError = (
   component: string,
   expectedType: string,
-  receivedValue: unknown
+  receivedValue: unknown,
 ): void => {
   errorTracker.trackTypeError(new TypeError(`Type validation failed in ${component}`), {
     component,

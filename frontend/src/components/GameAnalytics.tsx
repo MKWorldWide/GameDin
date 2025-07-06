@@ -1,5 +1,9 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
+import AssessmentIcon from '@mui/icons-material/Assessment';
+import BarChartIcon from '@mui/icons-material/BarChart';
+import GroupsIcon from '@mui/icons-material/Groups';
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import TrendingUpIcon from '@mui/icons-material/TrendingUp';
 import {
   Box,
   Container,
@@ -29,12 +33,8 @@ import {
   Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import AssessmentIcon from '@mui/icons-material/Assessment';
-import TrendingUpIcon from '@mui/icons-material/TrendingUp';
-import GroupsIcon from '@mui/icons-material/Groups';
-import PersonSearchIcon from '@mui/icons-material/PersonSearch';
-import BarChartIcon from '@mui/icons-material/BarChart';
-import TimelineIcon from '@mui/icons-material/Timeline';
+import React, { useState, useEffect } from 'react';
+
 import { useAuth } from '../context/AuthContext';
 
 interface IPlayerStats {
@@ -495,14 +495,7 @@ const GameAnalytics: React.FC = () => {
 };
 
 export default GameAnalytics;
-=======
-import {
-  Box,
-  Typography,
-  Card,
-  Grid
-} from '@mui/material';
-import { useState } from 'react';
+
 import { useUser } from '../hooks/useUser';
 
 export const GameAnalytics = () => {
@@ -556,4 +549,3 @@ export const GameAnalytics = () => {
 };
 
 export default GameAnalytics;
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

@@ -1,6 +1,7 @@
-import React from 'react';
-import { Box, Typography, List, ListItem, ListItemText, IconButton, Badge } from '@mui/material';
 import { Notifications as NotificationsIcon, Clear as ClearIcon } from '@mui/icons-material';
+import { Box, Typography, List, ListItem, ListItemText, IconButton, Badge } from '@mui/material';
+import React from 'react';
+
 import { useNotifications } from '../../context/NotificationsContext';
 
 const NotificationCenter: React.FC = () => {

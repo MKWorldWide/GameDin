@@ -36,20 +36,22 @@
  * - [v3.2.2] Created unified mock service integrating database, API, and test generator for comprehensive testing
  */
 
-import { mockDatabase } from './mockDatabase';
-import { mockApi } from './mockApi';
-import { testDataGenerator } from './testDataGenerator';
-import { 
-  IUser, 
-  IPost, 
-  IMessage, 
-  IConversation, 
-  IGame, 
+import {
+  IUser,
+  IPost,
+  IMessage,
+  IConversation,
+  IGame,
   IAchievement,
   INotification,
   IActivity,
-  IFriend
+  IFriend,
 } from '../types/social';
+
+import { mockApi } from './mockApi';
+import { mockDatabase } from './mockDatabase';
+import { testDataGenerator } from './testDataGenerator';
+
 
 /**
  * Mock Service Configuration
@@ -85,7 +87,7 @@ export class MockService {
   public database: typeof mockDatabase;
   public api: typeof mockApi;
   public testGenerator: typeof testDataGenerator;
-  
+
   private config: MockServiceConfig;
   private isInitialized: boolean = false;
   private stats: MockServiceStats | null = null;
@@ -97,7 +99,7 @@ export class MockService {
       dataSize: 'medium',
       enablePerformanceMode: false,
       enableTestMode: true,
-      ...config
+      ...config,
     };
 
     this.database = mockDatabase;
@@ -120,7 +122,7 @@ export class MockService {
     try {
       // Initialize database with appropriate size
       await this.initializeDatabase();
-      
+
       // Generate test data if test mode is enabled
       if (this.config.enableTestMode) {
         await this.initializeTestData();
@@ -145,14 +147,14 @@ export class MockService {
       small: { userCount: 10, postCount: 50, gameCount: 20, conversationCount: 5, achievementCount: 10 },
       medium: { userCount: 50, postCount: 200, gameCount: 100, conversationCount: 30, achievementCount: 50 },
       large: { userCount: 200, postCount: 1000, gameCount: 500, conversationCount: 100, achievementCount: 200 },
-      extreme: { userCount: 1000, postCount: 5000, gameCount: 1000, conversationCount: 500, achievementCount: 1000 }
+      extreme: { userCount: 1000, postCount: 5000, gameCount: 1000, conversationCount: 500, achievementCount: 1000 },
     };
 
     const config = sizeConfigs[this.config.dataSize];
-    
+
     // Reinitialize database with new configuration
     const newDatabase = new (require('./mockDatabase').MockDatabase)(config);
-    
+
     // Update the singleton instance
     Object.assign(mockDatabase, newDatabase);
   }
@@ -164,7 +166,7 @@ export class MockService {
     // Test data is already generated in the TestDataGenerator constructor
     console.log('Test data initialized:', {
       testCases: this.testGenerator.getTestCases().length,
-      scenarios: this.testGenerator.getTestScenarios().length
+      scenarios: this.testGenerator.getTestScenarios().length,
     });
   }
 
@@ -182,7 +184,7 @@ export class MockService {
       notifications: this.database.getNotifications().length,
       activities: this.database.getActivities().length,
       testCases: this.testGenerator.getTestCases().length,
-      scenarios: this.testGenerator.getTestScenarios().length
+      scenarios: this.testGenerator.getTestScenarios().length,
     };
   }
 
@@ -398,7 +400,7 @@ export class MockService {
         gamesPlayed: 0,
         gamesWon: 0,
         winRate: 0,
-        achievements: []
+        achievements: [],
       },
       settings: userData.settings || {
         profileVisibility: 'public',
@@ -411,23 +413,23 @@ export class MockService {
               friendRequests: true,
               messages: true,
               gameInvites: true,
-              achievements: true
-            }
-          }
+              achievements: true,
+            },
+          },
         },
         privacy: {
           showOnlineStatus: true,
           showLastSeen: true,
           allowFriendRequests: true,
-          showGameStats: true
-        }
+          showGameStats: true,
+        },
       },
       attributes: userData.attributes || {
         email: userData.email || `user${Date.now()}@example.com`,
         name: userData.name || `User ${Date.now()}`,
         picture: userData.picture || `https://api.dicebear.com/7.x/initials/svg?seed=User${Date.now()}`,
-        rank: userData.rank || 'Rookie'
-      }
+        rank: userData.rank || 'Rookie',
+      },
     };
 
     // Add to database (this would need to be implemented in MockDatabase)
@@ -452,7 +454,7 @@ export class MockService {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       type: 'general',
-      gameId: postData.gameId
+      gameId: postData.gameId,
     };
 
     return newPost;
@@ -475,7 +477,7 @@ export class MockService {
       author,
       status: 'sent',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     return newMessage;
@@ -495,7 +497,7 @@ export class MockService {
       notifications: this.database.getNotifications(),
       activities: this.database.getActivities(),
       stats: this.stats,
-      config: this.config
+      config: this.config,
     };
   }
 
@@ -524,8 +526,8 @@ export class MockService {
       details: {
         initialized: this.isInitialized,
         stats: this.stats,
-        config: this.config
-      }
+        config: this.config,
+      },
     };
   }
 }
@@ -534,4 +536,4 @@ export class MockService {
 export const mockService = new MockService();
 
 // Export for use in components
-export default mockService; 
+export default mockService;

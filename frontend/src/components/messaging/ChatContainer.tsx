@@ -1,13 +1,15 @@
-import React, { useRef, useEffect, useState, useCallback } from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
-import { useStore } from '../../store/useStore';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
+
 import { useIntersectionObserver } from '../../hooks/useIntersectionObserver';
+import { useStore } from '../../store/useStore';
 import { IMessage, IMessageInput, IConversation, IUser } from '../../types/social';
-import { MessageList } from './MessageList';
-import { MessageInput } from './MessageInput';
+
 import { ChatHeader } from './ChatHeader';
 import { ChatSidebar } from './ChatSidebar';
 import { GroupChatDialog } from './GroupChatDialog';
+import { MessageInput } from './MessageInput';
+import { MessageList } from './MessageList';
 
 interface ChatContainerProps {
   conversation: IConversation;
@@ -36,7 +38,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   onLeaveGroup,
   onEditGroup,
   onMuteConversation,
-  onBlockUser
+  onBlockUser,
 }) => {
   const darkMode = useStore((state) => state.darkMode);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -119,7 +121,7 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
     setIsEditingGroup(false);
   }, []);
 
-  const handleUpdateGroup = useCallback(async (name: string, participants: string[]) => {
+  const handleUpdateGroup = useCallback(async(name: string, participants: string[]) => {
     if (onEditGroup) {
       await onEditGroup();
       setIsEditingGroup(false);
@@ -231,4 +233,4 @@ export const ChatContainer: React.FC<ChatContainerProps> = ({
   );
 };
 
-ChatContainer.displayName = 'ChatContainer'; 
+ChatContainer.displayName = 'ChatContainer';

@@ -1,4 +1,15 @@
-import React, { useState } from 'react';
+import {
+  Facebook as FacebookIcon,
+  Twitter as TwitterIcon,
+  LinkedIn as LinkedInIcon,
+  Reddit as RedditIcon,
+  WhatsApp as WhatsAppIcon,
+  Telegram as TelegramIcon,
+  Email as EmailIcon,
+  Link as LinkIcon,
+  Close as CloseIcon,
+  Repeat as RepostIcon,
+} from '@mui/icons-material';
 import {
   Dialog,
   DialogTitle,
@@ -18,18 +29,7 @@ import {
   Alert,
   Tooltip,
 } from '@mui/material';
-import {
-  Facebook as FacebookIcon,
-  Twitter as TwitterIcon,
-  LinkedIn as LinkedInIcon,
-  Reddit as RedditIcon,
-  WhatsApp as WhatsAppIcon,
-  Telegram as TelegramIcon,
-  Email as EmailIcon,
-  Link as LinkIcon,
-  Close as CloseIcon,
-  Repeat as RepostIcon,
-} from '@mui/icons-material';
+import React, { useState } from 'react';
 
 interface ShareDialogProps {
   open: boolean;
@@ -55,7 +55,7 @@ const shareOptions: ShareOption[] = [
     onClick: url => {
       window.open(
         `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-        '_blank'
+        '_blank',
       );
     },
   },
@@ -65,10 +65,8 @@ const shareOptions: ShareOption[] = [
     color: '#1da1f2',
     onClick: (url, title) => {
       window.open(
-        `https://twitter.com/intent/tweet?url=${encodeURIComponent(
-          url
-        )}&text=${encodeURIComponent(title)}`,
-        '_blank'
+        `https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
+        '_blank',
       );
     },
   },
@@ -79,7 +77,7 @@ const shareOptions: ShareOption[] = [
     onClick: (url, title) => {
       window.open(
         `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
-        '_blank'
+        '_blank',
       );
     },
   },
@@ -89,10 +87,8 @@ const shareOptions: ShareOption[] = [
     color: '#ff4500',
     onClick: (url, title) => {
       window.open(
-        `https://reddit.com/submit?url=${encodeURIComponent(
-          url
-        )}&title=${encodeURIComponent(title)}`,
-        '_blank'
+        `https://reddit.com/submit?url=${encodeURIComponent(url)}&title=${encodeURIComponent(title)}`,
+        '_blank',
       );
     },
   },
@@ -111,7 +107,7 @@ const shareOptions: ShareOption[] = [
     onClick: (url, title) => {
       window.open(
         `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`,
-        '_blank'
+        '_blank',
       );
     },
   },
@@ -120,9 +116,7 @@ const shareOptions: ShareOption[] = [
     icon: <EmailIcon />,
     color: '#ea4335',
     onClick: (url, title) => {
-      window.location.href = `mailto:?subject=${encodeURIComponent(
-        title
-      )}&body=${encodeURIComponent(`Check this out: ${url}`)}`;
+      window.location.href = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(`Check this out: ${url}`)}`;
     },
   },
 ];
@@ -143,7 +137,7 @@ const ShareDialog: React.FC<ShareDialogProps> = ({
     severity: 'success' as 'success' | 'error',
   });
 
-  const handleCopyLink = async () => {
+  const handleCopyLink = async() => {
     try {
       await navigator.clipboard.writeText(postUrl);
       setSnackbar({
@@ -160,7 +154,7 @@ const ShareDialog: React.FC<ShareDialogProps> = ({
     }
   };
 
-  const handleRepost = async () => {
+  const handleRepost = async() => {
     if (!repostContent.trim() || !onRepost) return;
 
     try {

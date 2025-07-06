@@ -1,19 +1,5 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
-import {
-  Box,
-  Container,
-  Typography,
-  Switch,
-  FormGroup,
-  FormControlLabel,
-  Button,
-  Alert,
-  Snackbar,
-} from '@mui/material';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import {
   Notifications as NotificationsIcon,
   NotificationsActive as NotificationsActiveIcon,
@@ -25,7 +11,20 @@ import {
   DesktopWindows as DesktopIcon,
   AccessTime as TimeIcon,
 } from '@mui/icons-material';
-import { INotificationPreferences, NotificationType } from '../types/notifications';
+import {
+  Box,
+  Container,
+  Typography,
+  Switch,
+  FormGroup,
+  FormControlLabel,
+  Button,
+  Alert,
+  Snackbar,
+  Paper, Grid,
+} from '@mui/material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 
 const defaultPreferences: INotificationPreferences = {
   email: true,
@@ -35,7 +34,7 @@ const defaultPreferences: INotificationPreferences = {
     FRIEND_REQUEST: true,
     MESSAGE: true,
     GAME_INVITE: true,
-    SYSTEM: true
+    SYSTEM: true,
   },
   sounds: true,
   doNotDisturb: {
@@ -55,7 +54,7 @@ const NotificationSettings: React.FC = () => {
 
   const handleChange = (
     key: keyof INotificationPreferences | keyof INotificationPreferences['types'],
-    value: boolean
+    value: boolean,
   ) => {
     if (key in preferences.types) {
       setPreferences(prev => ({
@@ -90,7 +89,7 @@ const NotificationSettings: React.FC = () => {
     }
   };
 
-  const handleSave = async () => {
+  const handleSave = async() => {
     try {
       // TODO: Implement API call to save preferences
       setSnackbar({
@@ -275,10 +274,10 @@ const NotificationSettings: React.FC = () => {
 };
 
 export default NotificationSettings;
-=======
-import { Box, Typography, Paper, Grid, Switch, FormGroup, FormControlLabel } from '@mui/material';
-import { useState } from 'react';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+
 import { useUser } from '../hooks/useUser';
+import { INotificationPreferences, NotificationType } from '../types/notifications';
 
 export default function NotificationSettings() {
   const { user } = useUser();
@@ -385,5 +384,4 @@ export default function NotificationSettings() {
       </Grid>
     </Box>
   );
-} 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+}

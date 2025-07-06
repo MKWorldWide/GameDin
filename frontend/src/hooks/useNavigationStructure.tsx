@@ -25,10 +25,10 @@ const useNavigationStructure = (): NavigationStructureReturn => {
   const navigationItems = useMemo<NavigationItem[]>(() => [
     { name: 'Dashboard', path: '/' },
     { name: 'Products', path: '/products' },
-    { name: 'Customers', path: '/customers' }
+    { name: 'Customers', path: '/customers' },
   ], []);
 
   return { navigationItems };
 };
 
-export default useNavigationStructure; 
+export default useNavigationStructure;

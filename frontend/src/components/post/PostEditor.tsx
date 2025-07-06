@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState } from 'react';
 import {
   Box,
@@ -19,7 +18,6 @@ const PostEditor: React.FC<PostEditorProps> = ({ onSubmit }) => {
     if (content.trim()) {
       onSubmit(content);
       setContent('');
-=======
 import { Box, TextField, Button } from '@mui/material';
 import { useState } from 'react';
 
@@ -43,12 +41,10 @@ export default function PostEditor({ onSubmit }: PostEditorProps) {
       console.error('Failed to submit post:', error);
     } finally {
       setIsSubmitting(false);
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     }
   };
 
   return (
-<<<<<<< HEAD
     <Paper sx={{ p: 2, mb: 2 }}>
       <Box component="form" onSubmit={handleSubmit}>
         <TextField
@@ -77,7 +73,6 @@ export default function PostEditor({ onSubmit }: PostEditorProps) {
 };
 
 export default PostEditor;
-=======
     <Box
       component="form"
       onSubmit={handleSubmit}
@@ -112,4 +107,3 @@ export default PostEditor;
     </Box>
   );
 } 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

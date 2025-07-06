@@ -11,31 +11,31 @@ interface LoadingSpinnerProps {
 
 /**
  * Galaxy LoadingSpinner component with cosmic animations
- * 
+ *
  * Features Apple-inspired design with:
  * - Cosmic gradient spinner
  * - Floating star animations
  * - Glassmorphism effects
  * - Premium typography
  * - Accessibility-first approach
- * 
+ *
  * @param props - Component props
  * @returns Galaxy-themed loading spinner component
  */
-const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({ 
-  size = 'medium', 
+const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
+  size = 'medium',
   text = 'Exploring the galaxy...',
-  className = ''
+  className = '',
 }) => {
   // Size classes for different spinner sizes
   const sizeClasses = {
     small: 'w-6 h-6',
     medium: 'w-12 h-12',
-    large: 'w-16 h-16'
+    large: 'w-16 h-16',
   };
 
   return (
-    <div 
+    <div
       className={`flex justify-center items-center min-h-screen relative ${className}`}
       role="status"
       aria-live="polite"
@@ -51,7 +51,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
               left: `${20 + (i * 10)}%`,
               top: `${30 + (i * 8)}%`,
               animationDelay: `${i * 0.2}s`,
-              animationDuration: `${1.5 + (i * 0.1)}s`
+              animationDuration: `${1.5 + (i * 0.1)}s`,
             }}
           ></div>
         ))}
@@ -63,7 +63,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
               left: `${70 + (i * 5)}%`,
               top: `${20 + (i * 10)}%`,
               animationDelay: `${i * 0.3}s`,
-              animationDuration: `${1.8 + (i * 0.1)}s`
+              animationDuration: `${1.8 + (i * 0.1)}s`,
             }}
           ></div>
         ))}
@@ -73,31 +73,31 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
         {/* Cosmic Spinner */}
         <div className="relative">
           {/* Outer ring */}
-          <div 
+          <div
             className={`${sizeClasses[size]} border-4 border-cosmic-glass rounded-full animate-spin`}
             style={{ borderTopColor: 'transparent' }}
             role="status"
             aria-hidden="true"
           />
-          
+
           {/* Inner gradient ring */}
-          <div 
-            className={`absolute inset-1 border-2 border-transparent rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse-glow`}
-            style={{ 
+          <div
+            className={'absolute inset-1 border-2 border-transparent rounded-full bg-gradient-to-r from-primary-500 to-secondary-500 animate-pulse-glow'}
+            style={{
               background: 'conic-gradient(from 0deg, #6b46c1, #3b82f6, #f093fb, #6b46c1)',
-              animation: 'spin 2s linear infinite'
+              animation: 'spin 2s linear infinite',
             }}
           />
-          
+
           {/* Center glow */}
           <div className="absolute inset-2 bg-gradient-to-br from-primary-400 to-secondary-400 rounded-full animate-pulse-glow opacity-30"></div>
-          
+
           {/* Floating center element */}
           <div className="absolute inset-3 bg-gradient-to-br from-accent-gold to-accent-orange rounded-full flex items-center justify-center animate-float">
             <div className="w-1 h-1 bg-white rounded-full"></div>
           </div>
         </div>
-        
+
         {/* Loading text with gradient */}
         <div className="text-center">
           <p className="text-text-primary font-sf-text font-medium text-lg bg-gradient-to-r from-primary-400 to-secondary-400 bg-clip-text text-transparent animate-pulse">
@@ -113,7 +113,7 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
             ))}
           </div>
         </div>
-        
+
         {/* Screen reader only text */}
         <span className="sr-only">
           {text}
@@ -123,4 +123,4 @@ const LoadingSpinner: React.FC<LoadingSpinnerProps> = ({
   );
 };
 
-export default LoadingSpinner; 
+export default LoadingSpinner;

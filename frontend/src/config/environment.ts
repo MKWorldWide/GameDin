@@ -1,38 +1,38 @@
 /**
  * Environment Configuration
- * 
+ *
  * This module manages environment-specific configuration for the GameDin application.
  * It provides type-safe access to environment variables and configuration settings
  * across different deployment environments (development, staging, production).
- * 
+ *
  * Feature Context:
  * - Centralized environment management
  * - Type-safe configuration access
  * - Environment-specific feature flags
  * - API endpoint management
  * - Security configuration
- * 
+ *
  * Usage Example:
  *   import { config } from './config/environment';
  *   const apiUrl = config.api.baseUrl;
  *   const isFeatureEnabled = config.features.chat;
- * 
+ *
  * Dependency Listing:
  * - AWS Amplify configuration
  * - Environment variables
  * - Feature flags
  * - API endpoints
- * 
+ *
  * Performance Considerations:
  * - Environment config is loaded once at startup
  * - No runtime configuration changes
  * - Optimized for tree-shaking
- * 
+ *
  * Security Implications:
  * - Sensitive values are managed through environment variables
  * - No hardcoded secrets in configuration
  * - Environment-specific security settings
- * 
+ *
  * Changelog:
  * - [v4.0.6] Created comprehensive environment configuration with TypeScript types and validation
  */
@@ -118,7 +118,7 @@ interface AppConfig {
  */
 const getEnvironment = (): Environment => {
   const env = process.env.NODE_ENV || 'development';
-  
+
   switch (env) {
     case 'production':
       return 'production';
@@ -334,14 +334,10 @@ export const validateConfig = (): void => {
     'REACT_APP_IDENTITY_POOL_ID',
   ];
 
-  const missingVars = requiredEnvVars.filter(
-    (varName) => !process.env[varName]
-  );
+  const missingVars = requiredEnvVars.filter((varName) => !process.env[varName]);
 
   if (missingVars.length > 0) {
-    console.warn(
-      `⚠️ Missing environment variables: ${missingVars.join(', ')}`
-    );
+    console.warn(`⚠️ Missing environment variables: ${missingVars.join(', ')}`);
   }
 
   if (config.debug) {
@@ -364,4 +360,4 @@ export const validateConfig = (): void => {
 /**
  * Export configuration as default
  */
-export default config; 
+export default config;

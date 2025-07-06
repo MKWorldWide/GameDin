@@ -1,5 +1,9 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import AddIcon from '@mui/icons-material/Add';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import LocationOnIcon from '@mui/icons-material/LocationOn';
+import SearchIcon from '@mui/icons-material/Search';
+import WorkIcon from '@mui/icons-material/Work';
 import {
   Box,
   Container,
@@ -25,13 +29,8 @@ import {
   Tooltip,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import AddIcon from '@mui/icons-material/Add';
-import SearchIcon from '@mui/icons-material/Search';
-import WorkIcon from '@mui/icons-material/Work';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import AccessTimeIcon from '@mui/icons-material/AccessTime';
-import { useAuth } from '../context/AuthContext';
+import React, { useState, useEffect } from 'react';
+
 
 interface IJob {
   id: string;
@@ -153,9 +152,9 @@ const Jobs: React.FC = () => {
   };
 
   const filteredJobs = jobs.filter(job => {
-    const matchesSearch =
-      job.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      job.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch
+      = job.title.toLowerCase().includes(searchQuery.toLowerCase())
+      || job.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesCategory = selectedCategory === 'all' || job.skills.includes(selectedCategory);
     const matchesType = selectedType === 'all' || job.type === selectedType;
     return matchesSearch && matchesCategory && matchesType;
@@ -372,14 +371,9 @@ const Jobs: React.FC = () => {
 };
 
 export default Jobs;
-=======
-import {
-  Box,
-  Typography,
-  Button,
-  Grid
-} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
 import { useUser } from '../hooks/useUser';
 
 export const Jobs = () => {
@@ -412,5 +406,4 @@ export const Jobs = () => {
   );
 };
 
-export default Jobs; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+export default Jobs;

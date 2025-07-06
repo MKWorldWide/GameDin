@@ -1,4 +1,15 @@
-<<<<<<< HEAD
+/**
+ * Social Types for GameDin Application
+ * 
+ * This module defines all social interaction types including users, posts,
+ * conversations, messages, and related interfaces for the gaming social platform.
+ * 
+ * @author GameDin Development Team
+ * @version 4.1.0
+ * @since 2024-07-06
+ */
+
+// Basic user types
 export interface User {
   id: string;
   username: string;
@@ -8,17 +19,14 @@ export interface User {
   level?: number;
 }
 
-export interface Post {
-  id: string;
-  title: string;
-  content: string;
-  author: User;
-  comments: Comment[];
-  likes: number;
-  createdAt: string;
-  updatedAt: string;
-}
+// Message and conversation types
+export type MessageType = 'text' | 'image' | 'video' | 'file' | 'system';
+export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
+export type ConversationType = 'PRIVATE' | 'GROUP';
+export type ParticipantRole = 'ADMIN' | 'MEMBER';
+export type UserPresence = 'online' | 'offline' | 'away' | 'busy';
 
+// Rich text content for posts
 export interface RichTextContent {
   blocks: Array<{
     id: string;
@@ -34,6 +42,18 @@ export interface RichTextContent {
   }>;
 }
 
+// Post and comment types
+export interface Post {
+  id: string;
+  title: string;
+  content: string;
+  author: User;
+  comments: Comment[];
+  likes: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 export interface Comment {
   id: string;
   content: string;
@@ -43,6 +63,7 @@ export interface Comment {
   updatedAt: string;
 }
 
+// Reaction and attachment types
 export interface Reaction {
   id: string;
   type: 'like' | 'love' | 'haha' | 'wow' | 'sad' | 'angry';
@@ -56,6 +77,7 @@ export interface Attachment {
   description?: string;
 }
 
+// Notification types
 export interface Notification {
   id: string;
   type: 'follow' | 'like' | 'comment' | 'message';
@@ -66,6 +88,7 @@ export interface Notification {
   updatedAt: string;
 }
 
+// Feed and activity types
 export interface FeedItem {
   id: string;
   type: 'post' | 'shared' | 'activity';
@@ -112,6 +135,7 @@ export interface FeedState {
   };
 }
 
+// WebSocket message types
 export interface WebSocketMessage {
   id: string;
   type: 'ACTIVITY_CREATE' | 'ACTIVITY_UPDATE' | 'ACTIVITY_DELETE' | 'MESSAGE_CREATE' | 'MESSAGE_UPDATE' | 'MESSAGE_DELETE';
@@ -124,6 +148,7 @@ export interface WebSocketMessage {
   timestamp: string;
 }
 
+// Cache configuration
 export interface CacheConfig {
   key: string;
   ttl: number;
@@ -131,93 +156,7 @@ export interface CacheConfig {
   dependencies: string[];
 }
 
-export interface IUser {
-  id: string;
-  username: string;
-  email: string;
-  name: string;
-  picture?: string;
-  avatar?: string;
-  bio?: string;
-  rank?: string;
-  createdAt: string;
-  updatedAt: string;
-  attributes?: {
-    email?: string;
-    name?: string;
-    picture?: string;
-    rank?: string;
-    [key: string]: any;
-  };
-}
-
-export interface IConversationParticipant {
-  id: string;
-  user: IUser;
-  conversation: IConversation;
-  lastRead?: string;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IAttachment {
-  id: string;
-  type: 'image' | 'video' | 'file';
-  url: string;
-  name: string;
-  size?: number;
-  mimeType?: string;
-}
-
-export interface IMessage {
-  id: string;
-  conversationId: string;
-  content: string;
-  author: IUser;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface IMessageInput {
-  content: string;
-  recipientId: string;
-  attachments?: File[];
-}
-
-export interface IConversation {
-  id: string;
-  title?: string;
-  description?: string;
-  type: 'PRIVATE' | 'GROUP';
-  participants: {
-    user: IUser;
-    role: 'ADMIN' | 'MEMBER';
-  }[];
-  lastMessage?: IMessage;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface ExtendedConversation extends IConversation {
-  name: string;
-}
-
-export interface IActivity {
-  id: string;
-  type: 'post' | 'achievement' | 'game';
-  content: string;
-  user: IUser;
-  likes: number;
-  isLiked: boolean;
-  comments: IComment[];
-  media?: IPostMedia;
-=======
-export type MessageType = 'text' | 'image' | 'video' | 'file' | 'system';
-export type MessageStatus = 'sending' | 'sent' | 'delivered' | 'read' | 'failed';
-export type ConversationType = 'PRIVATE' | 'GROUP';
-export type ParticipantRole = 'ADMIN' | 'MEMBER';
-export type UserPresence = 'online' | 'offline' | 'away' | 'busy';
-
+// Extended user interface with gaming features
 export interface IUser {
   id: string;
   email: string;
@@ -262,41 +201,41 @@ export interface IUser {
   attributes?: Record<string, string | undefined>;
 }
 
+// Friend relationship types
 export interface IFriend extends IUser {
   friendshipStatus: 'pending' | 'accepted' | 'blocked';
   friendSince: string;
 }
 
+// User profile types
 export interface IUserProfile {
   user: IUser;
   isCurrentUser: boolean;
 }
 
+// Post types with media support
 export interface IPost {
   id: string;
   content: string;
   author: IUser;
   likes: number;
   comments: number;
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
   createdAt: string;
   updatedAt: string;
+  media?: IPostMedia;
 }
 
 export interface IComment {
   id: string;
   content: string;
   author: IUser;
-<<<<<<< HEAD
   post: Post;
-=======
   postId: string;
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
   createdAt: string;
   updatedAt: string;
 }
 
-<<<<<<< HEAD
+// Achievement and game preference types
 export interface IAchievement {
   id: string;
   name: string;
@@ -318,16 +257,7 @@ export interface ISocialLink {
   url: string;
 }
 
-export interface IUserProfile {
-  id: string;
-  user: IUser;
-  posts: Post[];
-  followers: IUser[];
-  following: IUser[];
-  createdAt: string;
-  updatedAt: string;
-}
-
+// Media types
 export interface IPostMedia {
   type: 'image' | 'video';
   file: File;
@@ -335,6 +265,7 @@ export interface IPostMedia {
   url?: string;
 }
 
+// Game activity types
 export interface IGameActivity {
   id: string;
   game: {
@@ -351,14 +282,7 @@ export interface IGameActivity {
   updatedAt: string;
 }
 
-export interface GroupParticipant {
-  id: string;
-  role: 'owner' | 'admin' | 'member';
-  user: IUser;
-  conversation: IConversation;
-  createdAt: string;
-  updatedAt: string;
-=======
+// Message and conversation types
 export interface IMessage {
   id: string;
   conversationId: string;
@@ -427,6 +351,17 @@ export interface IConversation {
   };
 }
 
+// Group participant types
+export interface GroupParticipant {
+  id: string;
+  role: 'owner' | 'admin' | 'member';
+  user: IUser;
+  conversation: IConversation;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Message input types
 export interface IMessageInput {
   content: string;
   recipientId: string;
@@ -435,9 +370,9 @@ export interface IMessageInput {
     replyTo?: string;
     mentions?: string[];
   };
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
 }
 
+// Notification types
 export interface INotification {
   id: string;
   type: 'MESSAGE' | 'FRIEND_REQUEST' | 'ACHIEVEMENT' | 'SYSTEM';
@@ -449,52 +384,60 @@ export interface INotification {
     conversationId?: string;
     userId?: string;
     achievementId?: string;
-<<<<<<< HEAD
-    post?: Post;
-  };
-}
-=======
     post?: IPost;
   };
 }
 
-export interface Post {
+// Activity types
+export interface IActivity {
   id: string;
+  type: 'post' | 'achievement' | 'game';
   content: string;
-  author: IUser;
+  user: IUser;
   likes: number;
-  comments: number;
-  createdAt: string;
-  updatedAt: string;
+  isLiked: boolean;
+  lastMessage?: IMessage;
+  unreadCount: number;
+  createdAt: Date;
+  updatedAt: Date;
+  metadata?: {
+    theme?: string;
+    pinnedMessages?: string[];
+    customEmoji?: Record<string, string>;
+  };
 }
 
+// Pagination and response types
 export interface IPaginatedResponse<T> {
   items: T[];
   nextToken?: string;
   hasMore: boolean;
 }
 
+// WebSocket message types
 export interface IWebSocketMessage<T = unknown> {
   type: 'MESSAGE' | 'TYPING' | 'PRESENCE' | 'REACTION';
   payload: T;
   timestamp: Date;
 }
 
+// Typing indicator types
 export interface ITypingIndicator {
   conversationId: string;
   userId: string;
   isTyping: boolean;
 }
 
+// Presence update types
 export interface IPresenceUpdate {
   userId: string;
   status: UserPresence;
   lastSeen: Date;
 }
 
+// Error types
 export interface IChatError extends Error {
   code: string;
   details?: Record<string, unknown>;
   retry?: boolean;
 } 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

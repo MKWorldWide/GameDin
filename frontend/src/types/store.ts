@@ -54,14 +54,14 @@ export interface Store {
   loading: boolean;
   error: string | null;
   darkMode: boolean;
-  
+
   setUser: (user: IUser | null) => void;
   setIsAuthenticated: (value: boolean) => void;
   setLoading: (value: boolean) => void;
   setError: (error: string | null) => void;
   updateSettings: (settings: Partial<ISettings>) => void;
   toggleDarkMode: () => void;
-  
+
   login: (credentials: LoginCredentials) => Promise<void>;
   register: (userData: RegisterData) => Promise<void>;
   logout: () => Promise<void>;

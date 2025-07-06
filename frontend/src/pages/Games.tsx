@@ -2,7 +2,7 @@ import React from 'react';
 
 /**
  * Games Page Component
- * 
+ *
  * Features:
  * - Galaxy-themed game browsing interface
  * - Responsive grid layout
@@ -36,7 +36,7 @@ const Games: React.FC = () => {
 
           {/* Placeholder Game Cards */}
           {[...Array(5)].map((_, index) => (
-            <div 
+            <div
               key={index}
               className="bg-cosmic-glass backdrop-blur-md border border-white/10 rounded-2xl p-6 shadow-glass hover:shadow-glow transition-all duration-300 transform hover:scale-105 group"
             >
@@ -80,4 +80,4 @@ const Games: React.FC = () => {
   );
 };
 
-export default Games; 
+export default Games;

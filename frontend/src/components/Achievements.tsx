@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -91,7 +90,6 @@ const Achievements: React.FC = () => {
       <div className="text-center py-8">
         <p className="text-gray-600">Please sign in to view achievements</p>
       </div>
-=======
 import { Box, Typography, Paper, Grid } from '@mui/material';
 import { useUser } from '../hooks/useUser';
 import { useState, useEffect } from 'react';
@@ -121,17 +119,14 @@ export const Achievements = () => {
       <Box p={4}>
         <Typography>Please sign in to view your achievements</Typography>
       </Box>
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     );
   }
 
   if (loading) {
     return (
-<<<<<<< HEAD
       <div className="text-center py-8">
         <p className="text-gray-600">Loading achievements...</p>
       </div>
-=======
       <Box p={4}>
         <Typography>Loading achievements...</Typography>
       </Box>
@@ -143,12 +138,10 @@ export const Achievements = () => {
       <Box p={4}>
         <Typography>No achievements yet. Start playing to earn some!</Typography>
       </Box>
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     );
   }
 
   return (
-<<<<<<< HEAD
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div className="bg-white shadow rounded-lg p-6">
         <h2 className="text-2xl font-bold text-gray-900 mb-4">Achievements</h2>
@@ -161,7 +154,6 @@ export const Achievements = () => {
 };
 
 export default Achievements;
-=======
     <Box p={4}>
       <Typography variant="h4" gutterBottom>
         Your Achievements
@@ -186,4 +178,3 @@ export default Achievements;
 };
 
 export default Achievements; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

@@ -64,7 +64,7 @@ class MetricsTracker {
     validationType: string,
     success: boolean,
     context: string,
-    errors?: string[]
+    errors?: string[],
   ): void {
     const metric: ValidationMetric = {
       timestamp: Date.now(),
@@ -89,7 +89,7 @@ class MetricsTracker {
     guardName: string,
     success: boolean,
     value: unknown,
-    context: string
+    context: string,
   ): void {
     const metric: TypeGuardMetric = {
       timestamp: Date.now(),
@@ -195,7 +195,7 @@ export const trackTypeGuardUsage = (
   guardName: string,
   success: boolean,
   value: unknown,
-  context: string
+  context: string,
 ): void => {
   metricsTracker.trackTypeGuard(guardName, success, value, context);
 };
@@ -203,7 +203,7 @@ export const trackTypeGuardUsage = (
 export const measureTypeCheck = async <T>(
   type: string,
   context: string,
-  checkFn: () => Promise<T>
+  checkFn: () => Promise<T>,
 ): Promise<T> => {
   const start = performance.now();
   try {

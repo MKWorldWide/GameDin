@@ -21,7 +21,7 @@ const mockIntersectionObserver = jest.fn();
 mockIntersectionObserver.mockReturnValue({
   observe: () => null,
   unobserve: () => null,
-  disconnect: () => null
+  disconnect: () => null,
 });
 window.IntersectionObserver = mockIntersectionObserver;
 
@@ -33,4 +33,4 @@ window.ResizeObserver = jest.fn().mockImplementation(() => ({
 }));
 
 // Suppress console errors during tests
-console.error = jest.fn(); 
+console.error = jest.fn();

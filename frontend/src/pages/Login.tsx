@@ -1,8 +1,9 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
 import { Container, Paper, TextField, Button, Typography, Box } from '@mui/material';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
+
 import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
+
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -10,7 +11,7 @@ const Login: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(email, password);
@@ -60,14 +61,12 @@ const Login: React.FC = () => {
 };
 
 export default Login;
-=======
-import React, { useEffect, useMemo } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+
 import { useAuth } from '../hooks/useAuth';
 import { useForm } from '../hooks/useForm';
-import { loginFormSchema } from '../utils/validation';
 import { useNetwork } from '../hooks/useNetwork';
+import { loginFormSchema } from '../utils/validation';
 
 // Define the shape of our form data
 interface LoginFormData {
@@ -80,15 +79,15 @@ const Login: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { isOnline, connectionQuality } = useNetwork();
-  const { 
-    login, 
-    loginWithGoogle, 
-    loginWithDiscord, 
+  const {
+    login,
+    loginWithGoogle,
+    loginWithDiscord,
     loginWithTwitch,
     handleOAuthRedirect,
-    isAuthenticated, 
-    isLoading, 
-    error: authError 
+    isAuthenticated,
+    isLoading,
+    error: authError,
   } = useAuth();
 
   // Parse the redirect URL from query parameters
@@ -102,14 +101,14 @@ const Login: React.FC = () => {
     initialValues: {
       email: '',
       password: '',
-      rememberMe: false
+      rememberMe: false,
     },
     schema: loginFormSchema,
     validateOnBlur: true,
     validateOnChange: false,
-    onSubmit: async (values) => {
+    onSubmit: async(values) => {
       await login(values.email, values.password, values.rememberMe);
-    }
+    },
   });
 
   // Handle OAuth redirect on component mount
@@ -139,18 +138,18 @@ const Login: React.FC = () => {
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.5 }}
         >
-          <img 
-            className="mx-auto h-12 w-auto" 
-            src="/logo.png" 
-            alt="GameDin Logo" 
+          <img
+            className="mx-auto h-12 w-auto"
+            src="/logo.png"
+            alt="GameDin Logo"
           />
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
             Sign in to your account
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             Or{' '}
-            <Link 
-              to="/register" 
+            <Link
+              to="/register"
               className="font-medium text-indigo-600 hover:text-indigo-500"
               aria-label="Register for a new account"
             >
@@ -165,7 +164,7 @@ const Login: React.FC = () => {
           {/* Error message section */}
           <AnimatePresence mode="wait">
             {(form.errors.form || authError || oauthError) && (
-              <motion.div 
+              <motion.div
                 className="mb-4 bg-red-50 border-l-4 border-red-400 p-4"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
@@ -193,7 +192,7 @@ const Login: React.FC = () => {
           {/* Offline warning */}
           <AnimatePresence mode="wait">
             {!isOnline && (
-              <motion.div 
+              <motion.div
                 className="mb-4 bg-yellow-50 border-l-4 border-yellow-400 p-4"
                 initial={{ opacity: 0, height: 0 }}
                 animate={{ opacity: 1, height: 'auto' }}
@@ -221,8 +220,8 @@ const Login: React.FC = () => {
           <form className="space-y-6" onSubmit={form.handleSubmit} noValidate>
             {/* Email field */}
             <div>
-              <label 
-                htmlFor="email" 
+              <label
+                htmlFor="email"
                 className="block text-sm font-medium text-gray-700"
               >
                 Email address
@@ -234,17 +233,17 @@ const Login: React.FC = () => {
                   autoComplete="email"
                   required
                   className={`appearance-none block w-full px-3 py-2 border ${
-                    form.touched.email && form.errors.email 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                    form.touched.email && form.errors.email
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                   } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm`}
                   {...form.getFieldProps('email')}
-                  aria-describedby={form.touched.email && form.errors.email ? "email-error" : undefined}
+                  aria-describedby={form.touched.email && form.errors.email ? 'email-error' : undefined}
                 />
                 <AnimatePresence mode="wait">
                   {form.touched.email && form.errors.email && (
-                    <motion.p 
-                      className="mt-2 text-sm text-red-600" 
+                    <motion.p
+                      className="mt-2 text-sm text-red-600"
                       id="email-error"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -261,15 +260,15 @@ const Login: React.FC = () => {
             {/* Password field */}
             <div>
               <div className="flex items-center justify-between">
-                <label 
-                  htmlFor="password" 
+                <label
+                  htmlFor="password"
                   className="block text-sm font-medium text-gray-700"
                 >
                   Password
                 </label>
                 <div className="text-sm">
-                  <Link 
-                    to="/forgot-password" 
+                  <Link
+                    to="/forgot-password"
                     className="font-medium text-indigo-600 hover:text-indigo-500"
                     aria-label="Forgot your password"
                   >
@@ -284,17 +283,17 @@ const Login: React.FC = () => {
                   autoComplete="current-password"
                   required
                   className={`appearance-none block w-full px-3 py-2 border ${
-                    form.touched.password && form.errors.password 
-                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500' 
+                    form.touched.password && form.errors.password
+                      ? 'border-red-300 focus:ring-red-500 focus:border-red-500'
                       : 'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500'
                   } rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 sm:text-sm`}
                   {...form.getFieldProps('password')}
-                  aria-describedby={form.touched.password && form.errors.password ? "password-error" : undefined}
+                  aria-describedby={form.touched.password && form.errors.password ? 'password-error' : undefined}
                 />
                 <AnimatePresence mode="wait">
                   {form.touched.password && form.errors.password && (
-                    <motion.p 
-                      className="mt-2 text-sm text-red-600" 
+                    <motion.p
+                      className="mt-2 text-sm text-red-600"
                       id="password-error"
                       initial={{ opacity: 0, y: -10 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -408,5 +407,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+export default Login;

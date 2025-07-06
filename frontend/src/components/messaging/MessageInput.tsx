@@ -1,13 +1,12 @@
-<<<<<<< HEAD
-import { useState, FormEvent } from 'react';
+import {
+  Send as SendIcon,
+} from '@mui/icons-material';
 import {
   Box,
   IconButton,
   TextField,
 } from '@mui/material';
-import {
-  Send as SendIcon,
-} from '@mui/icons-material';
+import React, { useState, FormEvent, useRef, useCallback, useEffect } from 'react';
 
 interface MessageInputProps {
   onSubmit: (content: string) => void;
@@ -58,12 +57,11 @@ export default function MessageInput({ onSubmit }: MessageInputProps) {
     </Box>
   );
 }
-=======
-import React, { useState, useRef, useCallback, useEffect } from 'react';
+
 import { useStore } from '../../store/useStore';
 import { IMessageInput } from '../../types/social';
-import { debounce } from '../../utils/debounce';
 import type { Store } from '../../types/store';
+import { debounce } from '../../utils/debounce';
 
 interface MessageInputProps {
   onSubmit: (message: IMessageInput) => Promise<void>;
@@ -78,9 +76,9 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   onSubmit,
   onTyping,
   disabled = false,
-  placeholder = "Type a message...",
+  placeholder = 'Type a message...',
   maxLength = 1000,
-  conversationId
+  conversationId,
 }) => {
   const darkMode = useStore((state: Store) => state.darkMode);
   const [content, setContent] = useState('');
@@ -94,7 +92,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     debounce((isTyping: boolean) => {
       onTyping?.(isTyping);
     }, 500),
-    [onTyping]
+    [onTyping],
   );
 
   useEffect(() => {
@@ -119,7 +117,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() && attachments.length === 0) return;
     if (isSubmitting || disabled) return;
@@ -127,21 +125,21 @@ export const MessageInput: React.FC<MessageInputProps> = ({
     try {
       setIsSubmitting(true);
       const mentions = extractMentions(content);
-      
+
       await onSubmit({
         content: content.trim(),
         recipientId: conversationId,
         attachments,
         metadata: {
           mentions,
-          replyTo: undefined // Add reply-to functionality later
-        }
+          replyTo: undefined, // Add reply-to functionality later
+        },
       });
 
       setContent('');
       setAttachments([]);
       debouncedTyping(false);
-      
+
       if (textareaRef.current) {
         textareaRef.current.style.height = 'auto';
       }
@@ -199,7 +197,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           ))}
         </div>
       )}
-      
+
       <div className="input-actions">
         <textarea
           ref={textareaRef}
@@ -213,7 +211,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
           aria-label="Message input"
           className={`message-textarea ${darkMode ? 'dark' : ''}`}
         />
-        
+
         <div className="action-buttons">
           <input
             ref={fileInputRef}
@@ -224,7 +222,7 @@ export const MessageInput: React.FC<MessageInputProps> = ({
             aria-label="Attach files"
             accept="image/*,video/*,application/*"
           />
-          
+
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
@@ -272,8 +270,8 @@ export const MessageInput: React.FC<MessageInputProps> = ({
             remainingChars === 0
               ? 'text-red-500'
               : darkMode
-              ? 'text-gray-400'
-              : 'text-gray-500'
+                ? 'text-gray-400'
+                : 'text-gray-500'
           }`}
         >
           {remainingChars} characters remaining
@@ -283,5 +281,4 @@ export const MessageInput: React.FC<MessageInputProps> = ({
   );
 };
 
-MessageInput.displayName = 'MessageInput'; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+MessageInput.displayName = 'MessageInput';

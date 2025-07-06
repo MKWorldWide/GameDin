@@ -1,4 +1,12 @@
-import React, { useState, useRef, useEffect } from 'react';
+import {
+  MoreVert as MoreIcon,
+  Edit as EditIcon,
+  Delete as DeleteIcon,
+  Reply as ReplyIcon,
+  ThumbUp as LikeIcon,
+  ExpandMore as ExpandMoreIcon,
+  ExpandLess as ExpandLessIcon,
+} from '@mui/icons-material';
 import {
   Box,
   Typography,
@@ -13,16 +21,9 @@ import {
   Stack,
   Collapse,
 } from '@mui/material';
-import {
-  MoreVert as MoreIcon,
-  Edit as EditIcon,
-  Delete as DeleteIcon,
-  Reply as ReplyIcon,
-  ThumbUp as LikeIcon,
-  ExpandMore as ExpandMoreIcon,
-  ExpandLess as ExpandLessIcon,
-} from '@mui/icons-material';
 import { formatDistanceToNow } from 'date-fns';
+import React, { useState, useRef, useEffect } from 'react';
+
 import { useAuth } from '../../context/AuthContext';
 import { useUser } from '../../hooks/useUser';
 
@@ -80,7 +81,7 @@ const Comment: React.FC<CommentProps> = ({
   const editInputRef = useRef<HTMLInputElement>(null);
   const replyInputRef = useRef<HTMLInputElement>(null);
 
-  const handleEdit = async () => {
+  const handleEdit = async() => {
     if (editContent.trim() === comment.content) {
       setIsEditing(false);
       return;
@@ -90,7 +91,7 @@ const Comment: React.FC<CommentProps> = ({
     setIsEditing(false);
   };
 
-  const handleReply = async () => {
+  const handleReply = async() => {
     if (!replyContent.trim()) return;
 
     await onReply(replyContent);
@@ -297,7 +298,7 @@ const CommentSection: React.FC<CommentSectionProps> = ({
   const [newComment, setNewComment] = useState('');
   const commentInputRef = useRef<HTMLInputElement>(null);
 
-  const handleAddComment = async () => {
+  const handleAddComment = async() => {
     if (!newComment.trim()) return;
 
     await onAddComment(newComment);

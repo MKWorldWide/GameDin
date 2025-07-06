@@ -1,10 +1,11 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { useUser } from '../hooks/useUser';
 
 /**
  * Galaxy Home Page Component
- * 
+ *
  * Features Apple-inspired design with:
  * - Hero section with cosmic gradients
  * - Animated feature cards
@@ -23,12 +24,12 @@ export default function Home() {
         {/* Animated background */}
         <div className="absolute inset-0 bg-gradient-to-br from-cosmic-primary via-cosmic-secondary to-cosmic-tertiary"></div>
         <div className="absolute inset-0 bg-galaxy-radial animate-nebula-drift opacity-40"></div>
-        
+
         {/* Floating nebula elements */}
         <div className="absolute top-20 left-10 w-32 h-32 bg-gradient-to-br from-primary-500/20 to-secondary-500/20 rounded-full blur-3xl animate-float"></div>
         <div className="absolute bottom-20 right-10 w-40 h-40 bg-gradient-to-br from-accent-magenta/20 to-accent-cyan/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '1s' }}></div>
         <div className="absolute top-1/2 left-1/4 w-24 h-24 bg-gradient-to-br from-accent-gold/20 to-accent-orange/20 rounded-full blur-2xl animate-float" style={{ animationDelay: '2s' }}></div>
-        
+
         {/* Hero Content */}
         <div className="relative z-10 text-center px-4 max-w-6xl mx-auto">
           <div className="animate-fade-in">
@@ -42,14 +43,14 @@ export default function Home() {
                 GameDin
               </span>
             </h1>
-            
+
             {/* Subtitle */}
             <p className="text-xl md:text-2xl lg:text-3xl text-text-secondary mb-12 font-sf-text font-medium max-w-4xl mx-auto leading-relaxed">
-              Your cosmic gaming companion. Connect with fellow space explorers, 
-              track your achievements across the galaxy, and discover new adventures 
+              Your cosmic gaming companion. Connect with fellow space explorers,
+              track your achievements across the galaxy, and discover new adventures
               in the vast universe of gaming.
             </p>
-            
+
             {/* CTA Buttons */}
             {!user && (
               <div className="flex flex-col sm:flex-row gap-6 justify-center items-center animate-slide-in-up">
@@ -77,7 +78,7 @@ export default function Home() {
             )}
           </div>
         </div>
-        
+
         {/* Scroll indicator */}
         <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
           <div className="w-6 h-10 border-2 border-text-secondary rounded-full flex justify-center">
@@ -104,7 +105,7 @@ export default function Home() {
               Experience gaming like never before with our cosmic features designed for the modern gamer
             </p>
           </div>
-          
+
           {/* Feature Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {/* Connect with Gamers */}
@@ -119,7 +120,7 @@ export default function Home() {
                 Find and connect with fellow space explorers who share your interests and gaming style across the galaxy.
               </p>
             </div>
-            
+
             {/* Track Progress */}
             <div className="group bg-cosmic-glass backdrop-blur-md border border-white/10 rounded-3xl p-8 hover:shadow-glass transition-all duration-500 transform hover:-translate-y-2 animate-scale-in" style={{ animationDelay: '0.2s' }}>
               <div className="w-16 h-16 bg-gradient-to-br from-accent-gold to-accent-orange rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-star transition-all duration-300">
@@ -132,7 +133,7 @@ export default function Home() {
                 Keep track of your cosmic achievements and progress across different galaxies and gaming universes.
               </p>
             </div>
-            
+
             {/* Join Tournaments */}
             <div className="group bg-cosmic-glass backdrop-blur-md border border-white/10 rounded-3xl p-8 hover:shadow-glass transition-all duration-500 transform hover:-translate-y-2 animate-scale-in" style={{ animationDelay: '0.4s' }}>
               <div className="w-16 h-16 bg-gradient-to-br from-accent-magenta to-accent-cyan rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-nebula transition-all duration-300">

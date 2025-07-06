@@ -1,4 +1,13 @@
-import React, { useState } from 'react';
+import {
+  ThumbUp as LikeIcon,
+  Favorite as LoveIcon,
+  EmojiEmotions as HappyIcon,
+  SentimentVeryDissatisfied as SadIcon,
+  Celebration as CelebrationIcon,
+  Whatshot as FireIcon,
+  Share as ShareIcon,
+  Comment as CommentIcon,
+} from '@mui/icons-material';
 import {
   Box,
   IconButton,
@@ -12,16 +21,7 @@ import {
   styled,
   keyframes,
 } from '@mui/material';
-import {
-  ThumbUp as LikeIcon,
-  Favorite as LoveIcon,
-  EmojiEmotions as HappyIcon,
-  SentimentVeryDissatisfied as SadIcon,
-  Celebration as CelebrationIcon,
-  Whatshot as FireIcon,
-  Share as ShareIcon,
-  Comment as CommentIcon,
-} from '@mui/icons-material';
+import React, { useState } from 'react';
 
 export type ReactionType = 'like' | 'love' | 'happy' | 'sad' | 'celebrate' | 'fire';
 
@@ -120,7 +120,7 @@ const ReactionBar: React.FC<ReactionBarProps> = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const [animatingButton, setAnimatingButton] = useState<ReactionType | null>(null);
 
-  const handleReactionClick = async (type: ReactionType) => {
+  const handleReactionClick = async(type: ReactionType) => {
     setAnchorEl(null);
     setAnimatingButton(type);
     await onReact(type);
@@ -129,7 +129,7 @@ const ReactionBar: React.FC<ReactionBarProps> = ({
 
   const totalReactions = Object.values(reactions).reduce(
     (sum, reaction) => sum + reaction.count,
-    0
+    0,
   );
 
   const userReaction = Object.entries(reactions).find(([_, reaction]) => reaction.reacted)?.[0] as

@@ -34,19 +34,20 @@
  * - [v3.2.2] Created comprehensive mock API service with all GameDin endpoints and realistic responses
  */
 
-import { mockDatabase } from './mockDatabase';
-import { 
-  IUser, 
-  IPost, 
-  IMessage, 
-  IConversation, 
-  IGame, 
+import {
+  IUser,
+  IPost,
+  IMessage,
+  IConversation,
+  IGame,
   IAchievement,
   INotification,
   IActivity,
   IFriend,
-  IPaginatedResponse
+  IPaginatedResponse,
 } from '../types/social';
+
+import { mockDatabase } from './mockDatabase';
 
 /**
  * Mock API Response Interface
@@ -102,12 +103,12 @@ export class MockApiService {
       statusText: this.getStatusText(status),
       headers: {
         'content-type': 'application/json',
-        'cache-control': 'no-cache'
+        'cache-control': 'no-cache',
       },
       config: {
         url: this.baseURL,
-        method: 'GET'
-      }
+        method: 'GET',
+      },
     };
   }
 
@@ -119,11 +120,11 @@ export class MockApiService {
       response: {
         data: {
           message,
-          code: this.getErrorCode(status)
+          code: this.getErrorCode(status),
         },
         status,
-        statusText: this.getStatusText(status)
-      }
+        statusText: this.getStatusText(status),
+      },
     };
   }
 
@@ -138,7 +139,7 @@ export class MockApiService {
       401: 'Unauthorized',
       403: 'Forbidden',
       404: 'Not Found',
-      500: 'Internal Server Error'
+      500: 'Internal Server Error',
     };
     return statusTexts[status] || 'Unknown';
   }
@@ -152,7 +153,7 @@ export class MockApiService {
       401: 'UNAUTHORIZED',
       403: 'FORBIDDEN',
       404: 'NOT_FOUND',
-      500: 'INTERNAL_ERROR'
+      500: 'INTERNAL_ERROR',
     };
     return errorCodes[status] || 'UNKNOWN_ERROR';
   }
@@ -214,7 +215,7 @@ export class MockApiService {
         gamesPlayed: 0,
         gamesWon: 0,
         winRate: 0,
-        achievements: []
+        achievements: [],
       },
       settings: {
         profileVisibility: 'public',
@@ -227,23 +228,23 @@ export class MockApiService {
               friendRequests: true,
               messages: true,
               gameInvites: true,
-              achievements: true
-            }
-          }
+              achievements: true,
+            },
+          },
         },
         privacy: {
           showOnlineStatus: true,
           showLastSeen: true,
           allowFriendRequests: true,
-          showGameStats: true
-        }
+          showGameStats: true,
+        },
       },
       attributes: {
         email: userData.email,
         name: userData.username,
         picture: `https://api.dicebear.com/7.x/initials/svg?seed=${userData.username}`,
-        rank: 'Rookie'
-      }
+        rank: 'Rookie',
+      },
     };
 
     const token = `mock_token_${newUser.id}_${Date.now()}`;
@@ -283,7 +284,7 @@ export class MockApiService {
     const response: IPaginatedResponse<IUser> = {
       items: paginatedUsers,
       hasMore: endIndex < users.length,
-      nextToken: endIndex < users.length ? `page_${page + 1}` : undefined
+      nextToken: endIndex < users.length ? `page_${page + 1}` : undefined,
     };
 
     return this.createResponse(response);
@@ -334,7 +335,7 @@ export class MockApiService {
     const response: IPaginatedResponse<IPost> = {
       items: paginatedPosts,
       hasMore: endIndex < posts.length,
-      nextToken: endIndex < posts.length ? `page_${page + 1}` : undefined
+      nextToken: endIndex < posts.length ? `page_${page + 1}` : undefined,
     };
 
     return this.createResponse(response);
@@ -375,7 +376,7 @@ export class MockApiService {
     const response: IPaginatedResponse<IPost> = {
       items: paginatedPosts,
       hasMore: endIndex < posts.length,
-      nextToken: endIndex < posts.length ? `page_${page + 1}` : undefined
+      nextToken: endIndex < posts.length ? `page_${page + 1}` : undefined,
     };
 
     return this.createResponse(response);
@@ -415,7 +416,7 @@ export class MockApiService {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       type: 'general',
-      gameId: postData.gameId
+      gameId: postData.gameId,
     };
 
     return this.createResponse(newPost, 201);
@@ -459,8 +460,7 @@ export class MockApiService {
     await this.simulateDelay();
 
     const conversations = mockDatabase.getConversations().filter(conv =>
-      conv.participants.some(p => p.user.id === userId)
-    );
+      conv.participants.some(p => p.user.id === userId));
 
     return this.createResponse(conversations);
   }
@@ -481,7 +481,7 @@ export class MockApiService {
     const response: IPaginatedResponse<IMessage> = {
       items: paginatedMessages,
       hasMore: endIndex < messages.length,
-      nextToken: endIndex < messages.length ? `page_${page + 1}` : undefined
+      nextToken: endIndex < messages.length ? `page_${page + 1}` : undefined,
     };
 
     return this.createResponse(response);
@@ -506,7 +506,7 @@ export class MockApiService {
       author,
       status: 'sent',
       createdAt: new Date(),
-      updatedAt: new Date()
+      updatedAt: new Date(),
     };
 
     return this.createResponse(newMessage, 201);
@@ -542,7 +542,7 @@ export class MockApiService {
     const response: IPaginatedResponse<IGame> = {
       items: paginatedGames,
       hasMore: endIndex < games.length,
-      nextToken: endIndex < games.length ? `page_${page + 1}` : undefined
+      nextToken: endIndex < games.length ? `page_${page + 1}` : undefined,
     };
 
     return this.createResponse(response);
@@ -576,9 +576,8 @@ export class MockApiService {
     if (params?.userId) {
       const user = mockDatabase.getUser(params.userId);
       if (user) {
-        achievements = achievements.filter(achievement => 
-          user.gameStats.achievements.includes(achievement.id)
-        );
+        achievements = achievements.filter(achievement =>
+          user.gameStats.achievements.includes(achievement.id));
       }
     }
 
@@ -667,9 +666,8 @@ export class MockApiService {
 
     if (!type || type === 'posts') {
       const posts = mockDatabase.getPosts();
-      results.posts = posts.filter(post => 
-        post.content.toLowerCase().includes(query.toLowerCase())
-      );
+      results.posts = posts.filter(post =>
+        post.content.toLowerCase().includes(query.toLowerCase()));
     }
 
     return this.createResponse(results);
@@ -727,4 +725,4 @@ export class MockApiService {
 }
 
 // Export singleton instance
-export const mockApi = new MockApiService(); 
+export const mockApi = new MockApiService();

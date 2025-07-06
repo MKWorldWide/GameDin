@@ -1,58 +1,52 @@
 import { create } from 'zustand';
-<<<<<<< HEAD
 import { persist } from 'zustand/middleware';
+
+import { defaultSettings } from '../constants/settings';
+import type { IUser } from '../types/social';
 import type { Store, ISettings } from '../types/store';
-import { defaultSettings } from '../constants/settings';
-import type { IUser } from '../types/social';
 
-const useStore = create<Store>()(
-  persist(
-    (set) => ({
-      user: null,
-      settings: defaultSettings,
-      darkMode: false,
-      isAuthenticated: false,
-      loading: false,
-      error: null,
+const useStore = create<Store>()(persist(
+  (set) => ({
+    user: null,
+    settings: defaultSettings,
+    darkMode: false,
+    isAuthenticated: false,
+    loading: false,
+    error: null,
 
-      setUser: (user: IUser | null) => set({ user }),
-      updateSettings: (settings: Partial<ISettings>) => set((state) => ({ 
-        settings: { ...state.settings, ...settings } 
-      })),
-      toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
-      setIsAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
-      setLoading: (value: boolean) => set({ loading: value }),
-      setError: (error: string | null) => set({ error }),
+    setUser: (user: IUser | null) => set({ user }),
+    updateSettings: (settings: Partial<ISettings>) => set((state) => ({
+      settings: { ...state.settings, ...settings },
+    })),
+    toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
+    setIsAuthenticated: (value: boolean) => set({ isAuthenticated: value }),
+    setLoading: (value: boolean) => set({ loading: value }),
+    setError: (error: string | null) => set({ error }),
 
-      login: async (credentials: { email: string; password: string }) => {
-        set({ loading: true, error: null });
-        try {
-          // Implementation will be added later with AWS Amplify
-          set({ loading: false, isAuthenticated: true });
-        } catch (error) {
-          set({ loading: false, error: 'Login failed' });
-          throw error;
-        }
-      },
-
-      logout: () => {
-        set({ 
-          user: null, 
-          isAuthenticated: false 
-        });
+    login: async(credentials: { email: string; password: string }) => {
+      set({ loading: true, error: null });
+      try {
+        // Implementation will be added later with AWS Amplify
+        set({ loading: false, isAuthenticated: true });
+      } catch (error) {
+        set({ loading: false, error: 'Login failed' });
+        throw error;
       }
-    }),
-    {
-      name: 'gamedin-storage',
-    }
-  )
-);
-=======
+    },
+
+    logout: () => {
+      set({
+        user: null,
+        isAuthenticated: false,
+      });
+    },
+  }),
+  {
+    name: 'gamedin-storage',
+  },
+));
 import { Auth } from '@aws-amplify/auth';
-import { persist } from 'zustand/middleware';
-import type { Store } from '../types/store';
-import { defaultSettings } from '../constants/settings';
-import type { IUser } from '../types/social';
+
 import { LoginCredentials, RegisterData } from '../types/store';
 import { userMapper } from '../utils/userMapper';
 
@@ -69,11 +63,11 @@ export const useStore = create<Store>((set, get) => ({
   setLoading: (value: boolean) => set({ loading: value }),
   setError: (error: string | null) => set({ error }),
   updateSettings: (newSettings: Partial<ISettings>) => set((state) => ({
-    settings: { ...state.settings, ...newSettings }
+    settings: { ...state.settings, ...newSettings },
   })),
   toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
 
-  login: async (credentials: LoginCredentials) => {
+  login: async(credentials: LoginCredentials) => {
     const { setLoading, setError, setUser, setIsAuthenticated } = get();
     try {
       setLoading(true);
@@ -90,7 +84,7 @@ export const useStore = create<Store>((set, get) => ({
     }
   },
 
-  register: async (userData: RegisterData) => {
+  register: async(userData: RegisterData) => {
     const { setLoading, setError } = get();
     try {
       setLoading(true);
@@ -100,8 +94,8 @@ export const useStore = create<Store>((set, get) => ({
         password: userData.password,
         attributes: {
           email: userData.email,
-          name: userData.username
-        }
+          name: userData.username,
+        },
       });
       return Promise.resolve();
     } catch (error) {
@@ -112,7 +106,7 @@ export const useStore = create<Store>((set, get) => ({
     }
   },
 
-  logout: async () => {
+  logout: async() => {
     const { setLoading, setError, setUser, setIsAuthenticated } = get();
     try {
       setLoading(true);
@@ -128,7 +122,7 @@ export const useStore = create<Store>((set, get) => ({
     }
   },
 
-  resetPassword: async (email: string) => {
+  resetPassword: async(email: string) => {
     const { setLoading, setError } = get();
     try {
       setLoading(true);
@@ -143,7 +137,7 @@ export const useStore = create<Store>((set, get) => ({
     }
   },
 
-  confirmResetPassword: async (email: string, code: string, newPassword: string) => {
+  confirmResetPassword: async(email: string, code: string, newPassword: string) => {
     const { setLoading, setError } = get();
     try {
       setLoading(true);
@@ -158,7 +152,7 @@ export const useStore = create<Store>((set, get) => ({
     }
   },
 
-  resendConfirmationCode: async (email: string) => {
+  resendConfirmationCode: async(email: string) => {
     const { setLoading, setError } = get();
     try {
       setLoading(true);
@@ -171,8 +165,7 @@ export const useStore = create<Store>((set, get) => ({
     } finally {
       setLoading(false);
     }
-  }
+  },
 }));
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
 
-export default useStore; 
+export default useStore;

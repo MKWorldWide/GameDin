@@ -1,6 +1,6 @@
 /**
  * Galaxy Theme Configuration
- * 
+ *
  * A stunning Apple-inspired design system featuring a galaxy theme with:
  * - Deep cosmic purples and blues
  * - Nebula gradients and star-like accents
@@ -25,7 +25,7 @@ export const galaxyTheme = {
       800: '#2d1b69',
       900: '#1a103d',
     },
-    
+
     // Nebula Blues
     secondary: {
       50: '#eff6ff',
@@ -39,7 +39,7 @@ export const galaxyTheme = {
       800: '#1e40af',
       900: '#1e3a8a',
     },
-    
+
     // Cosmic Backgrounds
     background: {
       primary: '#0a0a0f', // Deep space black
@@ -48,7 +48,7 @@ export const galaxyTheme = {
       glass: 'rgba(255, 255, 255, 0.05)', // Glassmorphism
       glassHover: 'rgba(255, 255, 255, 0.1)',
     },
-    
+
     // Star-like Accents
     accent: {
       gold: '#ffd700', // Golden stars
@@ -57,7 +57,7 @@ export const galaxyTheme = {
       magenta: '#ff00ff', // Nebula pink
       orange: '#ff6b35', // Cosmic orange
     },
-    
+
     // Text Colors
     text: {
       primary: '#ffffff',
@@ -66,7 +66,7 @@ export const galaxyTheme = {
       muted: '#64748b',
       inverse: '#0a0a0f',
     },
-    
+
     // Status Colors
     status: {
       success: '#10b981', // Emerald
@@ -74,7 +74,7 @@ export const galaxyTheme = {
       error: '#ef4444', // Red
       info: '#3b82f6', // Blue
     },
-    
+
     // Gradients
     gradients: {
       primary: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
@@ -85,7 +85,7 @@ export const galaxyTheme = {
       glass: 'linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%)',
     },
   },
-  
+
   // Typography
   typography: {
     fontFamily: {
@@ -93,7 +93,7 @@ export const galaxyTheme = {
       secondary: '"SF Pro Text", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
       mono: '"SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, monospace',
     },
-    
+
     fontSize: {
       xs: '0.75rem',
       sm: '0.875rem',
@@ -109,7 +109,7 @@ export const galaxyTheme = {
       '8xl': '6rem',
       '9xl': '8rem',
     },
-    
+
     fontWeight: {
       light: '300',
       normal: '400',
@@ -119,7 +119,7 @@ export const galaxyTheme = {
       extrabold: '800',
       black: '900',
     },
-    
+
     lineHeight: {
       none: '1',
       tight: '1.25',
@@ -129,7 +129,7 @@ export const galaxyTheme = {
       loose: '2',
     },
   },
-  
+
   // Spacing
   spacing: {
     0: '0',
@@ -162,7 +162,7 @@ export const galaxyTheme = {
     80: '20rem',
     96: '24rem',
   },
-  
+
   // Border Radius
   borderRadius: {
     none: '0',
@@ -175,7 +175,7 @@ export const galaxyTheme = {
     '3xl': '1.5rem',
     full: '9999px',
   },
-  
+
   // Shadows
   shadows: {
     sm: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
@@ -192,7 +192,7 @@ export const galaxyTheme = {
     star: '0 0 15px rgba(255, 215, 0, 0.5)',
     glass: '0 8px 32px rgba(0, 0, 0, 0.1)',
   },
-  
+
   // Animations
   animations: {
     // Duration
@@ -202,7 +202,7 @@ export const galaxyTheme = {
       slow: '500ms',
       slower: '700ms',
     },
-    
+
     // Easing
     easing: {
       linear: 'linear',
@@ -211,7 +211,7 @@ export const galaxyTheme = {
       inOut: 'cubic-bezier(0.4, 0, 0.2, 1)',
       bounce: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
     },
-    
+
     // Keyframes
     keyframes: {
       fadeIn: {
@@ -252,7 +252,7 @@ export const galaxyTheme = {
       },
     },
   },
-  
+
   // Breakpoints
   breakpoints: {
     xs: '0px',
@@ -262,7 +262,7 @@ export const galaxyTheme = {
     xl: '1280px',
     '2xl': '1536px',
   },
-  
+
   // Z-index
   zIndex: {
     hide: '-1',
@@ -281,4 +281,4 @@ export const galaxyTheme = {
   },
 };
 
-export default galaxyTheme; 
+export default galaxyTheme;

@@ -2,9 +2,9 @@ import React, { lazy, Suspense, useMemo, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 // Import core components
-import Navigation from './components/Navigation';
 import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
+import Navigation from './components/Navigation';
 
 // Import development tools
 import { isDevelopment, isMockModeEnabled } from './config/development';
@@ -23,7 +23,7 @@ const TestRunner = lazy(() => import('./components/TestRunner'));
 /**
  * Main App component that serves as the root of the application
  * Features a stunning galaxy theme with Apple-inspired design principles
- * 
+ *
  * Design Features:
  * - Deep cosmic backgrounds with nebula gradients
  * - Glassmorphism effects for modern UI
@@ -31,7 +31,7 @@ const TestRunner = lazy(() => import('./components/TestRunner'));
  * - Premium typography with SF Pro fonts
  * - Responsive design optimized for all devices
  * - Accessibility-first approach with ARIA labels
- * 
+ *
  * Development Features:
  * - Mock data integration for local development
  * - Test runner interface for automated testing
@@ -44,7 +44,7 @@ const App: React.FC = () => {
   // Initialize development environment
   useEffect(() => {
     if (isDevelopment() && isMockModeEnabled()) {
-      const initializeDev = async () => {
+      const initializeDev = async() => {
         try {
           await mockService.initialize();
           const stats = mockService.getStats();
@@ -87,7 +87,7 @@ const App: React.FC = () => {
       <div className="absolute top-10 left-10 w-2 h-2 bg-accent-gold rounded-full animate-star-twinkle"></div>
       <div className="absolute top-20 right-20 w-1 h-1 bg-accent-cyan rounded-full animate-star-twinkle" style={{ animationDelay: '0.5s' }}></div>
       <div className="absolute bottom-20 left-1/4 w-1.5 h-1.5 bg-accent-magenta rounded-full animate-star-twinkle" style={{ animationDelay: '1s' }}></div>
-      
+
       <div className="relative z-10 text-center p-8 bg-cosmic-glass backdrop-blur-md rounded-2xl border border-white/10 shadow-glass">
         <div className="w-16 h-16 mx-auto mb-6 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center animate-pulse-glow">
           <svg className="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,7 +129,7 @@ const App: React.FC = () => {
           {/* Animated cosmic background */}
           <div className="fixed inset-0 bg-gradient-to-br from-cosmic-primary via-cosmic-secondary to-cosmic-tertiary"></div>
           <div className="fixed inset-0 bg-galaxy-radial animate-nebula-drift opacity-30"></div>
-          
+
           {/* Floating stars background */}
           <div className="fixed inset-0 pointer-events-none">
             {[...Array(20)].map((_, i) => (
@@ -140,7 +140,7 @@ const App: React.FC = () => {
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                   animationDelay: `${Math.random() * 2}s`,
-                  animationDuration: `${1 + Math.random()}s`
+                  animationDuration: `${1 + Math.random()}s`,
                 }}
               ></div>
             ))}
@@ -152,12 +152,12 @@ const App: React.FC = () => {
                   left: `${Math.random() * 100}%`,
                   top: `${Math.random() * 100}%`,
                   animationDelay: `${Math.random() * 2}s`,
-                  animationDuration: `${1.5 + Math.random()}s`
+                  animationDuration: `${1.5 + Math.random()}s`,
                 }}
               ></div>
             ))}
           </div>
-          
+
           {/* Development Mode Indicator */}
           {isDevelopment() && isMockModeEnabled() && (
             <div className="fixed top-4 left-4 z-50">
@@ -179,7 +179,7 @@ const App: React.FC = () => {
               )}
             </div>
           )}
-          
+
           {/* Development Tools Panel */}
           {isDevelopment() && showDevTools && (
             <div className="fixed top-0 left-0 w-full h-full z-40 bg-black/50 backdrop-blur-sm">
@@ -198,12 +198,12 @@ const App: React.FC = () => {
               </div>
             </div>
           )}
-          
+
           {/* Main content */}
           <div className="relative z-10">
             {/* Navigation component */}
             <Navigation />
-            
+
             {/* Main content area with lazy loading */}
             <main className="container mx-auto px-4 py-8 relative">
               <Suspense fallback={fallback}>
@@ -217,4 +217,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App; 
+export default App;

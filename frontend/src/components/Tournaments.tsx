@@ -1,5 +1,17 @@
-<<<<<<< HEAD
-import React, { useState, useEffect } from 'react';
+
+import { useAuth } from '../context/AuthContext';
+
+import AddIcon from '@mui/icons-material/Add';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import GroupIcon from '@mui/icons-material/Group';
+import GroupsIcon from '@mui/icons-material/Groups';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import SearchIcon from '@mui/icons-material/Search';
+import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
+import WhatshotIcon from '@mui/icons-material/Whatshot';
 import {
   Container,
   Box,
@@ -29,19 +41,7 @@ import {
   InputAdornment,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { useAuth } from '../context/AuthContext';
-import { tournamentsApi, teamsApi } from '../services/api';
-import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
-import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
-import GroupIcon from '@mui/icons-material/Group';
-import WhatshotIcon from '@mui/icons-material/Whatshot';
-import VideogameAssetIcon from '@mui/icons-material/VideogameAsset';
-import TimelineIcon from '@mui/icons-material/Timeline';
-import SearchIcon from '@mui/icons-material/Search';
-import AddIcon from '@mui/icons-material/Add';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import GroupsIcon from '@mui/icons-material/Groups';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import React, { useState, useEffect } from 'react';
 
 interface ITournament {
   id: string;
@@ -125,7 +125,7 @@ const Tournaments: React.FC = () => {
   });
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async() => {
       try {
         setLoading(true);
         const [tournamentsResponse, teamsResponse] = await Promise.all([
@@ -149,7 +149,7 @@ const Tournaments: React.FC = () => {
     fetchData();
   }, []);
 
-  const handleCreateTournament = async () => {
+  const handleCreateTournament = async() => {
     try {
       const response = await tournamentsApi.createTournament(createFormData);
       setTournaments(prev => [...prev, response.data]);
@@ -196,9 +196,9 @@ const Tournaments: React.FC = () => {
   };
 
   const filteredTournaments = tournaments.filter(tournament => {
-    const matchesSearch =
-      tournament.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      tournament.description.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchesSearch
+      = tournament.title.toLowerCase().includes(searchQuery.toLowerCase())
+      || tournament.description.toLowerCase().includes(searchQuery.toLowerCase());
     const matchesGame = selectedGame === 'all' || tournament.game.name === selectedGame;
     return matchesSearch && matchesGame;
   });
@@ -484,16 +484,10 @@ const Tournaments: React.FC = () => {
 };
 
 export default Tournaments;
-=======
-import {
-  Box,
-  Typography,
-  Button,
-  Grid,
-  Paper
-} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+
 import { useUser } from '../hooks/useUser';
+import { tournamentsApi, teamsApi } from '../services/api';
 
 export const Tournaments = () => {
   const { user } = useUser();
@@ -525,5 +519,4 @@ export const Tournaments = () => {
   );
 };
 
-export default Tournaments; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+export default Tournaments;

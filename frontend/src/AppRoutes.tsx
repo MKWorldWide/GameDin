@@ -1,28 +1,29 @@
-<<<<<<< HEAD
-import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
 import { Box } from '@mui/material';
+import React, { lazy, Suspense } from 'react';
+import { Routes, Route, Navigate } from 'react-router-dom';
+
+import Achievements from './components/Achievements';
+import ErrorBoundary from './components/ErrorBoundary';
+import Feed from './components/Feed';
+import Forums from './components/Forums';
+import GameAnalytics from './components/GameAnalytics';
+import Jobs from './components/Jobs';
+import Messaging from './components/Messaging';
+import Tournaments from './components/Tournaments';
 import { useUser } from './hooks/useUser';
 
 // Pages
-import Home from './pages/Home';
 import About from './pages/About';
-import Token from './pages/Token';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Profile from './pages/Profile';
-import NotificationSettings from './pages/NotificationSettings';
-import Games from './pages/Games';
 import GameDetails from './pages/GameDetails';
+import Games from './pages/Games';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import NotificationSettings from './pages/NotificationSettings';
+import Profile from './pages/Profile';
+import Register from './pages/Register';
+import Token from './pages/Token';
 
 // Components
-import Feed from './components/Feed';
-import Messaging from './components/Messaging';
-import Forums from './components/Forums';
-import Achievements from './components/Achievements';
-import Tournaments from './components/Tournaments';
-import Jobs from './components/Jobs';
-import GameAnalytics from './components/GameAnalytics';
 
 interface IPrivateRouteProps {
   children: React.ReactNode;
@@ -136,12 +137,8 @@ const AppRoutes: React.FC = () => {
 };
 
 export default AppRoutes;
-=======
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { lazy, Suspense } from 'react';
-import { useUser } from './hooks/useUser';
 import { motion, AnimatePresence } from 'framer-motion';
-import ErrorBoundary from './components/ErrorBoundary';
+
 
 // Lazy-loaded page components
 const Home = lazy(() => import('./pages/Home'));
@@ -172,10 +169,10 @@ const PageLoader = () => (
       transition={{ duration: 0.3 }}
       className="flex flex-col items-center space-y-4"
     >
-      <motion.div 
+      <motion.div
         className="h-16 w-16 border-4 rounded-full border-primary border-t-transparent"
         animate={{ rotate: 360 }}
-        transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
       />
       <motion.p
         initial={{ opacity: 0 }}
@@ -307,5 +304,4 @@ export default function AppRoutes() {
       </ErrorBoundary>
     </div>
   );
-} 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+}

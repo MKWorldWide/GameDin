@@ -280,10 +280,7 @@ export default defineConfig(({ mode }) => {
             utils: ['date-fns', 'zod', 'swr', 'framer-motion'],
             // AWS-specific chunks
             amplify: ['aws-amplify', '@aws-amplify/ui-react', '@aws-amplify/auth'],
-            awsServices: ['@aws-sdk/client-s3', '@aws-sdk/client-cloudfront', '@aws-sdk/client-lambda'],
-            workbox: ['workbox-core', 'workbox-expiration', 'workbox-precaching', 'workbox-routing', 'workbox-strategies'],
-            // Performance monitoring chunks
-            monitoring: ['@aws-sdk/client-cloudwatch', '@aws-sdk/client-xray']
+            workbox: ['workbox-core', 'workbox-expiration', 'workbox-precaching', 'workbox-routing', 'workbox-strategies']
           }
         },
         // Enhanced tree shaking for AWS optimization
@@ -347,19 +344,16 @@ export default defineConfig(({ mode }) => {
         'aws-amplify',
         '@aws-amplify/ui-react',
         '@aws-amplify/auth',
-        // AWS SDK v3 for better tree shaking
-        '@aws-sdk/client-s3',
-        '@aws-sdk/client-cloudfront',
-        '@aws-sdk/client-lambda',
-        '@aws-sdk/client-cloudwatch',
-        '@aws-sdk/client-xray',
+        // AWS SDK v3 for better tree shaking - only include if actually used
         'workbox-core',
         'workbox-expiration',
         'workbox-precaching',
         'workbox-routing',
         'workbox-strategies'
       ],
-      exclude: ['@aws-amplify/cli']
+      exclude: ['@aws-amplify/cli'],
+      // Force pre-bundling for problematic dependencies
+      force: true
     },
     // AWS-specific optimizations
     esbuild: {

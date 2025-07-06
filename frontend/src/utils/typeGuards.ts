@@ -15,12 +15,12 @@ export const isDefined = <T>(value: T | undefined | null): value is T =>
 // Complex type guards
 export const isUserProfile = (obj: unknown): obj is IUserProfile => {
   return (
-    isObject(obj) &&
-    'username' in obj &&
-    'email' in obj &&
-    'bio' in obj &&
-    'avatarUrl' in obj &&
-    'status' in obj
+    isObject(obj)
+    && 'username' in obj
+    && 'email' in obj
+    && 'bio' in obj
+    && 'avatarUrl' in obj
+    && 'status' in obj
   );
 };
 
@@ -57,7 +57,7 @@ export const validatePassword = (password: string): ValidationResult<string> => 
 export function assertType<T>(
   value: unknown,
   guard: (value: unknown) => value is T,
-  message = 'Type assertion failed'
+  message = 'Type assertion failed',
 ): asserts value is T {
   if (!guard(value)) {
     throw new TypeError(message);
@@ -72,15 +72,13 @@ export const isArrayOfType = <T>(arr: unknown, guard: (item: unknown) => item is
 // Object type guards
 export const hasProperty = <T extends object, K extends string>(
   obj: T,
-  prop: K
+  prop: K,
 ): obj is T & Record<K, unknown> => {
   return prop in obj;
 };
 
 // Async type guards
-export const isValidUserProfileAsync = async (
-  obj: unknown
-): Promise<ValidationResult<IUserProfile>> => {
+export const isValidUserProfileAsync = async(obj: unknown): Promise<ValidationResult<IUserProfile>> => {
   if (!isUserProfile(obj)) {
     return {
       isValid: false,

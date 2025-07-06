@@ -1,4 +1,7 @@
-import React, { useState } from 'react';
+import CommentIcon from '@mui/icons-material/Comment';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ShareIcon from '@mui/icons-material/Share';
 import {
   Card,
   CardHeader,
@@ -12,10 +15,8 @@ import {
   MenuItem,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShareIcon from '@mui/icons-material/Share';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import CommentIcon from '@mui/icons-material/Comment';
+import React, { useState } from 'react';
+
 import { useAuth } from '../context/AuthContext';
 
 const StyledCard = styled(Card)(({ theme }) => ({
@@ -70,7 +71,7 @@ const Post: React.FC<PostProps> = ({ post, onDelete }) => {
     }
   };
 
-  const handleLike = async () => {
+  const handleLike = async() => {
     try {
       // Replace with actual API call
       setLiked(!liked);
@@ -80,7 +81,7 @@ const Post: React.FC<PostProps> = ({ post, onDelete }) => {
     }
   };
 
-  const handleShare = async () => {
+  const handleShare = async() => {
     try {
       await navigator.share({
         title: `Post by ${post.author.username}`,

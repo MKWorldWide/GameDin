@@ -1,4 +1,5 @@
 import { Navigate } from 'react-router-dom';
+
 import useStore from '../../store/useStore';
 
 interface ProtectedRouteProps {
@@ -15,4 +16,4 @@ const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   return <>{children}</>;
 };
 
-export default ProtectedRoute; 
+export default ProtectedRoute;

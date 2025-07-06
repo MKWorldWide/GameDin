@@ -1,15 +1,16 @@
 /**
  * Root Store
- * 
+ *
  * This module combines all domain-specific store slices into a single Zustand store.
  * It provides a unified interface for accessing and manipulating application state.
  */
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+
 import { AuthSlice, createAuthSlice } from './slices/authSlice';
-import { SettingsSlice, createSettingsSlice } from './slices/settingsSlice';
 import { MessagingSlice, createMessagingSlice } from './slices/messagingSlice';
+import { SettingsSlice, createSettingsSlice } from './slices/settingsSlice';
 
 /**
  * Combined store type that includes all slices
@@ -19,27 +20,25 @@ export type RootStore = AuthSlice & SettingsSlice & MessagingSlice;
 /**
  * Create the root store with persistence
  */
-export const useStore = create<RootStore>()(
-  persist(
-    (...a) => ({
-      ...createAuthSlice(...a),
-      ...createSettingsSlice(...a),
-      ...createMessagingSlice(...a),
+export const useStore = create<RootStore>()(persist(
+  (...a) => ({
+    ...createAuthSlice(...a),
+    ...createSettingsSlice(...a),
+    ...createMessagingSlice(...a),
+  }),
+  {
+    name: 'gamedin-store',
+    storage: createJSONStorage(() => localStorage),
+    partialize: (state) => ({
+      // Only persist non-sensitive data
+      settings: state.settings,
+      darkMode: state.darkMode,
+      // Don't persist user credentials, just authentication state
+      isAuthenticated: state.isAuthenticated,
+      // Don't persist messages or conversations (will be fetched from API)
     }),
-    {
-      name: 'gamedin-store',
-      storage: createJSONStorage(() => localStorage),
-      partialize: (state) => ({
-        // Only persist non-sensitive data
-        settings: state.settings,
-        darkMode: state.darkMode,
-        // Don't persist user credentials, just authentication state
-        isAuthenticated: state.isAuthenticated,
-        // Don't persist messages or conversations (will be fetched from API)
-      }),
-    }
-  )
-);
+  },
+));
 
 /**
  * Hook for accessing only the auth slice
@@ -110,4 +109,4 @@ export const useMessagingStore = () => {
     createConversation: store.createConversation,
     leaveConversation: store.leaveConversation,
   };
-}; 
+};

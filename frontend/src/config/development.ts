@@ -41,25 +41,25 @@ interface DevelopmentConfig {
   enableMockMode: boolean;
   enableTestMode: boolean;
   enablePerformanceMode: boolean;
-  
+
   // Data Configuration
   mockDataSize: 'small' | 'medium' | 'large' | 'extreme';
   enableAutoDataGeneration: boolean;
-  
+
   // Development Tools
   enableDebugMode: boolean;
   enableLogging: boolean;
   enableErrorTracking: boolean;
-  
+
   // Testing Utilities
   enableTestRunner: boolean;
   enableTestDataExport: boolean;
   enableTestScenarioRunner: boolean;
-  
+
   // Performance Testing
   enableLoadTesting: boolean;
   loadTestLevel: 'low' | 'medium' | 'high' | 'extreme';
-  
+
   // Development Features
   enableHotReload: boolean;
   enableSourceMaps: boolean;
@@ -74,64 +74,64 @@ export const devConfig: DevelopmentConfig = {
   enableMockMode: true,
   enableTestMode: true,
   enablePerformanceMode: false,
-  
+
   // Data Configuration
   mockDataSize: 'medium',
   enableAutoDataGeneration: true,
-  
+
   // Development Tools
   enableDebugMode: true,
   enableLogging: true,
   enableErrorTracking: true,
-  
+
   // Testing Utilities
   enableTestRunner: true,
   enableTestDataExport: true,
   enableTestScenarioRunner: true,
-  
+
   // Performance Testing
   enableLoadTesting: false,
   loadTestLevel: 'medium',
-  
+
   // Development Features
   enableHotReload: true,
   enableSourceMaps: true,
-  enableDevTools: true
+  enableDevTools: true,
 };
 
 /**
  * Initialize development environment
  */
-export const initializeDevelopment = async (): Promise<void> => {
+export const initializeDevelopment = async(): Promise<void> => {
   if (devConfig.enableMockMode) {
     console.log('🚀 Initializing development environment with mock mode...');
-    
+
     try {
       // Initialize mock service
       await mockService.initialize();
-      
+
       // Configure mock service based on development settings
       mockService.updateConfig({
         enableMockMode: devConfig.enableMockMode,
         autoInitialize: devConfig.enableAutoDataGeneration,
         dataSize: devConfig.mockDataSize,
         enablePerformanceMode: devConfig.enablePerformanceMode,
-        enableTestMode: devConfig.enableTestMode
+        enableTestMode: devConfig.enableTestMode,
       });
-      
+
       // Log initialization status
       const stats = mockService.getStats();
       const health = mockService.getHealthStatus();
-      
+
       console.log('✅ Mock service initialized successfully');
       console.log('📊 Mock data statistics:', stats);
       console.log('🏥 Service health:', health);
-      
+
       // Enable development tools if configured
       if (devConfig.enableDevTools) {
         enableDevelopmentTools();
       }
-      
+
     } catch (error) {
       console.error('❌ Failed to initialize development environment:', error);
       throw error;
@@ -147,7 +147,7 @@ const enableDevelopmentTools = (): void => {
   if (typeof window !== 'undefined') {
     (window as any).mockService = mockService;
     (window as any).devConfig = devConfig;
-    
+
     console.log('🔧 Development tools enabled');
     console.log('💡 Access mock service via window.mockService');
     console.log('💡 Access dev config via window.devConfig');
@@ -161,19 +161,19 @@ export const getDevelopmentUtils = () => {
   return {
     // Mock service utilities
     mockService,
-    
+
     // Test utilities
     runTestCase: (testCaseId: string) => mockService.runTestCase(testCaseId),
     runTestScenario: (scenarioId: string) => mockService.runTestScenario(scenarioId),
     getTestCases: () => mockService.getTestCases(),
     getTestScenarios: () => mockService.getTestScenarios(),
-    
+
     // Data utilities
     exportData: () => mockService.exportData(),
     resetData: () => mockService.reset(),
-    generatePerformanceData: (level: 'low' | 'medium' | 'high' | 'extreme') => 
+    generatePerformanceData: (level: 'low' | 'medium' | 'high' | 'extreme') =>
       mockService.generatePerformanceData(level),
-    
+
     // Configuration utilities
     updateConfig: (newConfig: Partial<DevelopmentConfig>) => {
       Object.assign(devConfig, newConfig);
@@ -182,18 +182,18 @@ export const getDevelopmentUtils = () => {
         autoInitialize: devConfig.enableAutoDataGeneration,
         dataSize: devConfig.mockDataSize,
         enablePerformanceMode: devConfig.enablePerformanceMode,
-        enableTestMode: devConfig.enableTestMode
+        enableTestMode: devConfig.enableTestMode,
       });
     },
-    
+
     // Health and status utilities
     getHealthStatus: () => mockService.getHealthStatus(),
     getStats: () => mockService.getStats(),
-    
+
     // Development mode utilities
     isMockModeEnabled: () => devConfig.enableMockMode,
     isTestModeEnabled: () => devConfig.enableTestMode,
-    isDebugModeEnabled: () => devConfig.enableDebugMode
+    isDebugModeEnabled: () => devConfig.enableDebugMode,
   };
 };
 
@@ -231,4 +231,4 @@ if (isDevelopment()) {
   // initializeDevelopment().catch(console.error);
 }
 
-export default devConfig; 
+export default devConfig;

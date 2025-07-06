@@ -20,7 +20,7 @@ api.interceptors.request.use(
   },
   error => {
     return Promise.reject(error);
-  }
+  },
 );
 
 // Add a response interceptor
@@ -57,7 +57,7 @@ api.interceptors.response.use(
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export interface LoginCredentials {

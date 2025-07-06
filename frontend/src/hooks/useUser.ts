@@ -31,8 +31,10 @@
  */
 
 import { useCallback } from 'react';
-import { useAuth } from './useAuth';
+
 import { IUser } from '../types/social';
+
+import { useAuth } from './useAuth';
 
 /**
  * Interface for the user management hook
@@ -43,16 +45,16 @@ interface UseUserReturn {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
-  
+
   // Authentication
   login: (email: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   register: (email: string, password: string, username: string) => Promise<void>;
-  
+
   // User profile
   updateProfile: (updates: Partial<IUser>) => Promise<void>;
   uploadAvatar: (file: File) => Promise<string>;
-  
+
   // Utility functions
   isCurrentUser: (userId: string) => boolean;
 }
@@ -82,7 +84,7 @@ export const useUser = (): UseUserReturn => {
    * @param updates Partial<IUser> - fields to update
    * @returns Promise<void>
    */
-  const updateProfile = useCallback(async (updates: Partial<IUser>) => {
+  const updateProfile = useCallback(async(updates: Partial<IUser>) => {
     if (!user) {
       throw new Error('User not authenticated');
     }
@@ -98,7 +100,7 @@ export const useUser = (): UseUserReturn => {
    * @param file File - avatar image
    * @returns Promise<string> - URL of uploaded avatar
    */
-  const uploadAvatar = useCallback(async (file: File) => {
+  const uploadAvatar = useCallback(async(file: File) => {
     if (!user) {
       throw new Error('User not authenticated');
     }

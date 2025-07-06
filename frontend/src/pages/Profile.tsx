@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import useStore from '../store/useStore';
 import type { IUser, IUserProfile } from '../types/social';
 
@@ -17,7 +18,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<IUserProfile>({
     name: user?.name || '',
     bio: user?.bio || '',
-    picture: user?.picture || '/default-avatar.png'
+    picture: user?.picture || '/default-avatar.png',
   });
 
   const handleEdit = () => setIsEditing(true);
@@ -26,11 +27,11 @@ export default function Profile() {
     setProfile({
       name: user?.name || '',
       bio: user?.bio || '',
-      picture: user?.picture || '/default-avatar.png'
+      picture: user?.picture || '/default-avatar.png',
     });
   };
 
-  const handleSave = async () => {
+  const handleSave = async() => {
     // TODO: Implement save functionality
     setIsEditing(false);
   };

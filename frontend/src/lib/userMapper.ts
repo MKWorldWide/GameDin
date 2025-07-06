@@ -1,9 +1,10 @@
 import { CognitoUser } from '@aws-amplify/auth';
+
 import { IUser } from '../types/social';
 
 export const userMapper = (cognitoUser: CognitoUser): IUser => {
   const attributes = cognitoUser.attributes || {};
-  
+
   return {
     id: cognitoUser.username,
     email: cognitoUser.username, // In Cognito, username is email
@@ -35,6 +36,6 @@ export const userMapper = (cognitoUser: CognitoUser): IUser => {
         allowMessages: true,
       },
     },
-    attributes
+    attributes,
   };
-}; 
+};

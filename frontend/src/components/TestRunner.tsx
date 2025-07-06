@@ -33,8 +33,9 @@
  */
 
 import React, { useState, useEffect } from 'react';
-import { mockService } from '../services/mockService';
+
 import { getDevelopmentUtils } from '../config/development';
+import { mockService } from '../services/mockService';
 
 /**
  * Test Result Interface
@@ -79,7 +80,7 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
   const loadTestData = () => {
     const cases = devUtils.getTestCases();
     const scenarios = devUtils.getTestScenarios();
-    
+
     setTestCases(cases);
     setTestScenarios(scenarios);
   };
@@ -87,23 +88,23 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
   /**
    * Run a single test case
    */
-  const runTestCase = async (testCase: any) => {
+  const runTestCase = async(testCase: any) => {
     setRunningTests(prev => [...prev, testCase.id]);
-    
+
     try {
       const startTime = Date.now();
       const result = await devUtils.runTestCase(testCase.id);
       const duration = Date.now() - startTime;
-      
+
       const testResult: TestResult = {
         id: testCase.id,
         name: testCase.name,
         success: result.success,
         duration,
         error: result.error,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-      
+
       setTestResults(prev => [testResult, ...prev]);
     } catch (error) {
       const testResult: TestResult = {
@@ -112,9 +113,9 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
         success: false,
         duration: 0,
         error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-      
+
       setTestResults(prev => [testResult, ...prev]);
     } finally {
       setRunningTests(prev => prev.filter(id => id !== testCase.id));
@@ -124,23 +125,23 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
   /**
    * Run a test scenario
    */
-  const runTestScenario = async (scenario: any) => {
+  const runTestScenario = async(scenario: any) => {
     setRunningTests(prev => [...prev, scenario.id]);
-    
+
     try {
       const startTime = Date.now();
       const result = await devUtils.runTestScenario(scenario.id);
       const duration = Date.now() - startTime;
-      
+
       const testResult: TestResult = {
         id: scenario.id,
         name: scenario.name,
         success: result.success,
         duration,
         error: result.errors.length > 0 ? result.errors.join(', ') : undefined,
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-      
+
       setTestResults(prev => [testResult, ...prev]);
     } catch (error) {
       const testResult: TestResult = {
@@ -149,9 +150,9 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
         success: false,
         duration: 0,
         error: error instanceof Error ? error.message : 'Unknown error',
-        timestamp: new Date()
+        timestamp: new Date(),
       };
-      
+
       setTestResults(prev => [testResult, ...prev]);
     } finally {
       setRunningTests(prev => prev.filter(id => id !== scenario.id));
@@ -161,14 +162,13 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
   /**
    * Run all tests in a category
    */
-  const runCategoryTests = async (category: string) => {
+  const runCategoryTests = async(category: string) => {
     setIsLoading(true);
-    
+
     try {
-      const categoryTests = testCases.filter(test => 
-        category === 'all' || test.category === category
-      );
-      
+      const categoryTests = testCases.filter(test =>
+        category === 'all' || test.category === category);
+
       for (const test of categoryTests) {
         await runTestCase(test);
       }
@@ -217,7 +217,7 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
     const passed = testResults.filter(r => r.success).length;
     const failed = total - passed;
     const avgDuration = total > 0 ? testResults.reduce((sum, r) => sum + r.duration, 0) / total : 0;
-    
+
     return { total, passed, failed, avgDuration };
   };
 
@@ -229,7 +229,7 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
       <div className="test-runner-header">
         <h2>🧪 Test Runner</h2>
         <div className="test-runner-controls">
-          <button 
+          <button
             onClick={() => runCategoryTests(selectedCategory)}
             disabled={isLoading}
             className="btn btn-primary"
@@ -265,8 +265,8 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
       </div>
 
       <div className="test-runner-filters">
-        <select 
-          value={selectedCategory} 
+        <select
+          value={selectedCategory}
           onChange={(e) => setSelectedCategory(e.target.value)}
           className="filter-select"
         >
@@ -282,8 +282,8 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
           <option value="Edge Cases">Edge Cases</option>
         </select>
 
-        <select 
-          value={selectedPriority} 
+        <select
+          value={selectedPriority}
           onChange={(e) => setSelectedPriority(e.target.value)}
           className="filter-select"
         >
@@ -658,4 +658,4 @@ export const TestRunner: React.FC<TestRunnerProps> = ({ className = '' }) => {
   );
 };
 
-export default TestRunner; 
+export default TestRunner;

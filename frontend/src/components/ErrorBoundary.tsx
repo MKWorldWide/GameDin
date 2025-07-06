@@ -1,5 +1,5 @@
-import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { motion } from 'framer-motion';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
 
 /**
  * Interface for ErrorBoundary props
@@ -21,14 +21,14 @@ interface ErrorBoundaryState {
 /**
  * ErrorBoundary component to catch JavaScript errors anywhere in the child component tree.
  * Displays a fallback UI instead of crashing the whole app.
- * 
+ *
  * Features:
  * - Catches JavaScript errors in child components
  * - Logs errors for debugging
  * - Displays customizable fallback UI with animations
  * - Prevents app crashes from component errors
  * - Provides error recovery options
- * 
+ *
  * Usage:
  * <ErrorBoundary>
  *   <ComponentThatMightError />
@@ -37,10 +37,10 @@ interface ErrorBoundaryState {
 class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   constructor(props: ErrorBoundaryProps) {
     super(props);
-    this.state = { 
-      hasError: false, 
-      error: null, 
-      errorInfo: null 
+    this.state = {
+      hasError: false,
+      error: null,
+      errorInfo: null,
     };
   }
 
@@ -62,10 +62,10 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     // Log the error to an error reporting service
     console.error('ErrorBoundary caught an error:', error, errorInfo);
-    
+
     // In a production environment, you would send this to an error reporting service
     // Example: Sentry.captureException(error, { extra: errorInfo });
-    
+
     this.setState({ errorInfo });
   }
 
@@ -137,4 +137,4 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   }
 }
 
-export default ErrorBoundary; 
+export default ErrorBoundary;

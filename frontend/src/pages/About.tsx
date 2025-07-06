@@ -1,10 +1,9 @@
-<<<<<<< HEAD
-import React from 'react';
-import { Container, Typography, Box, Grid, Paper } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import TimelineIcon from '@mui/icons-material/Timeline';
 import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
 import GroupsIcon from '@mui/icons-material/Groups';
+import TimelineIcon from '@mui/icons-material/Timeline';
+import { Container, Typography, Box, Grid, Paper } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React from 'react';
 
 const PageContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -155,8 +154,6 @@ const About: React.FC = () => {
 };
 
 export default About;
-=======
-import { Box, Typography, Paper, Grid } from '@mui/material';
 
 export default function About() {
   return (
@@ -188,5 +185,4 @@ export default function About() {
       </Grid>
     </Box>
   );
-} 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+}

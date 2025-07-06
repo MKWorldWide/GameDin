@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import * as React from 'react';
 import {
   Box,
@@ -150,7 +149,6 @@ const Settings: React.FC = () => {
           types: {
             ...settings.notifications.emailNotifications.types,
             [key]: value,
-=======
 import React from 'react';
 import { useStore } from '../../store/useStore';
 import { ISettings } from '../../types/store';
@@ -189,14 +187,12 @@ export const Settings = () => {
           types: {
             ...store.settings.notifications.emailNotifications.types,
             [type]: !store.settings.notifications.emailNotifications.types[type]
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
           }
         }
       }
     });
   };
 
-<<<<<<< HEAD
   const handleFrequencyChange = (value: 'daily' | 'weekly' | 'real-time' | 'none') => {
     updateSettings({
       notifications: {
@@ -204,7 +200,6 @@ export const Settings = () => {
         emailNotifications: {
           ...settings.notifications.emailNotifications,
           frequency: value
-=======
   const handleNotificationChange = (key: keyof ISettings['notifications']['emailNotifications'], value: any) => {
     store.updateSettings({
       notifications: {
@@ -212,13 +207,11 @@ export const Settings = () => {
         emailNotifications: {
           ...store.settings.notifications.emailNotifications,
           [key]: value
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
         }
       }
     });
   };
 
-<<<<<<< HEAD
   const renderAccountSettings = () => (
     <Box>
       <Typography variant="h6" gutterBottom>Profile Information</Typography>
@@ -741,7 +734,6 @@ export const Settings = () => {
 };
 
 export default Settings; 
-=======
   const handlePrivacyChange = (key: keyof ISettings['privacy']) => {
     store.updateSettings({
       privacy: {
@@ -889,4 +881,3 @@ export default Settings;
     </div>
   );
 }; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

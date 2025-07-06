@@ -1,10 +1,11 @@
-import { useState } from 'react';
-import { IConversation, IUser } from '../../types/social';
 import {
   EllipsisVerticalIcon,
   ChevronRightIcon,
-  ChevronLeftIcon
+  ChevronLeftIcon,
 } from '@heroicons/react/24/outline';
+import { useState } from 'react';
+
+import { IConversation, IUser } from '../../types/social';
 
 interface ChatHeaderProps {
   conversation: IConversation;
@@ -27,7 +28,7 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
   onMuteConversation,
   onBlockUser,
   onToggleSidebar,
-  isSidebarOpen
+  isSidebarOpen,
 }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -180,4 +181,4 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({
       </div>
     </div>
   );
-}; 
+};

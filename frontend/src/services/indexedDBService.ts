@@ -1,6 +1,6 @@
 /**
  * IndexedDB Service
- * 
+ *
  * Provides a comprehensive offline data storage solution using Dexie.js.
  * This service handles:
  * - Local caching of API responses
@@ -10,7 +10,9 @@
  */
 
 import Dexie, { Table } from 'dexie';
+
 import { config } from '../config';
+
 import { User } from './authService';
 
 // Define store (table) names
@@ -138,32 +140,32 @@ class GameDinDatabase extends Dexie {
 
   constructor() {
     super('GameDinDB');
-    
+
     // Define the database schema
     this.version(1).stores({
       // Simple key-value cache for API responses
       cache: 'id, key, store, expires',
-      
+
       // Queue for operations to be performed when online
       offlineQueue: '++id, url, method, timestamp, status, priority',
-      
+
       // User messages for chat functionality
       messages: 'id, conversationId, senderId, receiverId, timestamp, status',
-      
+
       // User profiles for offline access
       users: 'id, email, username, lastUpdated',
-      
+
       // Game sessions for events and multiplayer
       gameSessions: 'id, gameId, hostId, startTime, lastUpdated',
-      
+
       // User's game library
       gameLibraries: 'id, userId, gameId, status, lastPlayed, isLocalOnly',
-      
+
       // Application state (settings, preferences, etc.)
       appState: 'id, key, lastUpdated',
     });
   }
-  
+
   /**
    * Initialize the database and perform cleanup
    */
@@ -171,18 +173,18 @@ class GameDinDatabase extends Dexie {
     try {
       // Clean up expired cache entries
       await this.cleanup();
-      
+
       // Process pending offline queue items if online
       if (navigator.onLine) {
         this.processPendingQueue();
       }
-      
+
       console.log('IndexedDB initialized successfully');
     } catch (error) {
       console.error('Failed to initialize IndexedDB:', error);
     }
   }
-  
+
   /**
    * Set a cached item with optional expiration
    * @param store Store name
@@ -192,13 +194,13 @@ class GameDinDatabase extends Dexie {
   async setCache(
     store: string,
     data: any,
-    expiresIn: number = 60 * 60 * 1000
+    expiresIn: number = 60 * 60 * 1000,
   ): Promise<void> {
     try {
       const now = Date.now();
       const id = data.id || `${store}-${now}`;
       const key = `${store}-${id}`;
-      
+
       await this.cache.put({
         id,
         key,
@@ -211,7 +213,7 @@ class GameDinDatabase extends Dexie {
       console.error(`Failed to cache item in ${store}:`, error);
     }
   }
-  
+
   /**
    * Get a cached item
    * @param store Store name
@@ -222,12 +224,12 @@ class GameDinDatabase extends Dexie {
     try {
       const now = Date.now();
       const key = `${store}-${id}`;
-      
+
       const cacheItem = await this.cache
         .where('key')
         .equals(key)
         .first();
-      
+
       // Return null if item doesn't exist or is expired
       if (!cacheItem || cacheItem.expires < now) {
         if (cacheItem && cacheItem.expires < now) {
@@ -236,14 +238,14 @@ class GameDinDatabase extends Dexie {
         }
         return null;
       }
-      
+
       return cacheItem.data as T;
     } catch (error) {
       console.error(`Failed to get cached item from ${store}:`, error);
       return null;
     }
   }
-  
+
   /**
    * Delete a cached item
    * @param store Store name
@@ -252,13 +254,13 @@ class GameDinDatabase extends Dexie {
   async deleteCache(store: string, id: string): Promise<void> {
     try {
       const key = `${store}-${id}`;
-      
+
       // Find the cache item by key
       const cacheItem = await this.cache
         .where('key')
         .equals(key)
         .first();
-      
+
       if (cacheItem) {
         await this.cache.delete(cacheItem.id);
       }
@@ -266,7 +268,7 @@ class GameDinDatabase extends Dexie {
       console.error(`Failed to delete cached item from ${store}:`, error);
     }
   }
-  
+
   /**
    * Add an item to the offline queue
    * @param url API endpoint
@@ -281,7 +283,7 @@ class GameDinDatabase extends Dexie {
     method: string,
     body: any,
     headers?: Record<string, string>,
-    priority: number = 1
+    priority: number = 1,
   ): Promise<number> {
     try {
       // Add to the queue
@@ -295,21 +297,21 @@ class GameDinDatabase extends Dexie {
         priority,
         status: 'pending',
       });
-      
+
       console.log(`Added item to offline queue: ${method} ${url}`);
-      
+
       // Process the queue if we're online
       if (navigator.onLine) {
         this.processPendingQueue();
       }
-      
+
       return id;
     } catch (error) {
       console.error('Failed to add item to offline queue:', error);
       throw error;
     }
   }
-  
+
   /**
    * Process pending items in the offline queue
    */
@@ -318,27 +320,27 @@ class GameDinDatabase extends Dexie {
     if (!navigator.onLine) {
       return;
     }
-    
+
     try {
       // Get all pending items, sorted by priority (high to low) and timestamp
       const pendingItems = await this.offlineQueue
         .where('status')
         .equals('pending')
         .sortBy(['priority', 'timestamp']);
-      
+
       if (pendingItems.length === 0) {
         return;
       }
-      
+
       console.log(`Processing ${pendingItems.length} offline queue items`);
-      
+
       // Process each item sequentially to avoid race conditions
       for (const item of pendingItems) {
         // Mark as processing
         await this.offlineQueue.update(item.id!, {
           status: 'processing',
         });
-        
+
         try {
           // Perform the API request
           const response = await fetch(item.url, {
@@ -350,24 +352,24 @@ class GameDinDatabase extends Dexie {
             body: item.method !== 'GET' ? JSON.stringify(item.body) : undefined,
             credentials: 'include', // Send cookies for auth
           });
-          
+
           if (!response.ok) {
             throw new Error(`HTTP error ${response.status}: ${response.statusText}`);
           }
-          
+
           // Mark as completed
           await this.offlineQueue.update(item.id!, {
             status: 'completed',
           });
-          
+
           console.log(`Successfully processed offline queue item: ${item.method} ${item.url}`);
         } catch (error) {
-          console.error(`Failed to process offline queue item:`, error);
-          
+          console.error('Failed to process offline queue item:', error);
+
           // Increment retry count
           const retryCount = item.retryCount + 1;
           const maxRetries = 5;
-          
+
           if (retryCount < maxRetries) {
             // Mark for retry
             await this.offlineQueue.update(item.id!, {
@@ -388,7 +390,7 @@ class GameDinDatabase extends Dexie {
       console.error('Error processing offline queue:', error);
     }
   }
-  
+
   /**
    * Store a message locally
    * @param message Message to store
@@ -397,20 +399,20 @@ class GameDinDatabase extends Dexie {
     try {
       // Generate ID if not provided
       const id = message.id || `msg_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-      
+
       // Store the message
       await this.messages.put({
         ...message,
         id,
       });
-      
+
       return id;
     } catch (error) {
       console.error('Failed to store message:', error);
       throw error;
     }
   }
-  
+
   /**
    * Get messages for a conversation
    * @param conversationId Conversation ID
@@ -421,7 +423,7 @@ class GameDinDatabase extends Dexie {
   async getMessages(
     conversationId: string,
     limit: number = 20,
-    offset: number = 0
+    offset: number = 0,
   ): Promise<Message[]> {
     try {
       return await this.messages
@@ -436,50 +438,45 @@ class GameDinDatabase extends Dexie {
       return [];
     }
   }
-  
+
   /**
    * Delete expired items from the cache
    */
   async cleanup(): Promise<void> {
     try {
       const now = Date.now();
-      
+
       // Delete expired cache items
       const expiredItems = await this.cache
         .where('expires')
         .below(now)
         .toArray();
-      
+
       if (expiredItems.length > 0) {
         console.log(`Cleaning up ${expiredItems.length} expired cache items`);
-        
-        await Promise.all(
-          expiredItems.map(item => this.cache.delete(item.id))
-        );
+
+        await Promise.all(expiredItems.map(item => this.cache.delete(item.id)));
       }
-      
+
       // Clean up completed/failed queue items older than 7 days
       const sevenDaysAgo = now - 7 * 24 * 60 * 60 * 1000;
       const oldQueueItems = await this.offlineQueue
         .where('timestamp')
         .below(sevenDaysAgo)
-        .and(item => 
-          item.status === 'completed' || item.status === 'failed'
-        )
+        .and(item =>
+          item.status === 'completed' || item.status === 'failed')
         .toArray();
-      
+
       if (oldQueueItems.length > 0) {
         console.log(`Cleaning up ${oldQueueItems.length} old queue items`);
-        
-        await Promise.all(
-          oldQueueItems.map(item => this.offlineQueue.delete(item.id!))
-        );
+
+        await Promise.all(oldQueueItems.map(item => this.offlineQueue.delete(item.id!)));
       }
     } catch (error) {
       console.error('Error during cache cleanup:', error);
     }
   }
-  
+
   /**
    * Save app state (settings, preferences, etc.)
    * @param key State key
@@ -489,7 +486,7 @@ class GameDinDatabase extends Dexie {
     try {
       const now = Date.now();
       const id = key;
-      
+
       await this.appState.put({
         id,
         key,
@@ -500,7 +497,7 @@ class GameDinDatabase extends Dexie {
       console.error('Failed to save app state:', error);
     }
   }
-  
+
   /**
    * Get app state value
    * @param key State key
@@ -512,14 +509,14 @@ class GameDinDatabase extends Dexie {
         .where('key')
         .equals(key)
         .first();
-      
+
       return state ? state.value as T : null;
     } catch (error) {
       console.error('Failed to get app state:', error);
       return null;
     }
   }
-  
+
   /**
    * Store user's game library item
    * @param gameItem Game library item
@@ -528,20 +525,20 @@ class GameDinDatabase extends Dexie {
     try {
       // Generate ID if not provided
       const id = gameItem.id || `game_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-      
+
       // Store the game library item
       await this.gameLibraries.put({
         ...gameItem,
         id,
       });
-      
+
       return id;
     } catch (error) {
       console.error('Failed to store game library item:', error);
       throw error;
     }
   }
-  
+
   /**
    * Get user's game library
    * @param userId User ID
@@ -558,7 +555,7 @@ class GameDinDatabase extends Dexie {
       return [];
     }
   }
-  
+
   /**
    * Store a game session
    * @param session Game session
@@ -567,21 +564,21 @@ class GameDinDatabase extends Dexie {
     try {
       // Generate ID if not provided
       const id = session.id || `session_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-      
+
       // Store the game session
       await this.gameSessions.put({
         ...session,
         id,
         lastUpdated: Date.now(),
       });
-      
+
       return id;
     } catch (error) {
       console.error('Failed to store game session:', error);
       throw error;
     }
   }
-  
+
   /**
    * Get game sessions
    * @param filters Filter options
@@ -604,34 +601,33 @@ class GameDinDatabase extends Dexie {
         limit = 20,
         offset = 0,
       } = filters;
-      
+
       let collection = this.gameSessions.toCollection();
-      
+
       // Apply filters
       if (hostId) {
         collection = this.gameSessions.where('hostId').equals(hostId);
       } else if (gameId) {
         collection = this.gameSessions.where('gameId').equals(gameId);
       }
-      
+
       // Get all sessions that match the filter
       let sessions = await collection.toArray();
-      
+
       // Apply post-query filters
       if (participantId) {
-        sessions = sessions.filter(session => 
-          session.participants.some(p => p.userId === participantId)
-        );
+        sessions = sessions.filter(session =>
+          session.participants.some(p => p.userId === participantId));
       }
-      
+
       if (futureOnly) {
         const now = Date.now();
         sessions = sessions.filter(session => session.startTime > now);
       }
-      
+
       // Sort by start time (ascending)
       sessions.sort((a, b) => a.startTime - b.startTime);
-      
+
       // Apply pagination
       return sessions.slice(offset, offset + limit);
     } catch (error) {
@@ -639,7 +635,7 @@ class GameDinDatabase extends Dexie {
       return [];
     }
   }
-  
+
   /**
    * Clear all data (for logout or reset)
    */
@@ -654,7 +650,7 @@ class GameDinDatabase extends Dexie {
         this.appState.clear(),
         // Keep offline queue to ensure pending operations are completed
       ]);
-      
+
       console.log('All IndexedDB data cleared successfully');
     } catch (error) {
       console.error('Failed to clear IndexedDB data:', error);
@@ -677,7 +673,7 @@ export const addToOfflineQueue = (
   method: string,
   body: any,
   headers?: Record<string, string>,
-  priority: number = 1
+  priority: number = 1,
 ): Promise<number> => {
   return indexedDBService.addToQueue(url, method, body, headers, priority);
 };
@@ -689,7 +685,7 @@ export const processPendingQueue = (): Promise<void> => {
 export const getOfflineMessages = (
   conversationId: string,
   limit: number = 20,
-  offset: number = 0
+  offset: number = 0,
 ): Promise<Message[]> => {
   return indexedDBService.getMessages(conversationId, limit, offset);
 };
@@ -698,4 +694,4 @@ export const storeOfflineMessage = (message: Omit<Message, 'id'> & { id?: string
   return indexedDBService.storeMessage(message);
 };
 
-export default indexedDBService; 
+export default indexedDBService;

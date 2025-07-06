@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
-import { Container, Paper, TextField, Button, Typography, Box } from '@mui/material';
-import { useAuth } from '../context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { signUp } from '@aws-amplify/auth';
+import { Container, Paper, TextField, Button, Typography, Box } from '@mui/material';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { useAuth } from '../context/AuthContext';
+
 
 const Register: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -11,7 +13,7 @@ const Register: React.FC = () => {
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     try {
       await signUp({
@@ -20,9 +22,9 @@ const Register: React.FC = () => {
         options: {
           userAttributes: {
             email,
-            name: username
-          }
-        }
+            name: username,
+          },
+        },
       });
       await login(email, password);
       navigate('/');

@@ -1,12 +1,13 @@
 /**
  * Authentication Hook
- * 
+ *
  * This hook provides a clean interface for authentication operations,
  * abstracting the underlying AWS Amplify Auth implementation.
  * It uses the auth slice of the store for state management.
  */
 
 import { useEffect } from 'react';
+
 import { useAuthStore } from '../store/store';
 import { IUser } from '../types/social';
 
@@ -48,7 +49,7 @@ export const useAuth = (): UseAuthReturn => {
 
   // Check for existing session on mount
   useEffect(() => {
-    const checkSession = async () => {
+    const checkSession = async() => {
       try {
         await refreshSession();
       } catch (error) {
@@ -63,12 +64,12 @@ export const useAuth = (): UseAuthReturn => {
   }, [isAuthenticated, isLoading, refreshSession]);
 
   // Simplified login function
-  const login = async (email: string, password: string) => {
+  const login = async(email: string, password: string) => {
     await storeLogin({ email, password });
   };
 
   // Simplified register function
-  const register = async (email: string, password: string, username: string) => {
+  const register = async(email: string, password: string, username: string) => {
     await storeRegister({ email, password, username });
   };
 
@@ -85,4 +86,4 @@ export const useAuth = (): UseAuthReturn => {
     resendConfirmationCode: storeResendConfirmationCode,
     confirmSignUp: storeConfirmSignUp,
   };
-}; 
+};

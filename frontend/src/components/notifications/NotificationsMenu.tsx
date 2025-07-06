@@ -1,11 +1,11 @@
-<<<<<<< HEAD
-import React from 'react';
 import {
   List,
   ListItem,
   ListItemText,
   Menu,
 } from '@mui/material';
+import React, { useState } from 'react';
+
 import { INotification } from '../../types/social';
 
 interface NotificationsMenuProps {
@@ -57,8 +57,7 @@ const NotificationsMenu: React.FC<NotificationsMenuProps> = ({
 };
 
 export default NotificationsMenu;
-=======
-import { useState } from 'react';
+
 import type { INotification } from '../../types/social';
 
 interface NotificationsMenuProps {
@@ -181,5 +180,4 @@ export default function NotificationsMenu({
       </div>
     </div>
   );
-} 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+}

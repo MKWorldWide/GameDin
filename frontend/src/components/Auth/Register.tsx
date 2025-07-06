@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
 import { useAuth } from '../../hooks/useAuth';
 
 const Register = () => {
@@ -22,7 +23,7 @@ const Register = () => {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     setError('');
 
@@ -143,4 +144,4 @@ const Register = () => {
   );
 };
 
-export default Register; 
+export default Register;

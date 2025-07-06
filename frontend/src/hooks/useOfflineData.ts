@@ -1,10 +1,10 @@
 /**
  * useOfflineData Hook
- * 
+ *
  * This custom React hook provides a simple interface for components to work with
- * offline data stored in IndexedDB. It handles data fetching, caching, and 
+ * offline data stored in IndexedDB. It handles data fetching, caching, and
  * synchronization with the server, offering a seamless offline-first experience.
- * 
+ *
  * Features:
  * - Type-safe data access with TypeScript generics
  * - Optimistic UI updates for better UX
@@ -15,10 +15,11 @@
  */
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import indexedDBService from '../services/indexedDBService';
-import { addToOfflineQueue } from '../services/indexedDBService';
-import { useNetwork } from './useNetwork';
+
 import { config } from '../config';
+import indexedDBService, { addToOfflineQueue } from '../services/indexedDBService';
+
+import { useNetwork } from './useNetwork';
 
 // Types of data operations
 export type DataOperation = 'create' | 'update' | 'delete' | 'read';
@@ -27,28 +28,28 @@ export type DataOperation = 'create' | 'update' | 'delete' | 'read';
 export interface UseOfflineDataOptions<T> {
   // The store/table name in IndexedDB
   storeName: string;
-  
+
   // Function to fetch data from API when online
   fetchFn?: (id?: string) => Promise<T>;
-  
+
   // API endpoint for CRUD operations
   apiEndpoint?: string;
-  
+
   // Cache expiration time in milliseconds (default: 1 hour)
   cacheTime?: number;
-  
+
   // Whether to skip initial fetch (default: false)
   skipInitialFetch?: boolean;
-  
+
   // Function to generate a unique ID for new items
   generateId?: () => string;
-  
+
   // Function to determine if local data is stale and needs refresh
   isStale?: (data: T, cachedAt: number) => boolean;
-  
+
   // Function to resolve conflicts between local and server data
   resolveConflict?: (localData: T, serverData: T) => T;
-  
+
   // Whether to use optimistic updates (default: true)
   optimisticUpdates?: boolean;
 }
@@ -60,7 +61,7 @@ export interface UseOfflineDataOptions<T> {
  */
 function useOfflineData<T extends { id: string }>(
   id?: string,
-  options: UseOfflineDataOptions<T> = { storeName: '' }
+  options: UseOfflineDataOptions<T> = { storeName: '' },
 ) {
   // Extract options with defaults
   const {
@@ -89,28 +90,28 @@ function useOfflineData<T extends { id: string }>(
   const isMounted = useRef(true);
 
   // Function to fetch data from server
-  const fetchFromServer = useCallback(async (): Promise<T | null> => {
+  const fetchFromServer = useCallback(async(): Promise<T | null> => {
     if (!fetchFn || !isOnline || !id) return null;
 
     try {
       setIsSyncing(true);
       const serverData = await fetchFn(id);
-      
+
       if (serverData) {
         // Cache the server data
         await indexedDBService.setCache(
           storeName,
           serverData,
-          cacheTime
+          cacheTime,
         );
-        
+
         // Update state if component is still mounted
         if (isMounted.current) {
           setData(serverData);
           setLastUpdated(Date.now());
         }
       }
-      
+
       return serverData;
     } catch (err) {
       if (isMounted.current) {
@@ -126,7 +127,7 @@ function useOfflineData<T extends { id: string }>(
   }, [fetchFn, isOnline, id, storeName, cacheTime]);
 
   // Function to get data (from cache or server)
-  const getData = useCallback(async () => {
+  const getData = useCallback(async() => {
     if (!id) {
       setIsLoading(false);
       return;
@@ -138,16 +139,15 @@ function useOfflineData<T extends { id: string }>(
 
       // Try to get data from cache first
       const cachedData = await indexedDBService.getCache<T & { lastUpdated?: number }>(storeName, id);
-      
+
       if (cachedData) {
         setData(cachedData);
         setLastUpdated(cachedData.lastUpdated || 0);
-        
+
         // If online and data is stale, fetch from server in background
         if (isOnline && isStale(cachedData, cachedData.lastUpdated || 0)) {
-          fetchFromServer().catch(err => 
-            console.error(`Background refresh failed for ${storeName}:`, err)
-          );
+          fetchFromServer().catch(err =>
+            console.error(`Background refresh failed for ${storeName}:`, err));
         }
       } else if (isOnline) {
         // If no cached data and online, fetch from server
@@ -162,15 +162,15 @@ function useOfflineData<T extends { id: string }>(
   }, [id, storeName, isOnline, fetchFromServer, isStale]);
 
   // Function to create/update data
-  const saveData = useCallback(async (newData: Partial<T>): Promise<T | null> => {
+  const saveData = useCallback(async(newData: Partial<T>): Promise<T | null> => {
     try {
       setError(null);
-      
+
       // Determine if this is an update or create operation
       const isUpdate = Boolean(id) || Boolean(newData.id);
       const operation: DataOperation = isUpdate ? 'update' : 'create';
       const itemId = id || newData.id || generateId();
-      
+
       // Merge with existing data if updating
       let updatedData: T;
       if (isUpdate && data) {
@@ -185,34 +185,34 @@ function useOfflineData<T extends { id: string }>(
           id: itemId,
         } as T;
       }
-      
+
       // Apply optimistic update if enabled
       if (optimisticUpdates) {
         setData(updatedData);
         setLastUpdated(Date.now());
       }
-      
+
       // Add timestamp if not present
       if (!('lastUpdated' in updatedData)) {
         (updatedData as any).lastUpdated = Date.now();
       }
-      
+
       // Cache the updated data locally
       await indexedDBService.setCache(
         storeName,
         updatedData,
-        cacheTime
+        cacheTime,
       );
-      
+
       // If online and endpoint is provided, sync with server
       if (isOnline && apiEndpoint) {
         try {
-          const url = isUpdate 
+          const url = isUpdate
             ? `${apiEndpoint}/${itemId}`
             : apiEndpoint;
-            
+
           const method = isUpdate ? 'PATCH' : 'POST';
-          
+
           const response = await fetch(url, {
             method,
             headers: {
@@ -220,34 +220,34 @@ function useOfflineData<T extends { id: string }>(
             },
             body: JSON.stringify(updatedData),
           });
-          
+
           if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
-          
+
           const serverData = await response.json();
-          
+
           // Resolve any conflicts if necessary
           const finalData = resolveConflict(updatedData, serverData);
-          
+
           // Update cache with server data
           await indexedDBService.setCache(
             storeName,
             finalData,
-            cacheTime
+            cacheTime,
           );
-          
+
           setData(finalData);
           return finalData;
         } catch (err) {
           console.error(`Failed to sync ${storeName} with server:`, err);
-          
+
           // Still return optimistic data but queue for sync
           if (apiEndpoint) {
             await addToOfflineQueue(
               isUpdate ? `${apiEndpoint}/${itemId}` : apiEndpoint,
               isUpdate ? 'PATCH' : 'POST',
-              updatedData
+              updatedData,
             );
           }
         }
@@ -256,10 +256,10 @@ function useOfflineData<T extends { id: string }>(
         await addToOfflineQueue(
           isUpdate ? `${apiEndpoint}/${itemId}` : apiEndpoint,
           isUpdate ? 'PATCH' : 'POST',
-          updatedData
+          updatedData,
         );
       }
-      
+
       return updatedData;
     } catch (err) {
       setError(err as Error);
@@ -269,41 +269,41 @@ function useOfflineData<T extends { id: string }>(
   }, [id, data, optimisticUpdates, storeName, isOnline, apiEndpoint, cacheTime, generateId, resolveConflict]);
 
   // Function to delete data
-  const deleteData = useCallback(async (): Promise<boolean> => {
+  const deleteData = useCallback(async(): Promise<boolean> => {
     if (!id) return false;
-    
+
     try {
       setError(null);
-      
+
       // Optimistically remove from state
       if (optimisticUpdates) {
         setData(null);
       }
-      
+
       // Remove from local cache
       await indexedDBService.deleteCache(storeName, id);
-      
+
       // If online and endpoint is provided, delete from server
       if (isOnline && apiEndpoint) {
         try {
           const response = await fetch(`${apiEndpoint}/${id}`, {
             method: 'DELETE',
           });
-          
+
           if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
-          
+
           return true;
         } catch (err) {
           console.error(`Failed to delete ${storeName} from server:`, err);
-          
+
           // Queue delete operation for when online
           if (apiEndpoint) {
             await addToOfflineQueue(
               `${apiEndpoint}/${id}`,
               'DELETE',
-              null
+              null,
             );
           }
         }
@@ -312,10 +312,10 @@ function useOfflineData<T extends { id: string }>(
         await addToOfflineQueue(
           `${apiEndpoint}/${id}`,
           'DELETE',
-          null
+          null,
         );
       }
-      
+
       return true;
     } catch (err) {
       setError(err as Error);
@@ -325,11 +325,11 @@ function useOfflineData<T extends { id: string }>(
   }, [id, optimisticUpdates, storeName, isOnline, apiEndpoint]);
 
   // Function to force refresh data from server
-  const refresh = useCallback(async (): Promise<T | null> => {
+  const refresh = useCallback(async(): Promise<T | null> => {
     if (!isOnline || !id) {
       return data;
     }
-    
+
     return await fetchFromServer();
   }, [isOnline, id, data, fetchFromServer]);
 
@@ -338,7 +338,7 @@ function useOfflineData<T extends { id: string }>(
     if (!skipInitialFetch) {
       getData();
     }
-    
+
     return () => {
       isMounted.current = false;
     };
@@ -347,14 +347,14 @@ function useOfflineData<T extends { id: string }>(
   // Listen for online status changes to sync
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    
+
     if (isOnline && id && fetchFn) {
       // Wait a bit after coming online to avoid race conditions
       timeoutId = setTimeout(() => {
         fetchFromServer().catch(console.error);
       }, 2000);
     }
-    
+
     return () => {
       clearTimeout(timeoutId);
     };
@@ -378,8 +378,7 @@ function useOfflineData<T extends { id: string }>(
  * Hook for working with collections of offline data
  * @param options Configuration options
  */
-export function useOfflineCollection<T extends { id: string }>(
-  options: UseOfflineDataOptions<T[]> & {
+export function useOfflineCollection<T extends { id: string }>(options: UseOfflineDataOptions<T[]> & {
     // Function to fetch a collection of items
     fetchCollectionFn?: (params?: any) => Promise<T[]>;
     // Parameters for collection fetch
@@ -392,8 +391,7 @@ export function useOfflineCollection<T extends { id: string }>(
     limit?: number;
     // Number of items to skip (for pagination)
     offset?: number;
-  } = { storeName: '' }
-) {
+  } = { storeName: '' }) {
   // Extract additional options with defaults
   const {
     storeName,
@@ -426,25 +424,22 @@ export function useOfflineCollection<T extends { id: string }>(
   const cacheKey = useRef(`${storeName}_collection_${JSON.stringify(fetchParams || {})}`);
 
   // Function to fetch collection from server
-  const fetchFromServer = useCallback(async (): Promise<T[] | null> => {
+  const fetchFromServer = useCallback(async(): Promise<T[] | null> => {
     if (!fetchCollectionFn || !isOnline) return null;
 
     try {
       setIsSyncing(true);
       const serverData = await fetchCollectionFn(fetchParams);
-      
+
       if (serverData && Array.isArray(serverData)) {
         // Cache individual items
-        await Promise.all(
-          serverData.map(item => 
-            indexedDBService.setCache(
-              storeName,
-              item,
-              cacheTime
-            )
-          )
-        );
-        
+        await Promise.all(serverData.map(item =>
+          indexedDBService.setCache(
+            storeName,
+            item,
+            cacheTime,
+          )));
+
         // Cache the collection metadata
         await indexedDBService.setCache(
           'collections',
@@ -453,34 +448,34 @@ export function useOfflineCollection<T extends { id: string }>(
             ids: serverData.map(item => item.id),
             totalCount: serverData.length,
             params: fetchParams || {},
-            lastUpdated: Date.now()
+            lastUpdated: Date.now(),
           },
-          cacheTime
+          cacheTime,
         );
-        
+
         // Update state if component is still mounted
         if (isMounted.current) {
           let filteredData = serverData;
-          
+
           // Apply filter if provided
           if (filterFn) {
             filteredData = filteredData.filter(filterFn);
           }
-          
+
           // Apply sort if provided
           if (sortFn) {
             filteredData.sort(sortFn);
           }
-          
+
           // Apply pagination
           const paginatedData = filteredData.slice(offset, offset + limit);
-          
+
           setItems(paginatedData);
           setTotalCount(filteredData.length);
           setLastUpdated(Date.now());
         }
       }
-      
+
       return serverData;
     } catch (err) {
       if (isMounted.current) {
@@ -496,7 +491,7 @@ export function useOfflineCollection<T extends { id: string }>(
   }, [fetchCollectionFn, fetchParams, isOnline, storeName, cacheTime, filterFn, sortFn, offset, limit]);
 
   // Function to get collection data (from cache or server)
-  const getCollectionData = useCallback(async () => {
+  const getCollectionData = useCallback(async() => {
     try {
       setIsLoading(true);
       setError(null);
@@ -508,41 +503,38 @@ export function useOfflineCollection<T extends { id: string }>(
         params: any;
         lastUpdated: number;
       }>('collections', cacheKey.current);
-      
+
       if (collectionMeta) {
         // Fetch all items in the collection from cache
-        const cachedItems = await Promise.all(
-          collectionMeta.ids.map(async id => {
-            const item = await indexedDBService.getCache<T>(storeName, id);
-            return item;
-          })
-        );
-        
+        const cachedItems = await Promise.all(collectionMeta.ids.map(async id => {
+          const item = await indexedDBService.getCache<T>(storeName, id);
+          return item;
+        }));
+
         // Filter out null values
         const validItems = cachedItems.filter(Boolean) as T[];
-        
+
         // Apply filter if provided
-        let filteredItems = filterFn 
-          ? validItems.filter(filterFn) 
+        const filteredItems = filterFn
+          ? validItems.filter(filterFn)
           : validItems;
-        
+
         // Apply sort if provided
         if (sortFn) {
           filteredItems.sort(sortFn);
         }
-        
+
         // Apply pagination
         const paginatedItems = filteredItems.slice(offset, offset + limit);
-        
+
         setItems(paginatedItems);
         setTotalCount(filteredItems.length);
         setLastUpdated(collectionMeta.lastUpdated);
-        
+
         // If online and collection is stale, fetch from server in background
         if (isOnline && Date.now() - collectionMeta.lastUpdated > cacheTime) {
-          fetchFromServer().catch(err => 
-            console.error(`Background refresh failed for ${storeName} collection:`, err)
-          );
+          fetchFromServer().catch(err =>
+            console.error(`Background refresh failed for ${storeName} collection:`, err));
         }
       } else if (isOnline) {
         // If no cached data and online, fetch from server
@@ -557,45 +549,45 @@ export function useOfflineCollection<T extends { id: string }>(
   }, [storeName, cacheTime, isOnline, fetchFromServer, filterFn, sortFn, offset, limit]);
 
   // Function to add an item to the collection
-  const addItem = useCallback(async (newItem: Partial<T>): Promise<T | null> => {
+  const addItem = useCallback(async(newItem: Partial<T>): Promise<T | null> => {
     try {
       setError(null);
-      
+
       // Generate ID if not present
       const itemId = newItem.id || `${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
-      
+
       // Create complete item with ID
       const item = {
         ...newItem,
         id: itemId,
         lastUpdated: Date.now(),
       } as T;
-      
+
       // Apply optimistic update if enabled
       if (optimisticUpdates) {
         setItems(prevItems => {
           const updatedItems = [...prevItems, item];
-          
+
           // Apply sort if provided
           if (sortFn) {
             updatedItems.sort(sortFn);
           }
-          
+
           // Apply pagination
           return updatedItems.slice(0, limit);
         });
-        
+
         setTotalCount(prev => prev + 1);
         setLastUpdated(Date.now());
       }
-      
+
       // Cache the new item
       await indexedDBService.setCache(
         storeName,
         item,
-        cacheTime
+        cacheTime,
       );
-      
+
       // Update collection metadata
       const collectionMeta = await indexedDBService.getCache<{
         ids: string[];
@@ -603,7 +595,7 @@ export function useOfflineCollection<T extends { id: string }>(
         params: any;
         lastUpdated: number;
       }>('collections', cacheKey.current);
-      
+
       if (collectionMeta) {
         await indexedDBService.setCache(
           'collections',
@@ -611,12 +603,12 @@ export function useOfflineCollection<T extends { id: string }>(
             ...collectionMeta,
             ids: [...collectionMeta.ids, itemId],
             totalCount: collectionMeta.totalCount + 1,
-            lastUpdated: Date.now()
+            lastUpdated: Date.now(),
           },
-          cacheTime
+          cacheTime,
         );
       }
-      
+
       // If online and endpoint is provided, sync with server
       if (isOnline && options.apiEndpoint) {
         try {
@@ -627,46 +619,45 @@ export function useOfflineCollection<T extends { id: string }>(
             },
             body: JSON.stringify(item),
           });
-          
+
           if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
-          
+
           const serverData = await response.json();
-          
+
           // Update cache with server data
           await indexedDBService.setCache(
             storeName,
             serverData,
-            cacheTime
+            cacheTime,
           );
-          
+
           // Update item in the collection
           if (optimisticUpdates) {
             setItems(prevItems => {
-              const updatedItems = prevItems.map(i => 
-                i.id === itemId ? serverData : i
-              );
-              
+              const updatedItems = prevItems.map(i =>
+                i.id === itemId ? serverData : i);
+
               // Apply sort if provided
               if (sortFn) {
                 updatedItems.sort(sortFn);
               }
-              
+
               return updatedItems;
             });
           }
-          
+
           return serverData;
         } catch (err) {
           console.error(`Failed to sync new ${storeName} with server:`, err);
-          
+
           // Queue for sync when online
           if (options.apiEndpoint) {
             await addToOfflineQueue(
               options.apiEndpoint,
               'POST',
-              item
+              item,
             );
           }
         }
@@ -675,10 +666,10 @@ export function useOfflineCollection<T extends { id: string }>(
         await addToOfflineQueue(
           options.apiEndpoint,
           'POST',
-          item
+          item,
         );
       }
-      
+
       return item;
     } catch (err) {
       setError(err as Error);
@@ -688,17 +679,17 @@ export function useOfflineCollection<T extends { id: string }>(
   }, [storeName, cacheTime, isOnline, options.apiEndpoint, optimisticUpdates, sortFn, limit]);
 
   // Function to update an item in the collection
-  const updateItem = useCallback(async (itemId: string, updates: Partial<T>): Promise<T | null> => {
+  const updateItem = useCallback(async(itemId: string, updates: Partial<T>): Promise<T | null> => {
     try {
       setError(null);
-      
+
       // Get current item data
       const existingItem = await indexedDBService.getCache<T>(storeName, itemId);
-      
+
       if (!existingItem) {
         throw new Error(`Item with ID ${itemId} not found in ${storeName}`);
       }
-      
+
       // Merge updates with existing data
       const updatedItem = {
         ...existingItem,
@@ -706,32 +697,31 @@ export function useOfflineCollection<T extends { id: string }>(
         id: itemId,
         lastUpdated: Date.now(),
       };
-      
+
       // Apply optimistic update if enabled
       if (optimisticUpdates) {
         setItems(prevItems => {
-          const updatedItems = prevItems.map(item => 
-            item.id === itemId ? updatedItem : item
-          );
-          
+          const updatedItems = prevItems.map(item =>
+            item.id === itemId ? updatedItem : item);
+
           // Apply sort if provided
           if (sortFn) {
             updatedItems.sort(sortFn);
           }
-          
+
           return updatedItems;
         });
-        
+
         setLastUpdated(Date.now());
       }
-      
+
       // Cache the updated item
       await indexedDBService.setCache(
         storeName,
         updatedItem,
-        cacheTime
+        cacheTime,
       );
-      
+
       // If online and endpoint is provided, sync with server
       if (isOnline && options.apiEndpoint) {
         try {
@@ -742,46 +732,45 @@ export function useOfflineCollection<T extends { id: string }>(
             },
             body: JSON.stringify(updates),
           });
-          
+
           if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
-          
+
           const serverData = await response.json();
-          
+
           // Update cache with server data
           await indexedDBService.setCache(
             storeName,
             serverData,
-            cacheTime
+            cacheTime,
           );
-          
+
           // Update item in the collection
           if (optimisticUpdates) {
             setItems(prevItems => {
-              const updatedItems = prevItems.map(item => 
-                item.id === itemId ? serverData : item
-              );
-              
+              const updatedItems = prevItems.map(item =>
+                item.id === itemId ? serverData : item);
+
               // Apply sort if provided
               if (sortFn) {
                 updatedItems.sort(sortFn);
               }
-              
+
               return updatedItems;
             });
           }
-          
+
           return serverData;
         } catch (err) {
           console.error(`Failed to sync updated ${storeName} with server:`, err);
-          
+
           // Queue for sync when online
           if (options.apiEndpoint) {
             await addToOfflineQueue(
               `${options.apiEndpoint}/${itemId}`,
               'PATCH',
-              updates
+              updates,
             );
           }
         }
@@ -790,10 +779,10 @@ export function useOfflineCollection<T extends { id: string }>(
         await addToOfflineQueue(
           `${options.apiEndpoint}/${itemId}`,
           'PATCH',
-          updates
+          updates,
         );
       }
-      
+
       return updatedItem;
     } catch (err) {
       setError(err as Error);
@@ -803,20 +792,20 @@ export function useOfflineCollection<T extends { id: string }>(
   }, [storeName, cacheTime, isOnline, options.apiEndpoint, optimisticUpdates, sortFn]);
 
   // Function to remove an item from the collection
-  const removeItem = useCallback(async (itemId: string): Promise<boolean> => {
+  const removeItem = useCallback(async(itemId: string): Promise<boolean> => {
     try {
       setError(null);
-      
+
       // Optimistically remove from state
       if (optimisticUpdates) {
         setItems(prevItems => prevItems.filter(item => item.id !== itemId));
         setTotalCount(prev => Math.max(0, prev - 1));
         setLastUpdated(Date.now());
       }
-      
+
       // Remove from cache
       await indexedDBService.deleteCache(storeName, itemId);
-      
+
       // Update collection metadata
       const collectionMeta = await indexedDBService.getCache<{
         ids: string[];
@@ -824,7 +813,7 @@ export function useOfflineCollection<T extends { id: string }>(
         params: any;
         lastUpdated: number;
       }>('collections', cacheKey.current);
-      
+
       if (collectionMeta) {
         await indexedDBService.setCache(
           'collections',
@@ -832,33 +821,33 @@ export function useOfflineCollection<T extends { id: string }>(
             ...collectionMeta,
             ids: collectionMeta.ids.filter(id => id !== itemId),
             totalCount: Math.max(0, collectionMeta.totalCount - 1),
-            lastUpdated: Date.now()
+            lastUpdated: Date.now(),
           },
-          cacheTime
+          cacheTime,
         );
       }
-      
+
       // If online and endpoint is provided, delete from server
       if (isOnline && options.apiEndpoint) {
         try {
           const response = await fetch(`${options.apiEndpoint}/${itemId}`, {
             method: 'DELETE',
           });
-          
+
           if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
-          
+
           return true;
         } catch (err) {
           console.error(`Failed to delete ${storeName} from server:`, err);
-          
+
           // Queue delete operation for when online
           if (options.apiEndpoint) {
             await addToOfflineQueue(
               `${options.apiEndpoint}/${itemId}`,
               'DELETE',
-              null
+              null,
             );
           }
         }
@@ -867,10 +856,10 @@ export function useOfflineCollection<T extends { id: string }>(
         await addToOfflineQueue(
           `${options.apiEndpoint}/${itemId}`,
           'DELETE',
-          null
+          null,
         );
       }
-      
+
       return true;
     } catch (err) {
       setError(err as Error);
@@ -880,11 +869,11 @@ export function useOfflineCollection<T extends { id: string }>(
   }, [storeName, cacheTime, isOnline, options.apiEndpoint, optimisticUpdates]);
 
   // Function to force refresh collection from server
-  const refreshCollection = useCallback(async (): Promise<T[] | null> => {
+  const refreshCollection = useCallback(async(): Promise<T[] | null> => {
     if (!isOnline) {
       return items;
     }
-    
+
     return await fetchFromServer();
   }, [isOnline, items, fetchFromServer]);
 
@@ -893,7 +882,7 @@ export function useOfflineCollection<T extends { id: string }>(
     if (!skipInitialFetch) {
       getCollectionData();
     }
-    
+
     return () => {
       isMounted.current = false;
     };
@@ -907,14 +896,14 @@ export function useOfflineCollection<T extends { id: string }>(
   // Listen for online status changes to sync
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
-    
+
     if (isOnline && fetchCollectionFn) {
       // Wait a bit after coming online to avoid race conditions
       timeoutId = setTimeout(() => {
         fetchFromServer().catch(console.error);
       }, 2000);
     }
-    
+
     return () => {
       clearTimeout(timeoutId);
     };
@@ -944,4 +933,4 @@ export function useOfflineCollection<T extends { id: string }>(
   };
 }
 
-export default useOfflineData; 
+export default useOfflineData;

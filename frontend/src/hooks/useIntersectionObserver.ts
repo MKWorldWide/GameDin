@@ -37,7 +37,7 @@ export function useIntersectionObserver({
       {
         threshold,
         rootMargin,
-      }
+      },
     );
 
     const element = target.current;
@@ -49,4 +49,4 @@ export function useIntersectionObserver({
       }
     };
   }, [enabled, rootMargin, target, threshold]);
-} 
+}

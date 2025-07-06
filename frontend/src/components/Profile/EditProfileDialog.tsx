@@ -1,4 +1,5 @@
 import { useState } from 'react';
+
 import { useStore } from '../../store/useStore';
 import { IUser } from '../../types/social';
 
@@ -12,17 +13,17 @@ export const EditProfileDialog = ({ user, onClose }: EditProfileDialogProps) => 
   const [bio, setBio] = useState(user.bio);
   const [picture, setPicture] = useState(user.picture || user.avatar);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
-    
+
     updateSettings({
       user: {
         ...user,
         bio,
-        picture
-      }
+        picture,
+      },
     });
-    
+
     onClose();
   };
 
@@ -40,7 +41,7 @@ export const EditProfileDialog = ({ user, onClose }: EditProfileDialogProps) => 
             placeholder="Enter picture URL"
           />
         </div>
-        
+
         <div className="form-group">
           <label htmlFor="bio">Bio</label>
           <textarea
@@ -62,4 +63,4 @@ export const EditProfileDialog = ({ user, onClose }: EditProfileDialogProps) => 
       </form>
     </div>
   );
-}; 
+};

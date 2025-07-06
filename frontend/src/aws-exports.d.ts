@@ -9,4 +9,4 @@ declare const awsmobile: {
   aws_appsync_authenticationType: string;
 };
 
-export default awsmobile; 
+export default awsmobile;

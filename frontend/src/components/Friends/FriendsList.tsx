@@ -1,5 +1,8 @@
-<<<<<<< HEAD
-import React from 'react';
+import {
+  Chat as ChatIcon,
+  PersonAdd as AddFriendIcon,
+  SportsEsports as GameIcon,
+} from '@mui/icons-material';
 import {
   Box,
   Typography,
@@ -12,13 +15,10 @@ import {
   Badge,
   Tooltip,
 } from '@mui/material';
-import {
-  Chat as ChatIcon,
-  PersonAdd as AddFriendIcon,
-  SportsEsports as GameIcon,
-} from '@mui/icons-material';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { IUser } from '../../types/social';
+
+import { IUser, IFriend } from '../../types/social';
 
 interface IFriend extends IUser {
   isOnline: boolean;
@@ -30,7 +30,7 @@ const FriendsList: React.FC = () => {
   const [friends, setFriends] = React.useState<IFriend[]>([]);
 
   React.useEffect(() => {
-    const fetchFriends = async () => {
+    const fetchFriends = async() => {
       try {
         const response = await fetch('/api/friends');
         const data = await response.json();
@@ -123,9 +123,7 @@ const FriendsList: React.FC = () => {
   );
 };
 
-export default FriendsList; 
-=======
-import { IFriend } from '../../types/social';
+export default FriendsList;
 
 interface FriendsListProps {
   friends: IFriend[];
@@ -140,7 +138,7 @@ export const FriendsList = ({
   onAcceptFriend,
   onRejectFriend,
   onBlockFriend,
-  onUnblockFriend
+  onUnblockFriend,
 }: FriendsListProps) => {
   const pendingFriends = friends.filter(friend => friend.friendshipStatus === 'pending');
   const acceptedFriends = friends.filter(friend => friend.friendshipStatus === 'accepted');
@@ -230,5 +228,4 @@ export const FriendsList = ({
       )}
     </div>
   );
-}; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+};

@@ -1,6 +1,3 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
 import {
   Container,
   Box,
@@ -14,6 +11,10 @@ import {
   CircularProgress,
   Paper,
 } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+import { useAuth } from '../../context/AuthContext';
 
 const Login: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -29,7 +30,7 @@ const Login: React.FC = () => {
     }
   }, [user, navigate]);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     try {
       await login(email, password);
@@ -78,4 +79,4 @@ const Login: React.FC = () => {
   );
 };
 
-export default Login; 
+export default Login;

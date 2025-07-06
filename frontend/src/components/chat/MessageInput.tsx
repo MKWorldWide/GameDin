@@ -5,4 +5,4 @@ interface MessageInputProps {
 
 export const MessageInput: React.FC<MessageInputProps> = ({ onSubmit, disabled }) => {
   // ... existing code ...
-} 
+};

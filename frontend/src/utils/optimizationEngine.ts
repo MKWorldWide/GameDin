@@ -1,13 +1,13 @@
 /**
  * Self-Selecting Optimization Engine for GameDin
- * 
+ *
  * This engine dynamically adjusts application performance settings based on:
  * - Device capabilities (CPU, memory, GPU)
  * - Network conditions (bandwidth, latency)
  * - Operating system and browser
  * - User preferences and accessibility needs
  * - AWS Amplify deployment environment
- * 
+ *
  * @author GameDin Development Team
  * @version 4.0.0
  * @since 2024-07-06
@@ -70,7 +70,7 @@ export interface EnvironmentContext {
  */
 export function detectDeviceCapabilities(): DeviceCapabilities {
   const navigator = window.navigator as any;
-  
+
   return {
     cpuCores: navigator.hardwareConcurrency || 4,
     memoryGB: (navigator.deviceMemory || 4) * 1024, // Convert to MB
@@ -81,7 +81,7 @@ export function detectDeviceCapabilities(): DeviceCapabilities {
     isDesktop: !(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)),
     touchSupport: 'ontouchstart' in window || navigator.maxTouchPoints > 0,
     batteryLevel: navigator.getBattery?.()?.then((battery: any) => battery.level),
-    isLowPowerMode: navigator.getBattery?.()?.then((battery: any) => battery.level < 0.2)
+    isLowPowerMode: navigator.getBattery?.()?.then((battery: any) => battery.level < 0.2),
   };
 }
 
@@ -91,13 +91,13 @@ export function detectDeviceCapabilities(): DeviceCapabilities {
 export function detectNetworkConditions(): NetworkConditions {
   const navigator = window.navigator as any;
   const connection = navigator.connection || navigator.mozConnection || navigator.webkitConnection;
-  
+
   return {
     effectiveType: connection?.effectiveType || '4g',
     downlink: connection?.downlink || 10,
     rtt: connection?.rtt || 50,
     saveData: connection?.saveData || false,
-    connectionType: connection?.type || 'unknown'
+    connectionType: connection?.type || 'unknown',
   };
 }
 
@@ -111,7 +111,7 @@ export function detectEnvironmentContext(): EnvironmentContext {
     isStaging: import.meta.env.VITE_APP_ENV === 'staging',
     awsRegion: import.meta.env.VITE_AWS_REGION || 'us-east-1',
     amplifyVersion: import.meta.env.VITE_AMPLIFY_VERSION || 'gen2',
-    deploymentStage: import.meta.env.VITE_DEPLOYMENT_STAGE || 'development'
+    deploymentStage: import.meta.env.VITE_DEPLOYMENT_STAGE || 'development',
   };
 }
 
@@ -123,14 +123,14 @@ export function selectOptimizationProfile(): OptimizationProfile {
   const device = detectDeviceCapabilities();
   const network = detectNetworkConditions();
   const environment = detectEnvironmentContext();
-  
+
   // Calculate performance score (0-100)
   const deviceScore = calculateDeviceScore(device);
   const networkScore = calculateNetworkScore(network);
   const environmentScore = calculateEnvironmentScore(environment);
-  
+
   const totalScore = (deviceScore + networkScore + environmentScore) / 3;
-  
+
   // Select profile based on total score
   if (totalScore >= 80) {
     return getUltraPerformanceProfile();
@@ -150,24 +150,24 @@ export function selectOptimizationProfile(): OptimizationProfile {
  */
 function calculateDeviceScore(device: DeviceCapabilities): number {
   let score = 0;
-  
+
   // CPU scoring
   score += Math.min(device.cpuCores * 10, 40);
-  
+
   // Memory scoring
   score += Math.min(device.memoryGB / 1024 * 20, 30);
-  
+
   // GPU scoring
   if (device.gpuAvailable) score += 10;
-  
+
   // Device type scoring
   if (device.isDesktop) score += 10;
   else if (device.isTablet) score += 5;
   else if (device.isMobile) score += 0;
-  
+
   // Touch support (negative for mobile optimization)
   if (device.touchSupport && device.isMobile) score -= 5;
-  
+
   return Math.max(0, Math.min(100, score));
 }
 
@@ -176,7 +176,7 @@ function calculateDeviceScore(device: DeviceCapabilities): number {
  */
 function calculateNetworkScore(network: NetworkConditions): number {
   let score = 0;
-  
+
   // Connection type scoring
   switch (network.effectiveType) {
     case '4g': score += 40; break;
@@ -184,16 +184,16 @@ function calculateNetworkScore(network: NetworkConditions): number {
     case '2g': score += 10; break;
     case 'slow-2g': score += 5; break;
   }
-  
+
   // Downlink scoring
   score += Math.min(network.downlink * 2, 30);
-  
+
   // RTT scoring (lower is better)
   score += Math.max(0, 20 - network.rtt / 5);
-  
+
   // Save data mode (negative impact)
   if (network.saveData) score -= 10;
-  
+
   return Math.max(0, Math.min(100, score));
 }
 
@@ -202,19 +202,19 @@ function calculateNetworkScore(network: NetworkConditions): number {
  */
 function calculateEnvironmentScore(environment: EnvironmentContext): number {
   let score = 50; // Base score
-  
+
   // Production environment gets boost
   if (environment.isProduction) score += 20;
   else if (environment.isStaging) score += 10;
   else if (environment.isDevelopment) score += 0;
-  
+
   // AWS region optimization
   const optimalRegions = ['us-east-1', 'us-west-2', 'eu-west-1'];
   if (optimalRegions.includes(environment.awsRegion)) score += 10;
-  
+
   // Amplify Gen2 gets boost
   if (environment.amplifyVersion === 'gen2') score += 10;
-  
+
   return Math.max(0, Math.min(100, score));
 }
 
@@ -234,14 +234,14 @@ function getUltraPerformanceProfile(): OptimizationProfile {
       backgroundSync: true,
       offlineMode: true,
       realTimeUpdates: true,
-      analyticsLevel: 'detailed'
+      analyticsLevel: 'detailed',
     },
     performance: {
       maxConcurrentRequests: 10,
       requestTimeout: 30000,
       retryAttempts: 3,
-      batchSize: 50
-    }
+      batchSize: 50,
+    },
   };
 }
 
@@ -258,14 +258,14 @@ function getHighPerformanceProfile(): OptimizationProfile {
       backgroundSync: true,
       offlineMode: true,
       realTimeUpdates: true,
-      analyticsLevel: 'standard'
+      analyticsLevel: 'standard',
     },
     performance: {
       maxConcurrentRequests: 8,
       requestTimeout: 25000,
       retryAttempts: 3,
-      batchSize: 30
-    }
+      batchSize: 30,
+    },
   };
 }
 
@@ -282,14 +282,14 @@ function getBalancedProfile(): OptimizationProfile {
       backgroundSync: false,
       offlineMode: true,
       realTimeUpdates: false,
-      analyticsLevel: 'standard'
+      analyticsLevel: 'standard',
     },
     performance: {
       maxConcurrentRequests: 5,
       requestTimeout: 20000,
       retryAttempts: 2,
-      batchSize: 20
-    }
+      batchSize: 20,
+    },
   };
 }
 
@@ -306,14 +306,14 @@ function getLowPerformanceProfile(): OptimizationProfile {
       backgroundSync: false,
       offlineMode: false,
       realTimeUpdates: false,
-      analyticsLevel: 'minimal'
+      analyticsLevel: 'minimal',
     },
     performance: {
       maxConcurrentRequests: 3,
       requestTimeout: 15000,
       retryAttempts: 1,
-      batchSize: 10
-    }
+      batchSize: 10,
+    },
   };
 }
 
@@ -330,14 +330,14 @@ function getMinimalProfile(): OptimizationProfile {
       backgroundSync: false,
       offlineMode: false,
       realTimeUpdates: false,
-      analyticsLevel: 'minimal'
+      analyticsLevel: 'minimal',
     },
     performance: {
       maxConcurrentRequests: 1,
       requestTimeout: 10000,
       retryAttempts: 0,
-      batchSize: 5
-    }
+      batchSize: 5,
+    },
   };
 }
 
@@ -347,15 +347,15 @@ function getMinimalProfile(): OptimizationProfile {
 export function applyOptimizationProfile(profile: OptimizationProfile): void {
   // Store profile in localStorage for persistence
   localStorage.setItem('gamedin-optimization-profile', JSON.stringify(profile));
-  
+
   // Apply settings to global configuration
   window.__GAMEDIN_OPTIMIZATION__ = profile;
-  
+
   // Dispatch custom event for other components to listen
   window.dispatchEvent(new CustomEvent('optimizationProfileChanged', {
-    detail: { profile }
+    detail: { profile },
   }));
-  
+
   // Log optimization selection
   console.log(`🎯 Applied optimization profile: ${profile.name}`, profile);
 }
@@ -368,7 +368,7 @@ export function getCurrentOptimizationProfile(): OptimizationProfile {
   if (stored) {
     return JSON.parse(stored);
   }
-  
+
   // Fallback to balanced profile
   return getBalancedProfile();
 }
@@ -379,7 +379,7 @@ export function getCurrentOptimizationProfile(): OptimizationProfile {
 export function initializeOptimizationEngine(): OptimizationProfile {
   const profile = selectOptimizationProfile();
   applyOptimizationProfile(profile);
-  
+
   // Set up network change listener
   if ('connection' in navigator) {
     navigator.addEventListener('change', () => {
@@ -387,7 +387,7 @@ export function initializeOptimizationEngine(): OptimizationProfile {
       applyOptimizationProfile(newProfile);
     });
   }
-  
+
   return profile;
 }
 
@@ -405,5 +405,5 @@ export default {
   selectOptimizationProfile,
   applyOptimizationProfile,
   getCurrentOptimizationProfile,
-  initializeOptimizationEngine
-}; 
+  initializeOptimizationEngine,
+};

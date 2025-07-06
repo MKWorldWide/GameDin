@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react';
+
 import { WebSocketMessage } from '../types/social';
 
 const WEBSOCKET_URL = process.env.VITE_WS_URL || 'ws://localhost:3001';
@@ -63,7 +64,7 @@ class WebSocketService {
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
       const delay = Math.min(
         this.baseReconnectDelay * Math.pow(2, this.reconnectAttempts),
-        30000
+        30000,
       );
 
       this.reconnectTimeout = window.setTimeout(() => {
@@ -87,7 +88,7 @@ class WebSocketService {
       const handlers = this.messageHandlers.get(type) || [];
       this.messageHandlers.set(
         type,
-        handlers.filter(h => h !== handler)
+        handlers.filter(h => h !== handler),
       );
     };
   }
@@ -130,7 +131,7 @@ export function useWebSocket() {
     (type: WebSocketMessage['type'], handler: (message: WebSocketMessage) => void) => {
       return wsService.subscribe(type, handler);
     },
-    []
+    [],
   );
 
   const send = useCallback((type: WebSocketMessage['type'], data: any) => {

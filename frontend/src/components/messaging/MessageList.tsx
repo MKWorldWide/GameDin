@@ -1,8 +1,6 @@
-<<<<<<< HEAD
 import { Box } from '@mui/material';
 import { IMessage, IUser } from '../../types/social';
 import MessageBubble from '../chat/MessageBubble';
-=======
 import React, { useMemo, useCallback } from 'react';
 import { format, isToday, isYesterday, isSameDay } from 'date-fns';
 import { Virtualizer } from '@tanstack/react-virtual';
@@ -10,12 +8,10 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { useStore } from '../../store/useStore';
 import { IMessage, IUser } from '../../types/social';
 import { MessageBubble } from '../chat/MessageBubble';
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
 
 interface MessageListProps {
   messages: IMessage[];
   currentUser: IUser;
-<<<<<<< HEAD
 }
 
 export default function MessageList({ messages, currentUser }: MessageListProps) {
@@ -39,7 +35,6 @@ export default function MessageList({ messages, currentUser }: MessageListProps)
     </Box>
   );
 }
-=======
   virtualizer: Virtualizer<HTMLDivElement, Element>;
 }
 
@@ -191,4 +186,3 @@ export const MessageList: React.FC<MessageListProps> = ({
 };
 
 MessageList.displayName = 'MessageList'; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

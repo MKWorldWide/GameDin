@@ -27,8 +27,9 @@
  */
 
 import { CognitoUser } from '@aws-amplify/auth';
-import { IUser } from '../types/social';
+
 import { defaultSettings } from '../constants/settings';
+import { IUser } from '../types/social';
 
 export const userMapper = (cognitoUser: CognitoUser): IUser => {
   const attributes = cognitoUser.attributes || {};
@@ -54,7 +55,7 @@ export const userMapper = (cognitoUser: CognitoUser): IUser => {
       email: attributes.email,
       name: attributes.name,
       picture: attributes.picture,
-      rank: attributes['custom:rank'] || 'Rookie'
-    }
+      rank: attributes['custom:rank'] || 'Rookie',
+    },
   };
 };

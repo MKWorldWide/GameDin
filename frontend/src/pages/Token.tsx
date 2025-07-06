@@ -1,13 +1,12 @@
-<<<<<<< HEAD
-import React from 'react';
-import { Container, Typography, Box, Grid, Paper, Button as MuiButton } from '@mui/material';
-import { styled } from '@mui/material/styles';
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
 import AccountBalanceIcon from '@mui/icons-material/AccountBalance';
-import ShowChartIcon from '@mui/icons-material/ShowChart';
-import SecurityIcon from '@mui/icons-material/Security';
-import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
 import GroupWorkIcon from '@mui/icons-material/GroupWork';
+import MonetizationOnIcon from '@mui/icons-material/MonetizationOn';
+import SecurityIcon from '@mui/icons-material/Security';
+import ShowChartIcon from '@mui/icons-material/ShowChart';
+import SwapHorizIcon from '@mui/icons-material/SwapHoriz';
+import { Container, Typography, Box, Grid, Paper, Button as MuiButton, Button } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import React from 'react';
 
 const PageContainer = styled(Box)(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
@@ -276,8 +275,7 @@ const Token: React.FC = () => {
 };
 
 export default Token;
-=======
-import { Box, Typography, Paper, Grid, Button } from '@mui/material';
+
 import { useUser } from '../hooks/useUser';
 
 export default function Token() {
@@ -319,5 +317,4 @@ export default function Token() {
       </Grid>
     </Box>
   );
-} 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+}

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useRef } from 'react';
 import {
   Box,
@@ -214,7 +213,6 @@ const Messaging: React.FC = () => {
       <div className="text-center py-8">
         <p className="text-gray-600">Please sign in to view messages</p>
       </div>
-=======
 import { Box, Typography, Grid } from '@mui/material';
 import { useState, useEffect } from 'react';
 import { useUser } from '../hooks/useUser';
@@ -282,12 +280,10 @@ export const Messaging = () => {
       <Box p={4}>
         <Typography>Please sign in to access messaging</Typography>
       </Box>
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     );
   }
 
   return (
-<<<<<<< HEAD
     <Container maxWidth="lg">
       <Box display="flex" gap={2} height="calc(100vh - 100px)">
         {/* Conversations List */}
@@ -486,7 +482,6 @@ export const Messaging = () => {
 };
 
 export default Messaging;
-=======
     <Box p={4}>
       <Grid container spacing={3}>
         <Grid item xs={12} md={4}>
@@ -516,4 +511,3 @@ export default Messaging;
 };
 
 export default Messaging; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

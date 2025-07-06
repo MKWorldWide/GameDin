@@ -1,5 +1,6 @@
-import React, { useState, useMemo, useCallback } from 'react';
 import { format } from 'date-fns';
+import React, { useState, useMemo, useCallback } from 'react';
+
 import { useStore } from '../../store/useStore';
 import { IMessage, IUser, IConversation, IAttachment } from '../../types/social';
 
@@ -20,7 +21,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   messages,
   currentUser,
   onViewProfile,
-  onClose
+  onClose,
 }) => {
   const darkMode = useStore((state) => state.darkMode);
   const [activeTab, setActiveTab] = useState<'media' | 'files' | 'links' | 'search'>('media');
@@ -29,22 +30,20 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   // Memoized media items
   const mediaItems = useMemo(() => {
     return messages
-      .flatMap(message => 
+      .flatMap(message =>
         message.attachments
           ?.filter(att => att.type === 'image' || att.type === 'video')
-          .map(att => ({ ...att, message })) || []
-      )
+          .map(att => ({ ...att, message })) || [])
       .sort((a, b) => new Date(b.message.createdAt).getTime() - new Date(a.message.createdAt).getTime());
   }, [messages]);
 
   // Memoized file items
   const fileItems = useMemo(() => {
     return messages
-      .flatMap(message => 
+      .flatMap(message =>
         message.attachments
           ?.filter(att => att.type === 'file')
-          .map(att => ({ ...att, message })) || []
-      )
+          .map(att => ({ ...att, message })) || [])
       .sort((a, b) => new Date(b.message.createdAt).getTime() - new Date(a.message.createdAt).getTime());
   }, [messages]);
 
@@ -57,7 +56,7 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
         return matches.map(url => ({
           url,
           message,
-          title: url // TODO: Implement link preview
+          title: url, // TODO: Implement link preview
         }));
       })
       .sort((a, b) => new Date(b.message.createdAt).getTime() - new Date(a.message.createdAt).getTime());
@@ -66,13 +65,12 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   // Search functionality
   const searchResults = useMemo(() => {
     if (!searchQuery.trim()) return [];
-    
+
     const query = searchQuery.toLowerCase();
     return messages
-      .filter(message => 
-        message.content.toLowerCase().includes(query) ||
-        message.author.name.toLowerCase().includes(query)
-      )
+      .filter(message =>
+        message.content.toLowerCase().includes(query)
+        || message.author.name.toLowerCase().includes(query))
       .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
   }, [messages, searchQuery]);
 
@@ -114,9 +112,9 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
           onChange={(e) => setSearchQuery(e.target.value)}
           className={`
             w-full px-3 py-2 rounded-lg
-            ${darkMode 
-              ? 'bg-gray-700 text-white placeholder-gray-400' 
-              : 'bg-gray-100 text-gray-900 placeholder-gray-500'}
+            ${darkMode
+      ? 'bg-gray-700 text-white placeholder-gray-400'
+      : 'bg-gray-100 text-gray-900 placeholder-gray-500'}
           `}
         />
       </div>
@@ -129,12 +127,12 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
             className={`
               flex-1 p-3 text-sm font-medium
               ${activeTab === tab
-                ? darkMode
-                  ? 'text-white border-b-2 border-blue-500'
-                  : 'text-blue-600 border-b-2 border-blue-500'
-                : darkMode
-                  ? 'text-gray-400 hover:text-gray-300'
-                  : 'text-gray-500 hover:text-gray-700'}
+            ? darkMode
+              ? 'text-white border-b-2 border-blue-500'
+              : 'text-blue-600 border-b-2 border-blue-500'
+            : darkMode
+              ? 'text-gray-400 hover:text-gray-300'
+              : 'text-gray-500 hover:text-gray-700'}
             `}
           >
             {tab.charAt(0).toUpperCase() + tab.slice(1)}
@@ -188,8 +186,8 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 className={`
                   block p-3 rounded-lg
                   ${darkMode
-                    ? 'bg-gray-700 hover:bg-gray-600'
-                    : 'bg-gray-100 hover:bg-gray-200'}
+                ? 'bg-gray-700 hover:bg-gray-600'
+                : 'bg-gray-100 hover:bg-gray-200'}
                 `}
               >
                 <div className="flex items-center">
@@ -220,8 +218,8 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 className={`
                   block p-3 rounded-lg
                   ${darkMode
-                    ? 'bg-gray-700 hover:bg-gray-600'
-                    : 'bg-gray-100 hover:bg-gray-200'}
+                ? 'bg-gray-700 hover:bg-gray-600'
+                : 'bg-gray-100 hover:bg-gray-200'}
                 `}
               >
                 <p className="text-sm font-medium truncate">{link.title}</p>
@@ -245,8 +243,8 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
                 className={`
                   p-3 rounded-lg
                   ${darkMode
-                    ? 'bg-gray-700'
-                    : 'bg-gray-100'}
+                ? 'bg-gray-700'
+                : 'bg-gray-100'}
                 `}
               >
                 <div className="flex items-center mb-2">
@@ -297,4 +295,4 @@ export const ChatSidebar: React.FC<ChatSidebarProps> = ({
   );
 };
 
-ChatSidebar.displayName = 'ChatSidebar'; 
+ChatSidebar.displayName = 'ChatSidebar';

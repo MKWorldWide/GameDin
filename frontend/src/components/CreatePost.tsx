@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, IconButton, Stack, Typography } from '@mui/material';
 import {
   Image as ImageIcon,
   VideoLibrary as VideoIcon,
   Link as LinkIcon,
 } from '@mui/icons-material';
+import { Box, TextField, Button, IconButton, Stack, Typography } from '@mui/material';
+import React, { useState } from 'react';
 
 interface ICreatePostProps {
   onSubmit: (content: string) => Promise<void>;
@@ -14,7 +14,7 @@ const CreatePost: React.FC<ICreatePostProps> = ({ onSubmit }) => {
   const [content, setContent] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async(e: React.FormEvent) => {
     e.preventDefault();
     if (!content.trim() || isSubmitting) return;
 

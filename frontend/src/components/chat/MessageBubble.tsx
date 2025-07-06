@@ -1,20 +1,15 @@
-<<<<<<< HEAD
-import React from 'react';
 import { Box, Avatar, Typography } from '@mui/material';
-import { IMessage } from '../../types/social';
-=======
-import React, { memo } from 'react';
 import { format } from 'date-fns';
-import { IMessage } from '../../types/social';
+import React, { memo } from 'react';
+
 import { useStore } from '../../store/useStore';
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+import { IMessage } from '../../types/social';
 
 interface MessageBubbleProps {
   message: IMessage;
   isOwn: boolean;
 }
 
-<<<<<<< HEAD
 export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
   return (
     <Box
@@ -59,8 +54,7 @@ export default function MessageBubble({ message, isOwn }: MessageBubbleProps) {
       </Box>
     </Box>
   );
-} 
-=======
+}
 export const MessageBubble = memo<MessageBubbleProps>(({ message, isOwn }) => {
   const darkMode = useStore(state => state.darkMode);
 
@@ -110,8 +104,8 @@ export const MessageBubble = memo<MessageBubbleProps>(({ message, isOwn }) => {
                   className={`
                     flex items-center p-2 rounded-lg
                     ${darkMode
-                      ? 'bg-gray-700 hover:bg-gray-600'
-                      : 'bg-gray-100 hover:bg-gray-200'}
+                  ? 'bg-gray-700 hover:bg-gray-600'
+                  : 'bg-gray-100 hover:bg-gray-200'}
                   `}
                   aria-label={`Download ${attachment.name}`}
                 >
@@ -172,11 +166,11 @@ export const MessageBubble = memo<MessageBubbleProps>(({ message, isOwn }) => {
         className={`
           max-w-[70%] break-words rounded-2xl px-4 py-2
           ${isOwn
-            ? `${darkMode ? 'bg-blue-600' : 'bg-blue-500'} text-white`
-            : darkMode
-              ? 'bg-gray-700 text-white'
-              : 'bg-gray-100 text-gray-900'
-          }
+      ? `${darkMode ? 'bg-blue-600' : 'bg-blue-500'} text-white`
+      : darkMode
+        ? 'bg-gray-700 text-white'
+        : 'bg-gray-100 text-gray-900'
+    }
         `}
       >
         {!isOwn && (
@@ -190,11 +184,11 @@ export const MessageBubble = memo<MessageBubbleProps>(({ message, isOwn }) => {
           <div
             className={`
               text-xs ${isOwn
-                ? 'text-blue-100'
-                : darkMode
-                  ? 'text-gray-400'
-                  : 'text-gray-500'
-              }
+      ? 'text-blue-100'
+      : darkMode
+        ? 'text-gray-400'
+        : 'text-gray-500'
+    }
             `}
             role="presentation"
           >
@@ -225,5 +219,4 @@ export const MessageBubble = memo<MessageBubbleProps>(({ message, isOwn }) => {
   );
 });
 
-MessageBubble.displayName = 'MessageBubble'; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
+MessageBubble.displayName = 'MessageBubble';

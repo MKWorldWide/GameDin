@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect, useCallback, memo } from 'react';
 import { useInView } from 'react-intersection-observer';
 import { websocketService, WebSocketMessage } from '../services/websocket';
@@ -215,7 +214,6 @@ const Feed: React.FC = () => {
       {!loading && activities.length === 0 && (
         <div className="text-center text-gray-500 py-4">No activities yet</div>
       )}
-=======
 import { Box, Typography, Paper, Grid } from '@mui/material';
 import PostEditor from './post/PostEditor';
 import { useUser } from '../hooks/useUser';
@@ -277,14 +275,11 @@ export const Feed = ({ activities }: FeedProps) => {
           </div>
         ))}
       </div>
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     </div>
   );
 };
 
-<<<<<<< HEAD
 export default memo(Feed);
-=======
 export default function Feed() {
   const { user } = useUser();
 
@@ -323,4 +318,3 @@ export default function Feed() {
     </Box>
   );
 } 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

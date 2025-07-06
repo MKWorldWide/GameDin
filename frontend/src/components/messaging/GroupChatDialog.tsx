@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -56,7 +55,6 @@ const GroupChatDialog: React.FC<GroupChatDialogProps> = ({
     setSelectedUsers((prev) =>
       prev.includes(userId)
         ? prev.filter((id) => id !== userId)
-=======
 import { useState } from 'react';
 import { IUser } from '../../types/social';
 
@@ -86,12 +84,10 @@ export const GroupChatDialog = ({
     setSelectedUsers(prev =>
       prev.includes(userId)
         ? prev.filter(id => id !== userId)
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
         : [...prev, userId]
     );
   };
 
-<<<<<<< HEAD
   const handleSubmit = () => {
     if (groupName.trim() && selectedUsers.length > 0) {
       onCreateGroup(groupName.trim(), selectedUsers);
@@ -159,7 +155,6 @@ export const GroupChatDialog = ({
 };
 
 export default GroupChatDialog;
-=======
   return (
     <div className="group-chat-dialog">
       <h2>Create Group Chat</h2>
@@ -218,4 +213,3 @@ export default GroupChatDialog;
     </div>
   );
 }; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

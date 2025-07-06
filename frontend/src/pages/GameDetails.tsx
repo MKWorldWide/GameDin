@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom';
 
 /**
  * GameDetails Page Component
- * 
+ *
  * Features:
  * - Galaxy-themed details view
  * - Glassmorphism card for game info
@@ -29,4 +29,4 @@ const GameDetails: React.FC = () => {
   );
 };
 
-export default GameDetails; 
+export default GameDetails;

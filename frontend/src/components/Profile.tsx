@@ -1,4 +1,5 @@
 import { Box, Typography, Avatar, Button, Grid, Paper } from '@mui/material';
+
 import { useUser } from '../hooks/useUser';
 
 export const Profile = () => {
@@ -55,4 +56,4 @@ export const Profile = () => {
   );
 };
 
-export default Profile; 
+export default Profile;

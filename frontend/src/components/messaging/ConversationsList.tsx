@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import {
   List,
   ListItem,
@@ -15,7 +14,6 @@ import { useAuth } from '../../hooks/useAuth';
 interface ConversationsListProps {
   conversations: IConversation[];
   selectedConversation: string | null;
-=======
 import { IConversation, IUser } from '../../types/social';
 import { formatDistanceToNow } from 'date-fns';
 
@@ -23,12 +21,10 @@ interface ConversationsListProps {
   conversations: IConversation[];
   currentUser: IUser;
   selectedConversationId?: string;
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
   onSelectConversation: (conversationId: string) => void;
   loading?: boolean;
 }
 
-<<<<<<< HEAD
 export default function ConversationsList({
   conversations,
   selectedConversation,
@@ -57,7 +53,6 @@ export default function ConversationsList({
       hour: '2-digit',
       minute: '2-digit',
     });
-=======
 export const ConversationsList: React.FC<ConversationsListProps> = ({
   conversations,
   currentUser,
@@ -98,16 +93,13 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
   const getLastMessageTime = (conversation: IConversation): string => {
     if (!conversation.lastMessage) return '';
     return formatDistanceToNow(new Date(conversation.lastMessage.createdAt), { addSuffix: true });
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
   };
 
   if (loading) {
     return (
-<<<<<<< HEAD
       <Box display="flex" justifyContent="center" alignItems="center" p={4}>
         <CircularProgress />
       </Box>
-=======
       <div className="h-full flex items-center justify-center">
         <p className="text-gray-500">Loading conversations...</p>
       </div>
@@ -119,12 +111,10 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
       <div className="h-full flex items-center justify-center">
         <p className="text-gray-500">No conversations yet</p>
       </div>
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     );
   }
 
   return (
-<<<<<<< HEAD
     <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
       {conversations.map((conversation) => {
         const otherParticipant = getOtherParticipant(conversation);
@@ -193,7 +183,6 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
     </List>
   );
 }
-=======
     <div className="h-full overflow-y-auto">
       {conversations.map((conversation) => (
         <button
@@ -226,4 +215,3 @@ export const ConversationsList: React.FC<ConversationsListProps> = ({
     </div>
   );
 }; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9

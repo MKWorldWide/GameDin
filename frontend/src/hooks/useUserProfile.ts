@@ -1,9 +1,9 @@
 /**
  * User Profile Hook
- * 
+ *
  * This hook manages user profile data with SWR for automatic caching,
  * revalidation, and offline support. It provides:
- * 
+ *
  * 1. Profile data fetching with persistent offline caching
  * 2. Profile updates with optimistic UI and offline operation queueing
  * 3. Status management with real-time updates
@@ -11,10 +11,12 @@
  */
 
 import { useCallback } from 'react';
-import { useData, useMutation } from './useSWR';
-import { useAuth } from './useAuth';
+
 import { STORE } from '../services/cacheService';
 import { UserProfile, UserPreferences } from '../types/api';
+
+import { useAuth } from './useAuth';
+import { useData, useMutation } from './useSWR';
 
 interface UseUserProfileOptions {
   /** Stale time in milliseconds (default: 5 minutes) */
@@ -34,18 +36,18 @@ interface UpdateProfileData {
  * Hook for fetching and managing user profile data
  */
 export const useUserProfile = (
-  userId?: string, 
-  options: UseUserProfileOptions = {}
+  userId?: string,
+  options: UseUserProfileOptions = {},
 ) => {
   const { user: authUser } = useAuth();
   const id = userId || authUser?.id;
-  
+
   // Default cache settings
   const {
     staleTime = 5 * 60 * 1000, // 5 minutes
-    cacheTime = 24 * 60 * 60 * 1000 // 24 hours
+    cacheTime = 24 * 60 * 60 * 1000, // 24 hours
   } = options;
-  
+
   // Fetch profile data with SWR
   const {
     data: profile,
@@ -54,7 +56,7 @@ export const useUserProfile = (
     isValidating,
     mutate,
     isOffline,
-    isFromCache
+    isFromCache,
   } = useData<UserProfile>(
     id ? `/users/${id}/profile` : null,
     {
@@ -66,15 +68,15 @@ export const useUserProfile = (
       revalidateOnFocus: false,
       dedupingInterval: 60000, // 1 minute
       // Refresh data when component mounts
-      revalidateOnMount: true
-    }
+      revalidateOnMount: true,
+    },
   );
-  
+
   // Handle profile updates with optimistic UI
-  const { 
+  const {
     trigger: updateProfile,
     isMutating: isUpdating,
-    error: updateError
+    error: updateError,
   } = useMutation<UserProfile>(
     id ? `/users/${id}/profile` : null,
     {
@@ -86,153 +88,147 @@ export const useUserProfile = (
         mutate(updatedData, { revalidate: false });
       },
       // Keep offline behavior
-      offlineMode: 'cache-first'
-    }
+      offlineMode: 'cache-first',
+    },
   );
-  
+
   /**
    * Update user profile with optimistic UI update
    */
-  const handleUpdateProfile = useCallback(async (updateData: UpdateProfileData) => {
+  const handleUpdateProfile = useCallback(async(updateData: UpdateProfileData) => {
     if (!id || !profile) return;
-    
+
     // Create optimistic data for the update
     const optimisticData = {
       ...profile,
       ...updateData,
       // Merge preferences if provided
-      preferences: updateData.preferences 
+      preferences: updateData.preferences
         ? { ...profile.preferences, ...updateData.preferences }
         : profile.preferences,
       // Update timestamp
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
     };
-    
+
     try {
       // Trigger the update with optimistic data
       await updateProfile({
         method: 'PUT',
         body: updateData,
-        optimisticData
+        optimisticData,
       });
-      
+
       return true;
     } catch (err) {
       // Error handling will be done via the updateError state
       return false;
     }
   }, [id, profile, updateProfile]);
-  
+
   /**
    * Update user status
    */
-  const updateStatus = useCallback(async (status: UserProfile['status']) => {
+  const updateStatus = useCallback(async(status: UserProfile['status']) => {
     if (!id || !profile) return false;
-    
-    try {
-      await handleUpdateProfile({ 
-        preferences: { 
-          ...profile.preferences,
-          status 
-        } 
-      });
-      return true;
-    } catch (err) {
-      return false;
-    }
-  }, [id, profile, handleUpdateProfile]);
-  
-  /**
-   * Set user theme preference
-   */
-  const setTheme = useCallback(async (theme: UserPreferences['theme']) => {
-    if (!id || !profile) return false;
-    
+
     try {
       await handleUpdateProfile({
         preferences: {
           ...profile.preferences,
-          theme
-        }
+          status,
+        },
       });
       return true;
     } catch (err) {
       return false;
     }
   }, [id, profile, handleUpdateProfile]);
-  
+
+  /**
+   * Set user theme preference
+   */
+  const setTheme = useCallback(async(theme: UserPreferences['theme']) => {
+    if (!id || !profile) return false;
+
+    try {
+      await handleUpdateProfile({
+        preferences: {
+          ...profile.preferences,
+          theme,
+        },
+      });
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }, [id, profile, handleUpdateProfile]);
+
   /**
    * Update notification preferences
    */
-  const updateNotificationPreferences = useCallback(async (
-    notifications: Partial<UserPreferences['notifications']>
-  ) => {
+  const updateNotificationPreferences = useCallback(async(notifications: Partial<UserPreferences['notifications']>) => {
     if (!id || !profile || !profile.preferences) return false;
-    
+
     try {
       await handleUpdateProfile({
         preferences: {
           ...profile.preferences,
           notifications: {
             ...profile.preferences.notifications,
-            ...notifications
-          }
-        }
+            ...notifications,
+          },
+        },
       });
       return true;
     } catch (err) {
       return false;
     }
   }, [id, profile, handleUpdateProfile]);
-  
+
   /**
    * Update privacy settings
    */
-  const updatePrivacySettings = useCallback(async (
-    privacy: Partial<UserPreferences['privacy']>
-  ) => {
+  const updatePrivacySettings = useCallback(async(privacy: Partial<UserPreferences['privacy']>) => {
     if (!id || !profile || !profile.preferences) return false;
-    
+
     try {
       await handleUpdateProfile({
         preferences: {
           ...profile.preferences,
           privacy: {
             ...profile.preferences.privacy,
-            ...privacy
-          }
-        }
+            ...privacy,
+          },
+        },
       });
       return true;
     } catch (err) {
       return false;
     }
   }, [id, profile, handleUpdateProfile]);
-  
+
   /**
    * Update accessibility settings
    */
-  const updateAccessibilitySettings = useCallback(async (
-    accessibility: Partial<UserPreferences['accessibility']>
-  ) => {
+  const updateAccessibilitySettings = useCallback(async(accessibility: Partial<UserPreferences['accessibility']>) => {
     if (!id || !profile || !profile.preferences) return false;
-    
+
     try {
       await handleUpdateProfile({
         preferences: {
           ...profile.preferences,
           accessibility: {
             ...profile.preferences.accessibility,
-            ...accessibility
-          }
-        }
+            ...accessibility,
+          },
+        },
       });
       return true;
     } catch (err) {
       return false;
     }
   }, [id, profile, handleUpdateProfile]);
-  
+
   return {
     // Data states
     profile,
@@ -243,7 +239,7 @@ export const useUserProfile = (
     updateError,
     isOffline,
     isFromCache,
-    
+
     // Actions
     updateProfile: handleUpdateProfile,
     updateStatus,
@@ -251,10 +247,10 @@ export const useUserProfile = (
     updateNotificationPreferences,
     updatePrivacySettings,
     updateAccessibilitySettings,
-    
+
     // Manual revalidation
-    refreshProfile: () => mutate()
+    refreshProfile: () => mutate(),
   };
 };
 
-export default useUserProfile; 
+export default useUserProfile;

@@ -16,4 +16,4 @@ export interface AuthActions {
 
 export type UseAuthReturn = AuthState & AuthActions;
 
-export function useAuth(): UseAuthReturn; 
+export function useAuth(): UseAuthReturn;

@@ -35,19 +35,20 @@
  * - [v3.2.2] Created comprehensive test data generator with automated test cases and realistic scenarios
  */
 
-import { mockDatabase } from './mockDatabase';
-import { mockApi } from './mockApi';
-import { 
-  IUser, 
-  IPost, 
-  IMessage, 
-  IConversation, 
-  IGame, 
+import {
+  IUser,
+  IPost,
+  IMessage,
+  IConversation,
+  IGame,
   IAchievement,
   INotification,
   IActivity,
-  IFriend
+  IFriend,
 } from '../types/social';
+
+import { mockApi } from './mockApi';
+import { mockDatabase } from './mockDatabase';
 
 /**
  * Test Case Interface
@@ -128,13 +129,13 @@ export class TestDataGenerator {
         steps: [
           'Navigate to login page',
           'Enter valid email and password',
-          'Click login button'
+          'Click login button',
         ],
         expectedResult: 'User should be logged in and redirected to dashboard',
         data: {
           email: 'test@example.com',
-          password: 'validPassword123'
-        }
+          password: 'validPassword123',
+        },
       },
       {
         id: 'AUTH_002',
@@ -145,13 +146,13 @@ export class TestDataGenerator {
         steps: [
           'Navigate to login page',
           'Enter invalid email and password',
-          'Click login button'
+          'Click login button',
         ],
         expectedResult: 'Error message should be displayed',
         data: {
           email: 'invalid@example.com',
-          password: 'wrongPassword'
-        }
+          password: 'wrongPassword',
+        },
       },
       {
         id: 'AUTH_003',
@@ -162,14 +163,14 @@ export class TestDataGenerator {
         steps: [
           'Navigate to registration page',
           'Fill in all required fields',
-          'Submit registration form'
+          'Submit registration form',
         ],
         expectedResult: 'User account should be created and user logged in',
         data: {
           email: 'newuser@example.com',
           password: 'NewPassword123',
-          username: 'NewGamer123'
-        }
+          username: 'NewGamer123',
+        },
       },
       {
         id: 'AUTH_004',
@@ -180,10 +181,10 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Click logout button',
-          'Confirm logout'
+          'Confirm logout',
         ],
-        expectedResult: 'User should be logged out and redirected to login page'
-      }
+        expectedResult: 'User should be logged out and redirected to login page',
+      },
     ];
 
     authTests.forEach(test => this.testCases.set(test.id, test));
@@ -203,9 +204,9 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Navigate to profile page',
-          'View profile information'
+          'View profile information',
         ],
-        expectedResult: 'Profile should display all user information correctly'
+        expectedResult: 'Profile should display all user information correctly',
       },
       {
         id: 'PROFILE_002',
@@ -217,16 +218,16 @@ export class TestDataGenerator {
           'Login as a user',
           'Navigate to profile settings',
           'Update profile information',
-          'Save changes'
+          'Save changes',
         ],
         expectedResult: 'Profile should be updated with new information',
         data: {
           bio: 'Updated bio text',
           rank: 'Gold',
           settings: {
-            profileVisibility: 'friends'
-          }
-        }
+            profileVisibility: 'friends',
+          },
+        },
       },
       {
         id: 'PROFILE_003',
@@ -239,12 +240,12 @@ export class TestDataGenerator {
           'Navigate to profile settings',
           'Click upload picture',
           'Select image file',
-          'Save changes'
+          'Save changes',
         ],
         expectedResult: 'Profile picture should be updated',
         data: {
-          file: new File([''], 'profile.jpg', { type: 'image/jpeg' })
-        }
+          file: new File([''], 'profile.jpg', { type: 'image/jpeg' }),
+        },
       },
       {
         id: 'PROFILE_004',
@@ -255,10 +256,10 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Search for another user',
-          'Click on user profile'
+          'Click on user profile',
         ],
-        expectedResult: 'Other user\'s profile should be displayed with appropriate privacy settings'
-      }
+        expectedResult: 'Other user\'s profile should be displayed with appropriate privacy settings',
+      },
     ];
 
     profileTests.forEach(test => this.testCases.set(test.id, test));
@@ -280,13 +281,13 @@ export class TestDataGenerator {
           'Navigate to create post page',
           'Write post content',
           'Add optional media',
-          'Publish post'
+          'Publish post',
         ],
         expectedResult: 'Post should be created and visible in feed',
         data: {
           content: 'Just achieved a new high score in Valorant! 🎮',
-          gameId: 'game_123'
-        }
+          gameId: 'game_123',
+        },
       },
       {
         id: 'SOCIAL_002',
@@ -298,12 +299,12 @@ export class TestDataGenerator {
           'Login as a user',
           'Find a post in feed',
           'Click like button',
-          'Click like button again'
+          'Click like button again',
         ],
         expectedResult: 'Like count should increase then decrease',
         data: {
-          postId: 'post_123'
-        }
+          postId: 'post_123',
+        },
       },
       {
         id: 'SOCIAL_003',
@@ -316,13 +317,13 @@ export class TestDataGenerator {
           'Find a post in feed',
           'Click comment button',
           'Write comment',
-          'Submit comment'
+          'Submit comment',
         ],
         expectedResult: 'Comment should be added to post',
         data: {
           postId: 'post_123',
-          comment: 'Great achievement! Congrats! 🎉'
-        }
+          comment: 'Great achievement! Congrats! 🎉',
+        },
       },
       {
         id: 'SOCIAL_004',
@@ -335,14 +336,14 @@ export class TestDataGenerator {
           'Find a post in feed',
           'Click share button',
           'Add optional comment',
-          'Share post'
+          'Share post',
         ],
         expectedResult: 'Post should be shared to user\'s profile',
         data: {
           postId: 'post_123',
-          shareComment: 'Check out this amazing post!'
-        }
-      }
+          shareComment: 'Check out this amazing post!',
+        },
+      },
     ];
 
     socialTests.forEach(test => this.testCases.set(test.id, test));
@@ -363,15 +364,15 @@ export class TestDataGenerator {
           'Login as a user',
           'Navigate to games page',
           'Browse game list',
-          'Apply filters'
+          'Apply filters',
         ],
         expectedResult: 'Games should be displayed with filtering options',
         data: {
           filters: {
             genre: 'FPS',
-            platform: 'PC'
-          }
-        }
+            platform: 'PC',
+          },
+        },
       },
       {
         id: 'GAMING_002',
@@ -383,12 +384,12 @@ export class TestDataGenerator {
           'Login as a user',
           'Navigate to games page',
           'Enter search term',
-          'View search results'
+          'View search results',
         ],
         expectedResult: 'Relevant games should be displayed',
         data: {
-          searchTerm: 'Valorant'
-        }
+          searchTerm: 'Valorant',
+        },
       },
       {
         id: 'GAMING_003',
@@ -400,12 +401,12 @@ export class TestDataGenerator {
           'Login as a user',
           'Find a game in list',
           'Click on game',
-          'View game details'
+          'View game details',
         ],
         expectedResult: 'Game details should be displayed with all information',
         data: {
-          gameId: 'game_123'
-        }
+          gameId: 'game_123',
+        },
       },
       {
         id: 'GAMING_004',
@@ -417,13 +418,13 @@ export class TestDataGenerator {
           'Login as a user',
           'Navigate to achievements page',
           'View achievement list',
-          'Filter by game'
+          'Filter by game',
         ],
         expectedResult: 'Achievements should be displayed with progress',
         data: {
-          gameId: 'game_123'
-        }
-      }
+          gameId: 'game_123',
+        },
+      },
     ];
 
     gamingTests.forEach(test => this.testCases.set(test.id, test));
@@ -445,13 +446,13 @@ export class TestDataGenerator {
           'Navigate to messages',
           'Click new conversation',
           'Select recipient',
-          'Send first message'
+          'Send first message',
         ],
         expectedResult: 'New conversation should be created',
         data: {
           recipientId: 'user_456',
-          message: 'Hey! Want to play together?'
-        }
+          message: 'Hey! Want to play together?',
+        },
       },
       {
         id: 'MESSAGING_002',
@@ -463,13 +464,13 @@ export class TestDataGenerator {
           'Login as a user',
           'Open existing conversation',
           'Type message',
-          'Send message'
+          'Send message',
         ],
         expectedResult: 'Message should be sent and displayed',
         data: {
           conversationId: 'conv_123',
-          message: 'Great game last night!'
-        }
+          message: 'Great game last night!',
+        },
       },
       {
         id: 'MESSAGING_003',
@@ -481,9 +482,9 @@ export class TestDataGenerator {
           'Login as a user',
           'Open conversation',
           'Scroll through messages',
-          'Load more messages'
+          'Load more messages',
         ],
-        expectedResult: 'Message history should be displayed with pagination'
+        expectedResult: 'Message history should be displayed with pagination',
       },
       {
         id: 'MESSAGING_004',
@@ -494,10 +495,10 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Open conversation with unread messages',
-          'View messages'
+          'View messages',
         ],
-        expectedResult: 'Messages should be marked as read'
-      }
+        expectedResult: 'Messages should be marked as read',
+      },
     ];
 
     messagingTests.forEach(test => this.testCases.set(test.id, test));
@@ -519,13 +520,13 @@ export class TestDataGenerator {
           'Navigate to search page',
           'Enter search term',
           'Select users filter',
-          'View results'
+          'View results',
         ],
         expectedResult: 'Relevant users should be displayed',
         data: {
           searchTerm: 'ProGamer',
-          filter: 'users'
-        }
+          filter: 'users',
+        },
       },
       {
         id: 'SEARCH_002',
@@ -538,13 +539,13 @@ export class TestDataGenerator {
           'Navigate to search page',
           'Enter search term',
           'Select games filter',
-          'View results'
+          'View results',
         ],
         expectedResult: 'Relevant games should be displayed',
         data: {
           searchTerm: 'Valorant',
-          filter: 'games'
-        }
+          filter: 'games',
+        },
       },
       {
         id: 'SEARCH_003',
@@ -557,13 +558,13 @@ export class TestDataGenerator {
           'Navigate to search page',
           'Enter search term',
           'Select posts filter',
-          'View results'
+          'View results',
         ],
         expectedResult: 'Relevant posts should be displayed',
         data: {
           searchTerm: 'achievement',
-          filter: 'posts'
-        }
+          filter: 'posts',
+        },
       },
       {
         id: 'SEARCH_004',
@@ -576,17 +577,17 @@ export class TestDataGenerator {
           'Navigate to search page',
           'Open advanced filters',
           'Apply multiple filters',
-          'View results'
+          'View results',
         ],
         expectedResult: 'Filtered results should be displayed',
         data: {
           filters: {
             type: 'users',
             rank: 'Diamond',
-            game: 'Valorant'
-          }
-        }
-      }
+            game: 'Valorant',
+          },
+        },
+      },
     ];
 
     searchTests.forEach(test => this.testCases.set(test.id, test));
@@ -606,9 +607,9 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Click notification bell',
-          'View notification list'
+          'View notification list',
         ],
-        expectedResult: 'Notifications should be displayed with proper formatting'
+        expectedResult: 'Notifications should be displayed with proper formatting',
       },
       {
         id: 'NOTIFICATION_002',
@@ -619,9 +620,9 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Open notifications',
-          'Click on unread notification'
+          'Click on unread notification',
         ],
-        expectedResult: 'Notification should be marked as read'
+        expectedResult: 'Notification should be marked as read',
       },
       {
         id: 'NOTIFICATION_003',
@@ -633,13 +634,13 @@ export class TestDataGenerator {
           'Login as a user',
           'Open notifications',
           'Select notification type filter',
-          'View filtered results'
+          'View filtered results',
         ],
         expectedResult: 'Only notifications of selected type should be displayed',
         data: {
-          filter: 'messages'
-        }
-      }
+          filter: 'messages',
+        },
+      },
     ];
 
     notificationTests.forEach(test => this.testCases.set(test.id, test));
@@ -659,12 +660,12 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Navigate to feed page',
-          'Scroll through large number of posts'
+          'Scroll through large number of posts',
         ],
         expectedResult: 'Feed should load smoothly without performance issues',
         data: {
-          postCount: 1000
-        }
+          postCount: 1000,
+        },
       },
       {
         id: 'PERF_002',
@@ -675,12 +676,12 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Navigate to search page',
-          'Perform multiple rapid searches'
+          'Perform multiple rapid searches',
         ],
         expectedResult: 'Search results should appear quickly',
         data: {
-          searchTerms: ['game', 'user', 'post', 'achievement']
-        }
+          searchTerms: ['game', 'user', 'post', 'achievement'],
+        },
       },
       {
         id: 'PERF_003',
@@ -691,10 +692,10 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Open conversation with many messages',
-          'Scroll through message history'
+          'Scroll through message history',
         ],
-        expectedResult: 'Messages should load smoothly with pagination'
-      }
+        expectedResult: 'Messages should load smoothly with pagination',
+      },
     ];
 
     performanceTests.forEach(test => this.testCases.set(test.id, test));
@@ -713,9 +714,9 @@ export class TestDataGenerator {
         priority: 'medium',
         steps: [
           'Login as new user',
-          'Navigate to feed page'
+          'Navigate to feed page',
         ],
-        expectedResult: 'Empty state should be displayed with helpful message'
+        expectedResult: 'Empty state should be displayed with helpful message',
       },
       {
         id: 'EDGE_002',
@@ -726,12 +727,12 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Search for non-existent term',
-          'View search results'
+          'View search results',
         ],
         expectedResult: 'No results message should be displayed',
         data: {
-          searchTerm: 'nonexistentterm12345'
-        }
+          searchTerm: 'nonexistentterm12345',
+        },
       },
       {
         id: 'EDGE_003',
@@ -742,12 +743,12 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Create post with very long content',
-          'View post in feed'
+          'View post in feed',
         ],
         expectedResult: 'Long content should be truncated or handled properly',
         data: {
-          content: 'A'.repeat(10000)
-        }
+          content: 'A'.repeat(10000),
+        },
       },
       {
         id: 'EDGE_004',
@@ -758,13 +759,13 @@ export class TestDataGenerator {
         steps: [
           'Login as a user',
           'Create post with special characters',
-          'View post in feed'
+          'View post in feed',
         ],
         expectedResult: 'Special characters should be displayed correctly',
         data: {
-          content: 'Test with émojis 🎮 and special chars: !@#$%^&*()'
-        }
-      }
+          content: 'Test with émojis 🎮 and special chars: !@#$%^&*()',
+        },
+      },
     ];
 
     edgeCaseTests.forEach(test => this.testCases.set(test.id, test));
@@ -783,15 +784,15 @@ export class TestDataGenerator {
           this.testCases.get('AUTH_003')!,
           this.testCases.get('PROFILE_001')!,
           this.testCases.get('PROFILE_002')!,
-          this.testCases.get('SOCIAL_001')!
+          this.testCases.get('SOCIAL_001')!,
         ],
         setupData: {
           newUser: {
             email: 'newuser@example.com',
             password: 'NewPassword123',
-            username: 'NewGamer123'
-          }
-        }
+            username: 'NewGamer123',
+          },
+        },
       },
       {
         id: 'SCENARIO_002',
@@ -801,8 +802,8 @@ export class TestDataGenerator {
           this.testCases.get('SOCIAL_001')!,
           this.testCases.get('SOCIAL_002')!,
           this.testCases.get('SOCIAL_003')!,
-          this.testCases.get('NOTIFICATION_001')!
-        ]
+          this.testCases.get('NOTIFICATION_001')!,
+        ],
       },
       {
         id: 'SCENARIO_003',
@@ -812,8 +813,8 @@ export class TestDataGenerator {
           this.testCases.get('GAMING_001')!,
           this.testCases.get('GAMING_002')!,
           this.testCases.get('GAMING_003')!,
-          this.testCases.get('GAMING_004')!
-        ]
+          this.testCases.get('GAMING_004')!,
+        ],
       },
       {
         id: 'SCENARIO_004',
@@ -823,9 +824,9 @@ export class TestDataGenerator {
           this.testCases.get('MESSAGING_001')!,
           this.testCases.get('MESSAGING_002')!,
           this.testCases.get('MESSAGING_003')!,
-          this.testCases.get('MESSAGING_004')!
-        ]
-      }
+          this.testCases.get('MESSAGING_004')!,
+        ],
+      },
     ];
 
     scenarios.forEach(scenario => this.scenarios.set(scenario.id, scenario));
@@ -839,7 +840,7 @@ export class TestDataGenerator {
       low: { users: 100, posts: 500, messages: 1000, concurrentUsers: 10, requestsPerSecond: 5 },
       medium: { users: 500, posts: 2500, messages: 5000, concurrentUsers: 50, requestsPerSecond: 25 },
       high: { users: 1000, posts: 5000, messages: 10000, concurrentUsers: 100, requestsPerSecond: 50 },
-      extreme: { users: 5000, posts: 25000, messages: 50000, concurrentUsers: 500, requestsPerSecond: 250 }
+      extreme: { users: 5000, posts: 25000, messages: 50000, concurrentUsers: 500, requestsPerSecond: 250 },
     };
 
     const config = loadConfigs[loadLevel];
@@ -853,7 +854,7 @@ export class TestDataGenerator {
       messages,
       loadLevel,
       concurrentUsers: config.concurrentUsers,
-      requestsPerSecond: config.requestsPerSecond
+      requestsPerSecond: config.requestsPerSecond,
     };
   }
 
@@ -880,7 +881,7 @@ export class TestDataGenerator {
           gamesPlayed: Math.floor(Math.random() * 1000),
           gamesWon: Math.floor(Math.random() * 800),
           winRate: Math.random() * 0.7 + 0.3,
-          achievements: []
+          achievements: [],
         },
         settings: {
           profileVisibility: 'public',
@@ -893,23 +894,23 @@ export class TestDataGenerator {
                 friendRequests: true,
                 messages: true,
                 gameInvites: true,
-                achievements: true
-              }
-            }
+                achievements: true,
+              },
+            },
           },
           privacy: {
             showOnlineStatus: true,
             showLastSeen: true,
             allowFriendRequests: true,
-            showGameStats: true
-          }
+            showGameStats: true,
+          },
         },
         attributes: {
           email: `user${i}@example.com`,
           name: `Performance User ${i}`,
           picture: `https://api.dicebear.com/7.x/initials/svg?seed=User${i}`,
-          rank: ['Rookie', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'][Math.floor(Math.random() * 6)]
-        }
+          rank: ['Rookie', 'Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'][Math.floor(Math.random() * 6)],
+        },
       };
       users.push(user);
     }
@@ -931,7 +932,7 @@ export class TestDataGenerator {
         comments: Math.floor(Math.random() * 100),
         createdAt: new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString(),
         updatedAt: new Date().toISOString(),
-        type: ['achievement', 'game_review', 'tournament', 'highlight', 'general'][Math.floor(Math.random() * 5)]
+        type: ['achievement', 'game_review', 'tournament', 'highlight', 'general'][Math.floor(Math.random() * 5)],
       };
       posts.push(post);
     }
@@ -953,7 +954,7 @@ export class TestDataGenerator {
         author,
         status: 'read',
         createdAt: new Date(Date.now() - Math.random() * 7 * 24 * 60 * 60 * 1000),
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
       messages.push(message);
     }
@@ -986,7 +987,7 @@ export class TestDataGenerator {
   }
 
   public runTestCase(testCaseId: string): Promise<{ success: boolean; result: any; error?: string }> {
-    return new Promise(async (resolve) => {
+    return new Promise(async(resolve) => {
       const testCase = this.testCases.get(testCaseId);
       if (!testCase) {
         resolve({ success: false, error: 'Test case not found' });
@@ -996,10 +997,10 @@ export class TestDataGenerator {
       try {
         // Simulate test execution
         await new Promise(resolve => setTimeout(resolve, 1000));
-        
+
         // Random success/failure for demonstration
         const success = Math.random() > 0.1; // 90% success rate
-        
+
         if (success) {
           resolve({ success: true, result: `Test case ${testCaseId} executed successfully` });
         } else {
@@ -1012,7 +1013,7 @@ export class TestDataGenerator {
   }
 
   public runTestScenario(scenarioId: string): Promise<{ success: boolean; results: any[]; errors: string[] }> {
-    return new Promise(async (resolve) => {
+    return new Promise(async(resolve) => {
       const scenario = this.scenarios.get(scenarioId);
       if (!scenario) {
         resolve({ success: false, results: [], errors: ['Scenario not found'] });
@@ -1038,4 +1039,4 @@ export class TestDataGenerator {
 }
 
 // Export singleton instance
-export const testDataGenerator = new TestDataGenerator(); 
+export const testDataGenerator = new TestDataGenerator();

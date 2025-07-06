@@ -16,12 +16,12 @@ export const ProfileHeader = ({ user, isCurrentUser, onEditProfile }: ProfileHea
           className="avatar"
         />
       </div>
-      
+
       <div className="profile-info">
         <h1>{user.name || user.username}</h1>
         <p className="username">@{user.username}</p>
         <p className="bio">{user.bio}</p>
-        
+
         <div className="stats">
           <div className="stat">
             <span className="label">Level</span>
@@ -52,4 +52,4 @@ export const ProfileHeader = ({ user, isCurrentUser, onEditProfile }: ProfileHea
       </div>
     </div>
   );
-}; 
+};

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -562,7 +561,6 @@ const Forums: React.FC = () => {
           {snackbar.message}
         </Alert>
       </Snackbar>
-=======
 import {
   Box,
   Typography,
@@ -601,13 +599,9 @@ export const Forums = () => {
           No forum threads yet. Be the first to start a discussion!
         </Typography>
       </Paper>
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
     </Box>
   );
 };
 
-<<<<<<< HEAD
 export default Forums;
-=======
 export default Forums; 
->>>>>>> 2471f6c48a55d40216017bf626f34df3290ed4b9
