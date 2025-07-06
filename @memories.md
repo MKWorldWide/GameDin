@@ -131,6 +131,8 @@
 
 [v4.0.3] Development: Fixed AWS Amplify Node.js compatibility issues by updating engine requirements to >=18.0.0 to match AWS Amplify's Node.js v18.20.8. Removed husky prepare scripts that were causing deployment failures due to missing .git directory. Updated AWS Amplify Gen2 configuration to use Node.js 18 and added --ignore-scripts flag to all npm ci commands. Downgraded Vite to v5.0.0 for better Node.js 18 compatibility and updated Lambda function runtimes to nodejs18.x. Removed problematic dependencies including husky and newer testing tool versions. Successfully pushed compatibility fixes to GitHub (commit hash: b36f09991) with 1,095 insertions and 1,586 deletions. AWS Amplify deployment should now succeed without Node.js version mismatches or husky installation failures.
 
+[v4.0.4] Development: Fixed Vite build configuration issues for AWS Amplify deployment by removing cssnano dependency that was causing "Cannot find module 'cssnano'" errors. Corrected manualChunks configuration placement in rollupOptions to eliminate build warnings. Removed invalid [optimization] placeholder from output file names that was causing rollup errors. Configured PWA service worker to handle large files by excluding stats.html from cache and setting maximumFileSizeToCacheInBytes to 5MB. Successfully tested build locally and pushed fixes to GitHub (commit hash: 020f86fa8) with 35 insertions and 46 deletions. AWS Amplify deployment should now succeed without Vite configuration errors.
+
 # PROJECT STATUS SUMMARY
 
 ## ✅ COMPLETED

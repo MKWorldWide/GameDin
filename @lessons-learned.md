@@ -162,6 +162,8 @@
 
 [2024-07-06 04:30] Image Optimization: Self-selecting image optimization system → Implemented dynamic image optimization with responsive formats (WebP, AVIF, JPEG) and quality levels based on optimization profiles → Important for reducing bandwidth usage and improving page load performance across different network conditions.
 
+[2024-07-06 05:30] Vite Build Configuration: Issue: AWS Amplify deployment failing due to missing cssnano dependency and incorrect rollup configuration → Solution: Removed cssnano dependency, corrected manualChunks placement in rollupOptions, removed invalid [optimization] placeholders, and configured PWA to handle large files with proper cache exclusions → Why: Critical for successful AWS Amplify deployment. The cssnano dependency was not installed but referenced in Vite config, manualChunks was in wrong location causing build warnings, invalid placeholders caused rollup errors, and large files exceeded service worker cache limits. These fixes ensure clean builds and successful deployment to AWS Amplify.
+
 # KEY TAKEAWAYS AND RECOMMENDATIONS
 
 ## 🛡️ Security Best Practices

@@ -227,7 +227,8 @@ export const isDebugModeEnabled = (): boolean => {
 
 // Auto-initialize development environment
 if (isDevelopment()) {
-  initializeDevelopment().catch(console.error);
+  // Temporarily disabled to prevent initialization issues
+  // initializeDevelopment().catch(console.error);
 }
 
 export default devConfig; 
