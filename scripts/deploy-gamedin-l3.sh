@@ -93,11 +93,15 @@ build_and_push_images() {
     local account_id=$(aws sts get-caller-identity --query Account --output text)
     local ecr_repo="gamedin-l3"
     
-    # Create ECR repository if it doesn't exist
-    aws ecr describe-repositories --repository-names "$ecr_repo" --region "$AWS_REGION" 2>/dev/null || {
-        echo -e "${BLUE}📦 Creating ECR repository: $ecr_repo${NC}"
-        aws ecr create-repository --repository-name "$ecr_repo" --region "$AWS_REGION"
-    }
+    # Create ECR repositories if they don't exist
+    local repositories=("$ecr_repo/blockchain-node" "$ecr_repo/ai-service" "$ecr_repo/web-app")
+    
+    for repo in "${repositories[@]}"; do
+        aws ecr describe-repositories --repository-names "$repo" --region "$AWS_REGION" 2>/dev/null || {
+            echo -e "${BLUE}📦 Creating ECR repository: $repo${NC}"
+            aws ecr create-repository --repository-name "$repo" --region "$AWS_REGION"
+        }
+    done
     
     # Login to ECR
     aws ecr get-login-password --region "$AWS_REGION" | docker login --username AWS --password-stdin "$account_id.dkr.ecr.$AWS_REGION.amazonaws.com"
@@ -113,7 +117,13 @@ build_and_push_images() {
             create_dockerfile "$image"
         fi
         
-        docker build -f "Dockerfile.$image" -t "$image:$VERSION" .
+        # Use the correct Dockerfile path
+        local dockerfile_path="Dockerfile.$image"
+        if [ "$image" = "blockchain-node" ] && [ -f "blockchain/Dockerfile.blockchain-node" ]; then
+            dockerfile_path="blockchain/Dockerfile.blockchain-node"
+        fi
+        
+        docker build -f "$dockerfile_path" -t "$image:$VERSION" .
         docker tag "$image:$VERSION" "$account_id.dkr.ecr.$AWS_REGION.amazonaws.com/$ecr_repo/$image:$VERSION"
         docker push "$account_id.dkr.ecr.$AWS_REGION.amazonaws.com/$ecr_repo/$image:$VERSION"
         

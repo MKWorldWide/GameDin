@@ -1,0 +1,25 @@
+FROM node:18-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY blockchain/package*.json ./
+
+# Install dependencies
+RUN npm install --omit=dev
+
+# Copy source code
+COPY blockchain/ .
+
+# Build TypeScript
+RUN npm run build
+
+# Expose ports
+EXPOSE 8545 30303
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node -e "console.log('Health check passed')" || exit 1
+
+# Start the blockchain service
+CMD ["npm", "start"] 

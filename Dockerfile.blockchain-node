@@ -1,0 +1,7 @@
+FROM node:18-alpine
+WORKDIR /app
+COPY blockchain/package*.json ./
+RUN npm ci --only=production
+COPY blockchain/ .
+EXPOSE 8545 30303
+CMD ["node", "services/blockchainService.js"]
