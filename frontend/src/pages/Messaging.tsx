@@ -1,6 +1,6 @@
-import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
-import { useVirtualizer } from '@tanstack/react-virtual';
 import { DataStore, Predicates } from '@aws-amplify/datastore';
+import { useVirtualizer } from '@tanstack/react-virtual';
+import React, { useState, useEffect, useCallback, useMemo, memo } from 'react';
 
 import { useMessaging } from '../hooks/useMessaging';
 import useStore from '../store/useStore';
@@ -9,7 +9,7 @@ import type { IConversation, IMessage, IUser } from '../types/social';
 // TODO: Import Message model from correct path if available
 let MessageModel: any = undefined;
 try {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
+
   MessageModel = require('../models').Message;
 } catch (e) {
   // fallback if model is missing
@@ -162,7 +162,7 @@ export default function Messaging() {
         },
         error: (error: Error) => {
           console.error('Subscription error:', error);
-        }
+        },
       });
     }
 

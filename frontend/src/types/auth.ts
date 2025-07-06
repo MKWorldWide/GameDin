@@ -1,9 +1,9 @@
 /**
  * Authentication Types for GameDin Application
- * 
+ *
  * This module defines all authentication-related types including user interfaces,
  * context types, and AWS Amplify authentication integration.
- * 
+ *
  * @author GameDin Development Team
  * @version 4.1.0
  * @since 2024-07-06
@@ -112,4 +112,4 @@ export interface UserProfile {
   phoneVerified: boolean;
   createdAt: string;
   updatedAt: string;
-} 
+}

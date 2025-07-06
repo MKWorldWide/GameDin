@@ -1,0 +1,413 @@
+# GameDin L3 Unified Deployment Configuration
+# Integrates blockchain services with AWS infrastructure
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gamedin-l3
+  labels:
+    app: gamedin-l3
+    environment: production
+
+---
+# Blockchain Node Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-blockchain-node
+  namespace: gamedin-l3
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gamedin-blockchain-node
+  template:
+    metadata:
+      labels:
+        app: gamedin-blockchain-node
+    spec:
+      containers:
+      - name: blockchain-node
+        image: gamedin/blockchain-node:latest
+        ports:
+        - containerPort: 8545
+        - containerPort: 30303
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: CHAIN_ID
+          value: "1337421"
+        - name: CONSENSUS_TYPE
+          value: "BFT"
+        - name: VALIDATOR_COUNT
+          value: "21"
+        - name: CONSENSUS_THRESHOLD
+          value: "80"
+        - name: MAX_TPS
+          value: "50000"
+        - name: NOVASANCTUM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: gamedin-secrets
+              key: novasanctum-api-key
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2"
+          limits:
+            memory: "8Gi"
+            cpu: "4"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8545
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8545
+          initialDelaySeconds: 5
+          periodSeconds: 5
+
+---
+# AI Service Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-ai-service
+  namespace: gamedin-l3
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gamedin-ai-service
+  template:
+    metadata:
+      labels:
+        app: gamedin-ai-service
+    spec:
+      containers:
+      - name: ai-service
+        image: gamedin/ai-service:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: NOVASANCTUM_ENDPOINT
+          value: "https://api.novasanctum.ai/v1"
+        - name: NOVASANCTUM_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: gamedin-secrets
+              key: novasanctum-api-key
+        - name: AI_FEATURES_ANTICHEAT
+          value: "true"
+        - name: AI_FEATURES_MATCHMAKING
+          value: "true"
+        - name: AI_FEATURES_CONTENT_GENERATION
+          value: "true"
+        - name: AI_FEATURES_ANALYTICS
+          value: "true"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
+            memory: "4Gi"
+            cpu: "2"
+
+---
+# Web Application Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-web-app
+  namespace: gamedin-l3
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: gamedin-web-app
+  template:
+    metadata:
+      labels:
+        app: gamedin-web-app
+    spec:
+      containers:
+      - name: web-app
+        image: gamedin/web-app:latest
+        ports:
+        - containerPort: 3000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: BLOCKCHAIN_RPC_URL
+          value: "https://blockchain.gamedin.com"
+        - name: AI_SERVICE_URL
+          value: "https://ai.gamedin.com"
+        - name: AWS_REGION
+          value: "us-east-1"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "2Gi"
+            cpu: "1"
+
+---
+# Services
+apiVersion: v1
+kind: Service
+metadata:
+  name: blockchain-service
+  namespace: gamedin-l3
+spec:
+  selector:
+    app: gamedin-blockchain-node
+  ports:
+  - name: http
+    port: 8545
+    targetPort: 8545
+  - name: p2p
+    port: 30303
+    targetPort: 30303
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-service
+  namespace: gamedin-l3
+spec:
+  selector:
+    app: gamedin-ai-service
+  ports:
+  - port: 8080
+    targetPort: 8080
+  type: ClusterIP
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-app-service
+  namespace: gamedin-l3
+spec:
+  selector:
+    app: gamedin-web-app
+  ports:
+  - port: 80
+    targetPort: 3000
+  type: ClusterIP
+
+---
+# Ingress for external access
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: gamedin-ingress
+  namespace: gamedin-l3
+  annotations:
+    kubernetes.io/ingress.class: "alb"
+    alb.ingress.kubernetes.io/scheme: "internet-facing"
+    alb.ingress.kubernetes.io/target-type: "ip"
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:us-east-1:123456789012:certificate/your-cert-id"
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+spec:
+  rules:
+  - host: app.gamedin.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: web-app-service
+            port:
+              number: 80
+  - host: blockchain.gamedin.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: blockchain-service
+            port:
+              number: 8545
+  - host: ai.gamedin.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: ai-service
+            port:
+              number: 8080
+
+---
+# Secrets
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gamedin-secrets
+  namespace: gamedin-l3
+type: Opaque
+data:
+  novasanctum-api-key: <base64-encoded-api-key>
+  blockchain-private-key: <base64-encoded-private-key>
+  aws-access-key-id: <base64-encoded-access-key>
+  aws-secret-access-key: <base64-encoded-secret-key>
+
+---
+# ConfigMap for blockchain configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: blockchain-config
+  namespace: gamedin-l3
+data:
+  blockchain-config.json: |
+    {
+      "network": {
+        "name": "GameDin L3 Production",
+        "chainId": 1337421,
+        "rpcUrl": "https://mainnet.base.org",
+        "explorerUrl": "https://basescan.org",
+        "nativeCurrency": {
+          "name": "Ether",
+          "symbol": "ETH",
+          "decimals": 18
+        },
+        "blockTime": 1,
+        "gasLimit": 50000000,
+        "gasPrice": "1000000000"
+      },
+      "consensus": {
+        "type": "BFT",
+        "validators": 21,
+        "threshold": 80,
+        "blockTime": 50,
+        "finality": 1,
+        "gamingOptimized": true
+      },
+      "gaming": {
+        "maxTPS": 50000,
+        "criticalActionLatency": 50,
+        "batchSize": 5000,
+        "gasSponsoring": true,
+        "nftBatching": true,
+        "realtimeUpdates": true,
+        "aiIntegration": true
+      },
+      "ai": {
+        "novaSanctumEnabled": true,
+        "modelEndpoint": "https://api.novasanctum.ai/v1",
+        "features": {
+          "antiCheat": true,
+          "matchmaking": true,
+          "contentGeneration": true,
+          "analytics": true
+        }
+      },
+      "deployment": {
+        "environment": "production",
+        "region": "us-east-1",
+        "autoScaling": true,
+        "monitoring": true,
+        "backup": true,
+        "security": {
+          "waf": true,
+          "shield": true,
+          "guardDuty": true
+        }
+      }
+    }
+
+---
+# Horizontal Pod Autoscaler
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gamedin-blockchain-hpa
+  namespace: gamedin-l3
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gamedin-blockchain-node
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+# Horizontal Pod Autoscaler for AI Service
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gamedin-ai-hpa
+  namespace: gamedin-l3
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gamedin-ai-service
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+
+---
+# Horizontal Pod Autoscaler for Web App
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gamedin-web-hpa
+  namespace: gamedin-l3
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gamedin-web-app
+  minReplicas: 3
+  maxReplicas: 15
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80 

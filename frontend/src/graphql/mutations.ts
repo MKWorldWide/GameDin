@@ -1,9 +1,9 @@
 /**
  * GraphQL Mutations for GameDin Application
- * 
+ *
  * This module defines all GraphQL mutations for the gaming social platform
  * including message creation, conversation management, and user interactions.
- * 
+ *
  * @author GameDin Development Team
  * @version 4.1.0
  * @since 2024-07-06
@@ -302,4 +302,4 @@ export const deleteComment = /* GraphQL */ `
       updatedAt
     }
   }
-`; 
+`;

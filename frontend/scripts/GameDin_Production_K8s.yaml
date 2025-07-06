@@ -1,0 +1,765 @@
+# GameDin L3 Production Kubernetes Deployment
+# Optimized for maximum efficiency and immediate uptime
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gamedin-l3-prod
+  labels:
+    name: gamedin-l3-prod
+    tier: production
+---
+# ConfigMap for optimized configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gamedin-l3-config
+  namespace: gamedin-l3-prod
+data:
+  CHAIN_ID: "1337420"
+  SETTLEMENT_LAYER: "base"
+  MAX_TPS: "10000"
+  CONSENSUS_THRESHOLD: "67"
+  CRITICAL_GAMING_THRESHOLD: "60"
+  ENABLE_AI_CONSENSUS: "true"
+  ENABLE_GAS_SPONSORING: "true"
+  ENABLE_NFT_BATCHING: "true"
+  AI_ANALYSIS_SPEED: "50ms"
+  FRAUD_DETECTION: "true"
+  CONSENSUS_OPTIMIZATION: "true"
+  WEBSOCKET_PORT: "9546"
+  MAX_CONNECTIONS: "10000"
+  ENABLE_REAL_TIME: "true"
+---
+# High-performance GameDin L3 Node Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-l3-node
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-l3-node
+    tier: blockchain
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: gamedin-l3-node
+  template:
+    metadata:
+      labels:
+        app: gamedin-l3-node
+        tier: blockchain
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8545"
+        prometheus.io/path: "/metrics"
+    spec:
+      nodeSelector:
+        node-type: high-performance
+      tolerations:
+      - key: "dedicated"
+        operator: "Equal"
+        value: "gamedin-l3"
+        effect: "NoSchedule"
+      containers:
+      - name: l3-node
+        image: gamedin/l3-node:latest
+        imagePullPolicy: Always
+        ports:
+        - name: rpc
+          containerPort: 8545
+        - name: ws
+          containerPort: 8546
+        - name: metrics
+          containerPort: 9545
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: CHAIN_ID
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: CHAIN_ID
+        - name: MAX_TPS
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: MAX_TPS
+        - name: CONSENSUS_THRESHOLD
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: CONSENSUS_THRESHOLD
+        - name: ENABLE_AI_CONSENSUS
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: ENABLE_AI_CONSENSUS
+        resources:
+          requests:
+            memory: "4Gi"
+            cpu: "2000m"
+          limits:
+            memory: "8Gi"
+            cpu: "4000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8545
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 8545
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2
+        startupProbe:
+          httpGet:
+            path: /startup
+            port: 8545
+          initialDelaySeconds: 10
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 30
+        volumeMounts:
+        - name: l3-data
+          mountPath: /app/data
+        - name: l3-config
+          mountPath: /app/config
+      volumes:
+      - name: l3-data
+        persistentVolumeClaim:
+          claimName: l3-node-pvc
+      - name: l3-config
+        configMap:
+          name: gamedin-l3-config
+---
+# Gaming Engine Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-gaming-engine
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-gaming-engine
+    tier: gaming
+spec:
+  replicas: 5
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 2
+  selector:
+    matchLabels:
+      app: gamedin-gaming-engine
+  template:
+    metadata:
+      labels:
+        app: gamedin-gaming-engine
+        tier: gaming
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9546"
+        prometheus.io/path: "/metrics"
+    spec:
+      nodeSelector:
+        node-type: gaming-optimized
+      containers:
+      - name: gaming-engine
+        image: gamedin/gaming-engine:latest
+        imagePullPolicy: Always
+        ports:
+        - name: websocket
+          containerPort: 9546
+        - name: metrics
+          containerPort: 9547
+        env:
+        - name: L3_RPC_URL
+          value: "http://gamedin-l3-service:8545"
+        - name: WEBSOCKET_PORT
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: WEBSOCKET_PORT
+        - name: MAX_CONNECTIONS
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: MAX_CONNECTIONS
+        - name: ENABLE_REAL_TIME
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: ENABLE_REAL_TIME
+        - name: REDIS_URL
+          value: "redis://gamedin-redis-service:6379"
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "1000m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 9546
+          initialDelaySeconds: 20
+          periodSeconds: 10
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 9546
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+---
+# NovaSanctum AI Integration Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-novasanctum
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-novasanctum
+    tier: ai
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: gamedin-novasanctum
+  template:
+    metadata:
+      labels:
+        app: gamedin-novasanctum
+        tier: ai
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "7547"
+        prometheus.io/path: "/metrics"
+    spec:
+      nodeSelector:
+        node-type: ai-optimized
+      containers:
+      - name: novasanctum-ai
+        image: gamedin/novasanctum-integration:latest
+        imagePullPolicy: Always
+        ports:
+        - name: ai-api
+          containerPort: 7547
+        - name: metrics
+          containerPort: 7548
+        env:
+        - name: AI_ANALYSIS_SPEED
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: AI_ANALYSIS_SPEED
+        - name: FRAUD_DETECTION
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: FRAUD_DETECTION
+        - name: CONSENSUS_OPTIMIZATION
+          valueFrom:
+            configMapKeyRef:
+              name: gamedin-l3-config
+              key: CONSENSUS_OPTIMIZATION
+        - name: L3_RPC_URL
+          value: "http://gamedin-l3-service:8545"
+        resources:
+          requests:
+            memory: "3Gi"
+            cpu: "1500m"
+          limits:
+            memory: "6Gi"
+            cpu: "3000m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 7547
+          initialDelaySeconds: 30
+          periodSeconds: 15
+          timeoutSeconds: 5
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: 7547
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 3
+---
+# Redis High-Performance Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-redis
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-redis
+    tier: cache
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gamedin-redis
+  template:
+    metadata:
+      labels:
+        app: gamedin-redis
+        tier: cache
+    spec:
+      nodeSelector:
+        node-type: memory-optimized
+      containers:
+      - name: redis
+        image: redis:7-alpine
+        ports:
+        - containerPort: 6379
+        env:
+        - name: REDIS_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: gamedin-redis-secret
+              key: password
+        command:
+          - redis-server
+          - --maxmemory
+          - 4gb
+          - --maxmemory-policy
+          - allkeys-lru
+          - --save
+          - "900 1"
+          - --save
+          - "300 10"
+          - --save
+          - "60 10000"
+          - --requirepass
+          - $(REDIS_PASSWORD)
+        resources:
+          requests:
+            memory: "2Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "1000m"
+        livenessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          exec:
+            command:
+            - redis-cli
+            - ping
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+      volumes:
+      - name: redis-data
+        persistentVolumeClaim:
+          claimName: redis-pvc
+---
+# High-Performance Load Balancer (NGINX)
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gamedin-load-balancer
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-load-balancer
+    tier: proxy
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gamedin-load-balancer
+  template:
+    metadata:
+      labels:
+        app: gamedin-load-balancer
+        tier: proxy
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:alpine
+        ports:
+        - containerPort: 80
+        - containerPort: 443
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/nginx.conf
+          subPath: nginx.conf
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: nginx-config
+---
+# NGINX Configuration
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+  namespace: gamedin-l3-prod
+data:
+  nginx.conf: |
+    events {
+        worker_connections 4096;
+        use epoll;
+        multi_accept on;
+    }
+    
+    http {
+        upstream l3_nodes {
+            least_conn;
+            server gamedin-l3-service:8545 max_fails=3 fail_timeout=30s;
+        }
+        
+        upstream gaming_engines {
+            least_conn;
+            server gamedin-gaming-service:9546 max_fails=3 fail_timeout=30s;
+        }
+        
+        upstream ai_services {
+            least_conn;
+            server gamedin-novasanctum-service:7547 max_fails=3 fail_timeout=30s;
+        }
+        
+        server {
+            listen 80;
+            
+            # L3 RPC endpoint
+            location /rpc {
+                proxy_pass http://l3_nodes;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_cache_bypass $http_upgrade;
+                proxy_connect_timeout 5s;
+                proxy_send_timeout 60s;
+                proxy_read_timeout 60s;
+            }
+            
+            # Gaming WebSocket
+            location /gaming {
+                proxy_pass http://gaming_engines;
+                proxy_http_version 1.1;
+                proxy_set_header Upgrade $http_upgrade;
+                proxy_set_header Connection 'upgrade';
+                proxy_set_header Host $host;
+                proxy_cache_bypass $http_upgrade;
+                proxy_connect_timeout 1s;
+                proxy_send_timeout 10s;
+                proxy_read_timeout 10s;
+            }
+            
+            # AI API
+            location /ai {
+                proxy_pass http://ai_services;
+                proxy_http_version 1.1;
+                proxy_set_header Host $host;
+                proxy_connect_timeout 2s;
+                proxy_send_timeout 30s;
+                proxy_read_timeout 30s;
+            }
+            
+            # Health check
+            location /health {
+                access_log off;
+                return 200 "healthy\n";
+                add_header Content-Type text/plain;
+            }
+        }
+    }
+---
+# Services for High Availability
+apiVersion: v1
+kind: Service
+metadata:
+  name: gamedin-l3-service
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-l3-node
+spec:
+  selector:
+    app: gamedin-l3-node
+  ports:
+  - name: rpc
+    port: 8545
+    targetPort: 8545
+    protocol: TCP
+  - name: ws
+    port: 8546
+    targetPort: 8546
+    protocol: TCP
+  type: ClusterIP
+  sessionAffinity: None
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gamedin-gaming-service
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-gaming-engine
+spec:
+  selector:
+    app: gamedin-gaming-engine
+  ports:
+  - name: websocket
+    port: 9546
+    targetPort: 9546
+    protocol: TCP
+  type: ClusterIP
+  sessionAffinity: ClientIP
+  sessionAffinityConfig:
+    clientIP:
+      timeoutSeconds: 3600
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gamedin-novasanctum-service
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-novasanctum
+spec:
+  selector:
+    app: gamedin-novasanctum
+  ports:
+  - name: ai-api
+    port: 7547
+    targetPort: 7547
+    protocol: TCP
+  type: ClusterIP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gamedin-redis-service
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-redis
+spec:
+  selector:
+    app: gamedin-redis
+  ports:
+  - name: redis
+    port: 6379
+    targetPort: 6379
+    protocol: TCP
+  type: ClusterIP
+---
+# Load Balancer Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: gamedin-load-balancer-service
+  namespace: gamedin-l3-prod
+  labels:
+    app: gamedin-load-balancer
+spec:
+  selector:
+    app: gamedin-load-balancer
+  ports:
+  - name: http
+    port: 80
+    targetPort: 80
+    protocol: TCP
+  - name: https
+    port: 443
+    targetPort: 443
+    protocol: TCP
+  type: LoadBalancer
+---
+# Persistent Volume Claims for Data
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: l3-node-pvc
+  namespace: gamedin-l3-prod
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 100Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: redis-pvc
+  namespace: gamedin-l3-prod
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: fast-ssd
+  resources:
+    requests:
+      storage: 20Gi
+---
+# Redis Secret
+apiVersion: v1
+kind: Secret
+metadata:
+  name: gamedin-redis-secret
+  namespace: gamedin-l3-prod
+type: Opaque
+data:
+  password: Z2FtZWRpbl9zZWN1cmVfcmVkaXM= # gamedin_secure_redis base64 encoded
+---
+# Horizontal Pod Autoscaler for Gaming Engine
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gamedin-gaming-engine-hpa
+  namespace: gamedin-l3-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gamedin-gaming-engine
+  minReplicas: 3
+  maxReplicas: 20
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+  - type: Resource
+    resource:
+      name: memory
+      target:
+        type: Utilization
+        averageUtilization: 80
+---
+# HPA for L3 Nodes
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gamedin-l3-node-hpa
+  namespace: gamedin-l3-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gamedin-l3-node
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 75
+---
+# HPA for AI Services
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: gamedin-novasanctum-hpa
+  namespace: gamedin-l3-prod
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: gamedin-novasanctum
+  minReplicas: 2
+  maxReplicas: 8
+  metrics:
+  - type: Resource
+    resource:
+      name: cpu
+      target:
+        type: Utilization
+        averageUtilization: 70
+---
+# Pod Disruption Budget for High Availability
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: gamedin-l3-node-pdb
+  namespace: gamedin-l3-prod
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      app: gamedin-l3-node
+---
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: gamedin-gaming-engine-pdb
+  namespace: gamedin-l3-prod
+spec:
+  minAvailable: 3
+  selector:
+    matchLabels:
+      app: gamedin-gaming-engine
+---
+# Network Policy for Security
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: gamedin-l3-network-policy
+  namespace: gamedin-l3-prod
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          name: gamedin-l3-prod
+    - namespaceSelector:
+        matchLabels:
+          name: monitoring
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: gamedin-l3-prod
+  - to: [] # Allow external traffic for NovaSanctum API calls
+    ports:
+    - protocol: TCP
+      port: 443
+    - protocol: TCP
+      port: 80

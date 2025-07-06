@@ -1,9 +1,9 @@
 /**
  * Social Types for GameDin Application
- * 
+ *
  * This module defines all social interaction types including users, posts,
  * conversations, messages, and related interfaces for the gaming social platform.
- * 
+ *
  * @author GameDin Development Team
  * @version 4.1.0
  * @since 2024-07-06
@@ -440,4 +440,4 @@ export interface IChatError extends Error {
   code: string;
   details?: Record<string, unknown>;
   retry?: boolean;
-} 
+}

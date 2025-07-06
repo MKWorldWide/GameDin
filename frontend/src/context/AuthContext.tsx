@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { getCurrentUser, signIn, signOut } from '@aws-amplify/auth';
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+
 import useToast from '../hooks/useToast';
 import store from '../store/useStore';
 import { IUser } from '../types/social';
@@ -23,7 +24,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
   const { showToast } = useToast();
 
-  const login = async (email: string, password: string) => {
+  const login = async(email: string, password: string) => {
     try {
       setLoading(true);
       const { isSignedIn, nextStep } = await signIn({ username: email, password });
@@ -35,8 +36,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: currentUser.signInDetails?.loginId || '',
           name: currentUser.username,
           picture: '/default-avatar.png',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          avatar: '/default-avatar.png',
+          bio: '',
+          level: 1,
+          rank: 'Newbie',
+          status: 'online',
+          lastSeen: new Date(),
+          friends: [],
+          gameStats: {
+            gamesPlayed: 0,
+            gamesWon: 0,
+            winRate: 0,
+            achievements: [],
+          },
+          settings: {
+            profileVisibility: 'public',
+            notifications: {
+              push: true,
+              email: true,
+              emailNotifications: {
+                frequency: 'real-time',
+                types: {
+                  friendRequests: true,
+                  messages: true,
+                  gameInvites: true,
+                  achievements: true,
+                },
+              },
+            },
+            privacy: {
+              showOnlineStatus: true,
+              showLastSeen: true,
+              allowFriendRequests: true,
+              showGameStats: true,
+            },
+          },
         };
         setUser(mappedUser);
         showToast('Successfully logged in', 'success');
@@ -49,7 +83,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const logout = async () => {
+  const logout = async() => {
     try {
       await signOut();
       setUser(null);
@@ -61,7 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUser = async() => {
       try {
         const currentUser = await getCurrentUser();
         const mappedUser: IUser = {
@@ -70,8 +104,41 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           email: currentUser.signInDetails?.loginId || '',
           name: currentUser.username,
           picture: '/default-avatar.png',
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          avatar: '/default-avatar.png',
+          bio: '',
+          level: 1,
+          rank: 'Newbie',
+          status: 'online',
+          lastSeen: new Date(),
+          friends: [],
+          gameStats: {
+            gamesPlayed: 0,
+            gamesWon: 0,
+            winRate: 0,
+            achievements: [],
+          },
+          settings: {
+            profileVisibility: 'public',
+            notifications: {
+              push: true,
+              email: true,
+              emailNotifications: {
+                frequency: 'real-time',
+                types: {
+                  friendRequests: true,
+                  messages: true,
+                  gameInvites: true,
+                  achievements: true,
+                },
+              },
+            },
+            privacy: {
+              showOnlineStatus: true,
+              showLastSeen: true,
+              allowFriendRequests: true,
+              showGameStats: true,
+            },
+          },
         };
         setUser(mappedUser);
       } catch (err) {
@@ -87,36 +154,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   return (
     <AuthContext.Provider value={{ user, loading, error, login, logout, setUser, setLoading, setError }}>
-import React, { createContext, useContext } from 'react';
-import { useStore } from '../store/useStore';
-import { Store } from '../types/store';
-
-const AuthContext = createContext<Store | null>(null);
-
-export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const store = useStore(state => ({
-    user: state.user,
-    settings: state.settings,
-    isAuthenticated: state.isAuthenticated,
-    loading: state.loading,
-    error: state.error,
-    darkMode: state.darkMode,
-    setUser: state.setUser,
-    setIsAuthenticated: state.setIsAuthenticated,
-    setLoading: state.setLoading,
-    setError: state.setError,
-    updateSettings: state.updateSettings,
-    toggleDarkMode: state.toggleDarkMode,
-    login: state.login,
-    register: state.register,
-    logout: state.logout,
-    resetPassword: state.resetPassword,
-    confirmResetPassword: state.confirmResetPassword,
-    resendConfirmationCode: state.resendConfirmationCode
-  }));
-
-  return (
-    <AuthContext.Provider value={store}>
       {children}
     </AuthContext.Provider>
   );
@@ -131,8 +168,3 @@ export const useAuth = () => {
 };
 
 export default AuthContext;
-  if (!context) {
-    throw new Error('useAuth must be used within an AuthContextProvider');
-  }
-  return context;
-}; 
