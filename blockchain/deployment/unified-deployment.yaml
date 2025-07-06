@@ -28,7 +28,7 @@ spec:
     spec:
       containers:
       - name: blockchain-node
-        image: gamedin/blockchain-node:latest
+        image: 869935067006.dkr.ecr.us-east-1.amazonaws.com/gamedin-l3/blockchain-node:4.2.0
         ports:
         - containerPort: 8545
         - containerPort: 30303
@@ -52,11 +52,11 @@ spec:
               key: novasanctum-api-key
         resources:
           requests:
+            memory: "2Gi"
+            cpu: "1"
+          limits:
             memory: "4Gi"
             cpu: "2"
-          limits:
-            memory: "8Gi"
-            cpu: "4"
         livenessProbe:
           httpGet:
             path: /health
@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
       - name: ai-service
-        image: gamedin/ai-service:latest
+        image: 869935067006.dkr.ecr.us-east-1.amazonaws.com/gamedin-l3/ai-service:4.2.0
         ports:
         - containerPort: 8080
         env:
@@ -110,11 +110,11 @@ spec:
           value: "true"
         resources:
           requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
             memory: "2Gi"
             cpu: "1"
-          limits:
-            memory: "4Gi"
-            cpu: "2"
 
 ---
 # Web Application Deployment
@@ -135,7 +135,7 @@ spec:
     spec:
       containers:
       - name: web-app
-        image: gamedin/web-app:latest
+        image: 869935067006.dkr.ecr.us-east-1.amazonaws.com/gamedin-l3/web-app:4.2.0
         ports:
         - containerPort: 3000
         env:
@@ -248,20 +248,6 @@ spec:
             name: ai-service
             port:
               number: 8080
-
----
-# Secrets
-apiVersion: v1
-kind: Secret
-metadata:
-  name: gamedin-secrets
-  namespace: gamedin-l3
-type: Opaque
-data:
-  novasanctum-api-key: <base64-encoded-api-key>
-  blockchain-private-key: <base64-encoded-private-key>
-  aws-access-key-id: <base64-encoded-access-key>
-  aws-secret-access-key: <base64-encoded-secret-key>
 
 ---
 # ConfigMap for blockchain configuration

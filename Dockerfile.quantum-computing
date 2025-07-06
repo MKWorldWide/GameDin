@@ -1,0 +1,22 @@
+FROM node:18-alpine
+
+# Set working directory
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy quantum infrastructure
+COPY quantum-infrastructure/ ./quantum-infrastructure/
+
+# Build quantum infrastructure
+RUN npm run build
+
+# Expose quantum computing port
+EXPOSE 9090
+
+# Start quantum computing server
+CMD ["node", "quantum-infrastructure/quantumServer.js"] 

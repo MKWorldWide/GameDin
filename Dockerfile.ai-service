@@ -1,7 +1,8 @@
 FROM node:18-alpine
 WORKDIR /app
 COPY blockchain/package*.json ./
-RUN npm ci --only=production
+RUN npm install
 COPY blockchain/ .
+RUN npm run build
 EXPOSE 8080
-CMD ["node", "services/novaSanctumAI.js"]
+CMD ["node", "dist/services/aiServer.js"]

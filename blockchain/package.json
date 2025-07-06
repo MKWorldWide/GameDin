@@ -4,8 +4,8 @@
   "description": "GameDin L3 Blockchain with NovaSanctum AI Integration",
   "main": "services/blockchainService.ts",
   "scripts": {
-    "start": "node services/blockchainService.js",
-    "dev": "ts-node services/blockchainService.ts",
+    "start": "node dist/services/blockchainServer.js",
+    "dev": "ts-node services/blockchainServer.ts",
     "build": "tsc",
     "test": "jest",
     "lint": "eslint . --ext .ts",
