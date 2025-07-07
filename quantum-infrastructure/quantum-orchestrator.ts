@@ -111,7 +111,7 @@ export class QuantumOrchestrator {
           endpoint: lab.endpoint,
           qubits: lab.qubits,
           errorRate: lab.errorRate,
-          availability: lab.availability,
+          availability: lab.availability as 'low' | 'medium' | 'high' | 'research',
           type: 'research'
         });
       }
