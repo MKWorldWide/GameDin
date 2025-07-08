@@ -1,0 +1,25 @@
+{{- if .Values.performance.resourceQuotas.enabled }}
+# Quantum-Detailed ResourceQuota for GameDin Quantum Layer
+# This ResourceQuota limits the total resources that can be consumed in the namespace.
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: {{ include "gamedin-quantum.fullname" . }}-quantum-quota
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gamedin-quantum.labels" . | nindent 4 }}
+    component: quantum-layer
+spec:
+  hard:
+    {{- if .Values.performance.resourceQuotas.cpu }}
+    requests.cpu: {{ .Values.performance.resourceQuotas.cpu }}
+    limits.cpu: {{ .Values.performance.resourceQuotas.limits.cpu }}
+    {{- end }}
+    {{- if .Values.performance.resourceQuotas.memory }}
+    requests.memory: {{ .Values.performance.resourceQuotas.memory }}
+    limits.memory: {{ .Values.performance.resourceQuotas.limits.memory }}
+    {{- end }}
+    {{- if .Values.performance.resourceQuotas.persistentvolumeclaims }}
+    persistentvolumeclaims: {{ .Values.performance.resourceQuotas.persistentvolumeclaims }}
+    {{- end }}
+{{- end }} 

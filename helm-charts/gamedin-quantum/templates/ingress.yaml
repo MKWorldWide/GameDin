@@ -1,0 +1,255 @@
+{{- if .Values.quantumLayer.enabled }}
+{{- if .Values.quantumLayer.ingress.enabled }}
+{{- $fullName := include "gamedin-quantum.fullname" . -}}
+{{- $svcPort := .Values.quantumLayer.service.port -}}
+{{- if and .Values.quantumLayer.ingress.className (not (hasKey .Values.quantumLayer.ingress.annotations "kubernetes.io/ingress.class")) }}
+  {{- $_ := set .Values.quantumLayer.ingress.annotations "kubernetes.io/ingress.class" .Values.quantumLayer.ingress.className}}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-quantum-layer
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gamedin-quantum.labels" . | nindent 4 }}
+    component: quantum-layer
+  {{- with .Values.quantumLayer.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.quantumLayer.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.quantumLayer.ingress.className }}
+  {{- end }}
+  {{- if .Values.quantumLayer.ingress.tls }}
+  tls:
+    {{- range .Values.quantumLayer.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.quantumLayer.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-quantum-layer
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-quantum-layer
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.quantumTasks.enabled }}
+{{- if .Values.quantumTasks.ingress.enabled }}
+{{- $fullName := include "gamedin-quantum.fullname" . -}}
+{{- $svcPort := .Values.quantumTasks.service.port -}}
+{{- if and .Values.quantumTasks.ingress.className (not (hasKey .Values.quantumTasks.ingress.annotations "kubernetes.io/ingress.class")) }}
+  {{- $_ := set .Values.quantumTasks.ingress.annotations "kubernetes.io/ingress.class" .Values.quantumTasks.ingress.className}}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-quantum-tasks
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gamedin-quantum.labels" . | nindent 4 }}
+    component: quantum-tasks
+  {{- with .Values.quantumTasks.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.quantumTasks.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.quantumTasks.ingress.className }}
+  {{- end }}
+  {{- if .Values.quantumTasks.ingress.tls }}
+  tls:
+    {{- range .Values.quantumTasks.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.quantumTasks.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-quantum-tasks
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-quantum-tasks
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.blockchain.enabled }}
+{{- if .Values.blockchain.ingress.enabled }}
+{{- $fullName := include "gamedin-quantum.fullname" . -}}
+{{- $svcPort := .Values.blockchain.service.port -}}
+{{- if and .Values.blockchain.ingress.className (not (hasKey .Values.blockchain.ingress.annotations "kubernetes.io/ingress.class")) }}
+  {{- $_ := set .Values.blockchain.ingress.annotations "kubernetes.io/ingress.class" .Values.blockchain.ingress.className}}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-blockchain
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gamedin-quantum.labels" . | nindent 4 }}
+    component: blockchain
+  {{- with .Values.blockchain.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.blockchain.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.blockchain.ingress.className }}
+  {{- end }}
+  {{- if .Values.blockchain.ingress.tls }}
+  tls:
+    {{- range .Values.blockchain.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.blockchain.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-blockchain
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-blockchain
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }}
+
+{{- if .Values.aiService.enabled }}
+{{- if .Values.aiService.ingress.enabled }}
+{{- $fullName := include "gamedin-quantum.fullname" . -}}
+{{- $svcPort := .Values.aiService.service.port -}}
+{{- if and .Values.aiService.ingress.className (not (hasKey .Values.aiService.ingress.annotations "kubernetes.io/ingress.class")) }}
+  {{- $_ := set .Values.aiService.ingress.annotations "kubernetes.io/ingress.class" .Values.aiService.ingress.className}}
+{{- end }}
+{{- if semverCompare ">=1.19-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1
+{{- else if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+apiVersion: networking.k8s.io/v1beta1
+{{- else -}}
+apiVersion: extensions/v1beta1
+{{- end }}
+kind: Ingress
+metadata:
+  name: {{ $fullName }}-ai-service
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "gamedin-quantum.labels" . | nindent 4 }}
+    component: ai-service
+  {{- with .Values.aiService.ingress.annotations }}
+  annotations:
+    {{- toYaml . | nindent 4 }}
+  {{- end }}
+spec:
+  {{- if and .Values.aiService.ingress.className (semverCompare ">=1.18-0" .Capabilities.KubeVersion.GitVersion) }}
+  ingressClassName: {{ .Values.aiService.ingress.className }}
+  {{- end }}
+  {{- if .Values.aiService.ingress.tls }}
+  tls:
+    {{- range .Values.aiService.ingress.tls }}
+    - hosts:
+        {{- range .hosts }}
+        - {{ . | quote }}
+        {{- end }}
+      secretName: {{ .secretName }}
+    {{- end }}
+  {{- end }}
+  rules:
+    {{- range .Values.aiService.ingress.hosts }}
+    - host: {{ .host | quote }}
+      http:
+        paths:
+          {{- range .paths }}
+          - path: {{ .path }}
+            {{- if and .pathType (semverCompare ">=1.18-0" $.Capabilities.KubeVersion.GitVersion) }}
+            pathType: {{ .pathType }}
+            {{- end }}
+            backend:
+              {{- if semverCompare ">=1.19-0" $.Capabilities.KubeVersion.GitVersion }}
+              service:
+                name: {{ $fullName }}-ai-service
+                port:
+                  number: {{ $svcPort }}
+              {{- else }}
+              serviceName: {{ $fullName }}-ai-service
+              servicePort: {{ $svcPort }}
+              {{- end }}
+          {{- end }}
+    {{- end }}
+{{- end }}
+{{- end }} 
