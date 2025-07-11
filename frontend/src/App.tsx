@@ -6,6 +6,9 @@ import ErrorBoundary from './components/ErrorBoundary';
 import LoadingSpinner from './components/LoadingSpinner';
 import Navigation from './components/Navigation';
 
+// Import store and authentication
+import useStore from './store/useStore';
+
 // Import development tools
 import { isDevelopment, isMockModeEnabled } from './config/development';
 import { mockService } from './services/mockService';
@@ -40,6 +43,25 @@ const TestRunner = lazy(() => import('./components/TestRunner'));
 const App: React.FC = () => {
   const [showDevTools, setShowDevTools] = useState(false);
   const [devStats, setDevStats] = useState<any>(null);
+
+  // Get authentication methods from store
+  const { initializeAuth, isAuthenticated, isLoading } = useStore();
+
+  // Initialize authentication on app start
+  useEffect(() => {
+    const initializeApp = async() => {
+      try {
+        // Initialize authentication (includes development bypass)
+        await initializeAuth();
+        
+        console.log('🎮 GameDin App: Authentication initialized');
+      } catch (error) {
+        console.error('Failed to initialize authentication:', error);
+      }
+    };
+
+    initializeApp();
+  }, [initializeAuth]);
 
   // Initialize development environment
   useEffect(() => {

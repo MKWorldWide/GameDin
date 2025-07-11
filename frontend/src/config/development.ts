@@ -198,28 +198,28 @@ export const getDevelopmentUtils = () => {
 };
 
 /**
- * Development environment check
+ * Check if development environment is active
  */
 export const isDevelopment = (): boolean => {
-  return process.env.NODE_ENV === 'development';
+  return process.env.NODE_ENV === 'development' || import.meta.env.DEV;
 };
 
 /**
- * Mock mode check
+ * Check if mock mode is enabled
  */
 export const isMockModeEnabled = (): boolean => {
-  return isDevelopment() && devConfig.enableMockMode;
+  return isDevelopment() && import.meta.env.VITE_ENABLE_MOCK_MODE === 'true';
 };
 
 /**
- * Test mode check
+ * Check if test mode is enabled
  */
 export const isTestModeEnabled = (): boolean => {
   return isDevelopment() && devConfig.enableTestMode;
 };
 
 /**
- * Debug mode check
+ * Check if debug mode is enabled
  */
 export const isDebugModeEnabled = (): boolean => {
   return isDevelopment() && devConfig.enableDebugMode;
