@@ -74,5 +74,19 @@ async function canAccess(address: string, requiredTier: GDITier, baseUrl: string
   return !!data.canAccess;
 }
 
+/**
+ * Stake GDI tokens for a given address.
+ * Sends a POST request to /api/gdi/stake with address and amount.
+ * Returns success status and new tier if applicable.
+ */
+export async function stakeGDI(address: string, amount: number): Promise<{ success: boolean; newTier?: GDITier }> {
+  const res = await fetch(`/api/gdi/stake`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ address, amount }),
+  });
+  return await res.json();
+}
+
 // Standalone exports for direct use
 export { getGDITier, canAccess }; 
