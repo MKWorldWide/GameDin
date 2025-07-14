@@ -16,4 +16,15 @@ export interface GDIBalanceResponse {
   address: string;
   balance: number;
   tier: GDITier;
-} 
+}
+
+/**
+ * GDI Levels mapping for tier comparison and gating logic
+ * 0: Wanderer, 1: Initiate, 2: Radiant, 3: Sovereign
+ */
+export const GDILevels: Record<GDITier, number> = {
+  Wanderer: 0,
+  Initiate: 1,
+  Radiant: 2,
+  Sovereign: 3,
+}; 

@@ -3,17 +3,20 @@
 
 import React from 'react';
 import { GDIBalanceResponse } from '../types/GDI';
+import { useGDI } from '../hooks/useGDI';
 
 /**
- * GDITokenDisplay - Displays a user's GDI token balance and tier
- * @param balanceData - GDIBalanceResponse object
+ * GDITokenDisplay - Displays a user's GDI token balance and tier by address
+ * @param address - The user's wallet or account address
  *
  * Example:
- *   <GDITokenDisplay balanceData={{ address: '0x123', balance: 1200, tier: 'Sovereign' }} />
+ *   <GDITokenDisplay address="0x123" baseUrl="/api" />
  */
-export const GDITokenDisplay: React.FC<{ balanceData: GDIBalanceResponse | null }> = ({ balanceData }) => {
-  if (!balanceData) return <div aria-busy="true">Loading GDI balance...</div>;
-  const { balance, tier } = balanceData;
+export const GDITokenDisplay: React.FC<{ address: string; baseUrl: string; useMock?: boolean }> = ({ address, baseUrl, useMock }) => {
+  const { balance, tier, loading, error } = useGDI(address, { baseUrl, useMock });
+  if (loading) return <div aria-busy="true">Loading GDI balance...</div>;
+  if (error) return <div role="alert" style={{ color: 'red' }}>Error: {error}</div>;
+  if (balance === null || !tier) return null;
   return (
     <div
       aria-label="GDI Token Balance"

@@ -50,4 +50,29 @@ export class GDIClient {
     if (balance >= 100) return 'Initiate';
     return 'Wanderer';
   }
-} 
+}
+
+/**
+ * Get the GDI tier for a given address.
+ * Returns the tier as a string.
+ */
+async function getGDITier(address: string, baseUrl: string): Promise<GDITier> {
+  const res = await fetch(`${baseUrl}/gdi/tier/${address}`);
+  if (!res.ok) throw new Error('Failed to fetch GDI tier');
+  const data = await res.json();
+  return data.tier as GDITier;
+}
+
+/**
+ * Check if the address has access to a required GDI tier.
+ * Returns true if access is granted.
+ */
+async function canAccess(address: string, requiredTier: GDITier, baseUrl: string): Promise<boolean> {
+  const res = await fetch(`${baseUrl}/gdi/can-access/${address}/${requiredTier}`);
+  if (!res.ok) throw new Error('Failed to check GDI access');
+  const data = await res.json();
+  return !!data.canAccess;
+}
+
+// Standalone exports for direct use
+export { getGDITier, canAccess }; 

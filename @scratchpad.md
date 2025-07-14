@@ -196,3 +196,51 @@ Cross-reference with @memories.md and @lessons-learned.md for context and best p
 - Add Divina-L3 proof-of-ownership UI
 - Update accessibility and documentation
 - Track progress in @scratchpad.md and @memories.md 
+
+Current Phase: PHASE-1
+Mode Context: PLAN (Crystal Kit Integration)
+Status: Active
+Confidence: 80%
+Last Updated: v1.0.0
+
+Tasks:
+[crystalkit-setup-001] Scaffold /gamedin-core/ directory and create required files for Crystal Kit integration
+Status: [-] Priority: [High]
+Dependencies: []
+Progress Notes:
+- [v1.0.0] Directory and file structure verified, documentation initialized.
+
+[crystalkit-setup-002] Implement GDIClient.ts with async functions: getGDIBalance, getGDITier, canAccess
+Status: [ ] Priority: [High]
+Dependencies: [crystalkit-setup-001]
+Progress Notes:
+
+[crystalkit-setup-003] Implement useGDI.ts React hook to fetch and cache GDI balance and tier per address
+Status: [ ] Priority: [High]
+Dependencies: [crystalkit-setup-002]
+Progress Notes:
+
+[crystalkit-setup-004] Implement GDITokenDisplay, AccessGate, and UserAura components for GDI display, gating, and aura visualization
+Status: [ ] Priority: [High]
+Dependencies: [crystalkit-setup-003]
+Progress Notes:
+
+[crystalkit-setup-005] Define GDITier type and GDILevels mapping in types/GDI.ts
+Status: [ ] Priority: [High]
+Dependencies: [crystalkit-setup-001]
+Progress Notes:
+
+[crystalkit-setup-006] Create crystal-kit.md in repo root with module explanations, usage examples, and live code samples
+Status: [ ] Priority: [Medium]
+Dependencies: [crystalkit-setup-004, crystalkit-setup-005]
+Progress Notes:
+
+[crystalkit-setup-007] (Bonus) Add /gamedin-core/playground/ page to test Crystal Kit components in isolation
+Status: [ ] Priority: [Low]
+Dependencies: [crystalkit-setup-004]
+Progress Notes:
+
+[crystalkit-setup-008] Update @memories.md, @lessons-learned.md, and @scratchpad.md for session initialization and documentation compliance
+Status: [ ] Priority: [High]
+Dependencies: [crystalkit-setup-001]
+Progress Notes: 

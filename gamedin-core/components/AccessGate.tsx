@@ -3,20 +3,36 @@
 
 import React from 'react';
 import { GDITier } from '../types/GDI';
+import { useGDI } from '../hooks/useGDI';
 
 /**
  * AccessGate - Conditionally renders children if user's GDI tier meets or exceeds requiredTier
- * @param userTier - The user's GDI tier
- * @param requiredTier - The minimum GDI tier required for access
- * @param children - Content to render if access is granted
+ * Accepts either address (fetches tier) or userTier directly.
  *
  * Example:
+ *   <AccessGate address="0x123" requiredTier="Radiant" baseUrl="/api">Secret Content</AccessGate>
  *   <AccessGate userTier="Radiant" requiredTier="Initiate">Secret Content</AccessGate>
  */
-const tierOrder: GDITier[] = ['Wanderer', 'Initiate', 'Radiant', 'Sovereign'];
-
-export const AccessGate: React.FC<{ userTier: GDITier; requiredTier: GDITier; children: React.ReactNode }> = ({ userTier, requiredTier, children }) => {
-  const hasAccess = tierOrder.indexOf(userTier) >= tierOrder.indexOf(requiredTier);
+export const AccessGate: React.FC<
+  | { address: string; requiredTier: GDITier; baseUrl: string; useMock?: boolean; children: React.ReactNode }
+  | { userTier: GDITier; requiredTier: GDITier; children: React.ReactNode }
+> = (props) => {
+  let userTier: GDITier | null = null;
+  let loading = false;
+  let error: string | null = null;
+  if ('address' in props) {
+    const gdi = useGDI(props.address, { baseUrl: props.baseUrl, useMock: props.useMock });
+    userTier = gdi.tier;
+    loading = gdi.loading;
+    error = gdi.error;
+  } else {
+    userTier = props.userTier;
+  }
+  const { requiredTier, children } = props;
+  if (loading) return <div aria-busy="true">Checking GDI access...</div>;
+  if (error) return <div role="alert" style={{ color: 'red' }}>Error: {error}</div>;
+  if (!userTier) return null;
+  const hasAccess = GDILevels[userTier] >= GDILevels[requiredTier];
   return hasAccess ? (
     <div aria-label={`Access granted: ${userTier} >= ${requiredTier}`}>{children}</div>
   ) : (
