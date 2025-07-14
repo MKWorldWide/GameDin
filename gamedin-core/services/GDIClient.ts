@@ -88,5 +88,39 @@ export async function stakeGDI(address: string, amount: number): Promise<{ succe
   return await res.json();
 }
 
+/**
+ * Get all minted badge NFTs for a given address.
+ * Returns array of BadgeNFT objects with metadata.
+ */
+export async function getMintedBadges(address: string): Promise<{ badges: BadgeNFT[] }> {
+  const res = await fetch(`/api/gdi/badges/${address}`);
+  if (!res.ok) throw new Error('Failed to fetch minted badges');
+  return await res.json();
+}
+
+/**
+ * Mint a reward badge NFT for a given address and tier.
+ * Returns the minted badge data.
+ */
+export async function mintRewardBadge(address: string, tier: GDITier): Promise<BadgeNFT> {
+  const res = await fetch(`/api/gdi/mint-badge`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ address, tier }),
+  });
+  if (!res.ok) throw new Error('Failed to mint badge');
+  return await res.json();
+}
+
+// Export BadgeNFT interface
+export interface BadgeNFT {
+  id: string;
+  tier: 'Bronze' | 'Silver' | 'Gold' | 'Diamond';
+  mintedAt: string;
+  tokenId: string;
+  openseaUrl: string;
+  imageUrl: string;
+}
+
 // Standalone exports for direct use
 export { getGDITier, canAccess }; 
