@@ -219,3 +219,6 @@ GitHub Push ──▶ GitHub Actions ──▶ Tests & Lint ──▶ Build ─�
 - Architecture diagrams
 - Deployment guides
 - Contributing guidelines 
+
+## Crystal Kit Architecture
+Crystal Kit is a modular, cross-realm developer toolkit for GameDin, providing core services, hooks, and UI components for GDI (Global Divine Infrastructure) integration. It supports both mock and MKZenith (Divina L3) backends, and is designed for use in web, VRChat, and Unity environments. For details, see [crystal-kit.md](../crystal-kit.md). 

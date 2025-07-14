@@ -342,3 +342,6 @@ For API support:
 - Email: api@gamedin.xyz
 - Documentation: https://docs.gamedin.xyz
 - Status: https://status.gamedin.xyz 
+
+## Crystal Kit GDI API
+Crystal Kit provides a typed GDIClient for REST calls to the GDI backend, as well as React hooks and UI components for GDI data. See [crystal-kit.md](../crystal-kit.md) for API usage and examples. 

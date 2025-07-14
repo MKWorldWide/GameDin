@@ -147,3 +147,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [Vite Team](https://vitejs.dev/)
 - [Tailwind CSS](https://tailwindcss.com/)
 - [Shadcn UI](https://ui.shadcn.com/) 
+
+## Crystal Kit: Universal GDI Integration Toolkit
+Crystal Kit provides the foundational infrastructure and modular components for the GameDin metaverse, enabling seamless integration with the Global Divine Infrastructure (GDI), cross-realm data sharing, and universal UI tools. It is designed for use across VRChat, Unity (Blade Aeternum), and web apps, and will sync with the Divina L3 chain via MKZenith. See [crystal-kit.md](./crystal-kit.md) for full documentation, usage, and onboarding. 

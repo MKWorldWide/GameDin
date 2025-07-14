@@ -1,10 +1,9 @@
 {
+  "extends": "./tsconfig.json",
   "compilerOptions": {
     "target": "ES2022",
-    "useDefineForClassFields": true,
-    "lib": ["ES2022", "DOM", "DOM.Iterable", "WebWorker"],
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
     "module": "ESNext",
-    "skipLibCheck": true,
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
@@ -13,8 +12,8 @@
     "jsx": "react-jsx",
     "jsxImportSource": "@emotion/react",
     "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "noFallthroughCasesInSwitch": true,
     "noImplicitReturns": true,
     "noImplicitOverride": true,
@@ -26,7 +25,9 @@
       "react", 
       "react-dom",
       "vitest/globals",
-      "cypress"
+      "cypress",
+      "jest",
+      "@testing-library/jest-dom"
     ],
     "allowJs": true,
     "esModuleInterop": true,
@@ -53,7 +54,7 @@
       }
     ],
     "incremental": true,
-    "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo",
+    "tsBuildInfoFile": "./node_modules/.cache/.tsbuildinfo.test",
     "declaration": false,
     "declarationMap": false,
     "sourceMap": true,
@@ -73,11 +74,19 @@
     "src/**/*.tsx",
     "src/**/*.js",
     "src/**/*.jsx",
-    "vite.config.ts",
+    "tests/**/*",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "tests/**/*.js",
+    "tests/**/*.jsx",
+    "__tests__/**/*",
+    "__tests__/**/*.ts",
+    "__tests__/**/*.tsx",
+    "__tests__/**/*.js",
+    "__tests__/**/*.jsx",
     "vitest.config.ts",
     "cypress.config.ts",
-    "tailwind.config.js",
-    "postcss.config.js"
+    "jest.config.js"
   ],
   "exclude": [
     "node_modules",
@@ -86,9 +95,5 @@
     "coverage",
     ".cache",
     "*.config.js"
-  ],
-  "references": [
-    { "path": "./tsconfig.node.json" },
-    { "path": "./tsconfig.test.json" }
   ]
 } 

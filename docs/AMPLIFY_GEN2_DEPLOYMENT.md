@@ -212,3 +212,5 @@ If you encounter issues not covered in this guide:
 - [AWS Amplify CLI Documentation](https://docs.amplify.aws/cli/)
 - [AWS Amplify Gen2 Features](https://docs.aws.amazon.com/amplify/latest/userguide/welcome.html)
 - [AWS Amplify Console User Guide](https://docs.aws.amazon.com/amplify/latest/userguide/welcome.html) 
+
+> **Note:** Crystal Kit is now part of the core repo and should be included in all deployments for universal GDI integration. See [crystal-kit.md](../crystal-kit.md). 
