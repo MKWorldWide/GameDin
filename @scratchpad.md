@@ -197,50 +197,74 @@ Cross-reference with @memories.md and @lessons-learned.md for context and best p
 - Update accessibility and documentation
 - Track progress in @scratchpad.md and @memories.md 
 
-Current Phase: PHASE-1
-Mode Context: PLAN (Crystal Kit Integration)
+# Mode: PLAN 🎯
+Current Task: GameDin Amplify Prep & Optimization - Surgical refactoring for AWS Amplify deployment with code cleanup, modularity improvements, and performance optimization
+Understanding: 
+- Current project uses React 19, TypeScript 5.5+, Vite 6+ with comprehensive AWS integration
+- Multiple build configurations and optimization scripts already in place
+- Need to strip redundant code, improve modularity, and ensure Amplify readiness
+- Focus on efficiency, simplicity, and performance for cloud deployment
+- Must maintain existing functionality while optimizing for modern cloud systems
+
+Questions:
+1. Should we prioritize removing specific redundant components or focus on overall structure optimization first?
+2. Are there any specific performance bottlenecks or large components that need immediate attention?
+3. Should we maintain all current AWS integrations or streamline for core Amplify deployment?
+
+Confidence: 85%
+Next Steps:
+- Analyze current codebase for redundant files and components
+- Optimize folder structure for Amplify deployment
+- Clean up build configurations and remove unnecessary dependencies
+- Implement lazy loading and tree-shaking optimizations
+- Set up comprehensive testing scaffold
+- Verify mobile-first responsive design
+- Create Amplify-ready documentation
+
+Current Phase: PHASE-AMPLIFY-OPTIMIZATION
+Mode Context: Implementation Type, FOCUS: AWS Amplify deployment preparation and codebase optimization
 Status: Active
-Confidence: 80%
-Last Updated: v1.0.0
+Confidence: 85%
+Last Updated: v5.0.1
 
 Tasks:
-[crystalkit-setup-001] Scaffold /gamedin-core/ directory and create required files for Crystal Kit integration
+[amplify-001] Analyze and identify redundant code, unused components, and duplicate files across the codebase
 Status: [-] Priority: [High]
 Dependencies: []
 Progress Notes:
-- [v1.0.0] Directory and file structure verified, documentation initialized.
+- [v5.0.1] Starting comprehensive codebase analysis for optimization
 
-[crystalkit-setup-002] Implement GDIClient.ts with async functions: getGDIBalance, getGDITier, canAccess
+[amplify-002] Optimize folder structure for Amplify deployment with clean src/, components/, assets/, pages/ organization
 Status: [ ] Priority: [High]
-Dependencies: [crystalkit-setup-001]
+Dependencies: [amplify-001]
 Progress Notes:
 
-[crystalkit-setup-003] Implement useGDI.ts React hook to fetch and cache GDI balance and tier per address
+[amplify-003] Clean up build configurations and remove unnecessary dependencies from package.json files
 Status: [ ] Priority: [High]
-Dependencies: [crystalkit-setup-002]
+Dependencies: [amplify-001]
 Progress Notes:
 
-[crystalkit-setup-004] Implement GDITokenDisplay, AccessGate, and UserAura components for GDI display, gating, and aura visualization
-Status: [ ] Priority: [High]
-Dependencies: [crystalkit-setup-003]
-Progress Notes:
-
-[crystalkit-setup-005] Define GDITier type and GDILevels mapping in types/GDI.ts
-Status: [ ] Priority: [High]
-Dependencies: [crystalkit-setup-001]
-Progress Notes:
-
-[crystalkit-setup-006] Create crystal-kit.md in repo root with module explanations, usage examples, and live code samples
+[amplify-004] Implement lazy loading for components and assets to improve initial load performance
 Status: [ ] Priority: [Medium]
-Dependencies: [crystalkit-setup-004, crystalkit-setup-005]
+Dependencies: [amplify-002]
 Progress Notes:
 
-[crystalkit-setup-007] (Bonus) Add /gamedin-core/playground/ page to test Crystal Kit components in isolation
+[amplify-005] Set up comprehensive testing scaffold with Jest/Vitest and ensure all components are testable
+Status: [ ] Priority: [Medium]
+Dependencies: [amplify-002]
+Progress Notes:
+
+[amplify-006] Verify mobile-first responsive design and ensure optimal performance on AWS preview
+Status: [ ] Priority: [Medium]
+Dependencies: [amplify-004]
+Progress Notes:
+
+[amplify-007] Create Amplify-ready documentation and README with deployment instructions
 Status: [ ] Priority: [Low]
-Dependencies: [crystalkit-setup-004]
+Dependencies: [amplify-003, amplify-005]
 Progress Notes:
 
-[crystalkit-setup-008] Update @memories.md, @lessons-learned.md, and @scratchpad.md for session initialization and documentation compliance
+[amplify-008] Verify clean build process with npm run build and test deployment readiness
 Status: [ ] Priority: [High]
-Dependencies: [crystalkit-setup-001]
+Dependencies: [amplify-003, amplify-004, amplify-005]
 Progress Notes: 

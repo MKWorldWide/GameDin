@@ -4,26 +4,28 @@ applications:
       phases:
         preBuild:
           commands:
-            - echo "🚀 Starting GameDin build process..."
-            - echo "📦 Installing dependencies..."
+            - echo "🚀 Starting GameDin Amplify optimization build..."
+            - echo "📦 Installing dependencies with optimization..."
             - cd frontend
-            - npm ci --ignore-scripts
+            - npm ci --ignore-scripts --prefer-offline
             - echo "✅ Dependencies installed successfully"
         build:
           commands:
-            - echo "🔨 Building GameDin application..."
+            - echo "🔨 Building optimized GameDin application..."
             - npm run lint
             - npm run type-check
             - npm run test:ci
-            - npm run build
+            - npm run build:optimized
             - echo "✅ Build completed successfully"
         postBuild:
           commands:
-            - echo "📊 Generating build report..."
+            - echo "📊 Generating build analysis..."
             - npm run build:analyze
             - echo "🔍 Running security audit..."
             - npm audit --audit-level=moderate
-            - echo "✅ Post-build tasks completed"
+            - echo "⚡ Optimizing for AWS..."
+            - npm run aws:optimize
+            - echo "✅ Post-build optimization completed"
       artifacts:
         baseDirectory: frontend/dist
         files:
@@ -33,4 +35,5 @@ applications:
         paths:
           - frontend/node_modules/**/*
           - frontend/.cache/**/*
+          - frontend/dist/**/*
     appRoot: .
