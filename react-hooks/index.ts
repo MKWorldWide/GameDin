@@ -1,0 +1,1 @@
+// React hooks for Divina-L3 AI\nimport { useMemo } from 'react';\nimport { AthenaMistAI, AthenaMistConfig } from '../src/ai/AthenaMistAI';\nexport function useAthenaMistAI(config: AthenaMistConfig) {\n  return useMemo(() => new AthenaMistAI(config), [config]);\n}
