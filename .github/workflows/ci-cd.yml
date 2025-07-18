@@ -32,6 +32,18 @@ jobs:
           cd frontend
           npm ci --ignore-scripts
           
+      - name: Install Divina-L3 local packages
+        run: |
+          cd divina-l3/blockchain-client && npm install || true
+          cd ../react-hooks && npm install || true
+          cd ../smart-contracts && npm install || true
+          cd ../../..
+
+      - name: Link Divina-L3 packages in frontend
+        run: |
+          cd frontend
+          npm install --legacy-peer-deps
+          
       - name: Run linting
         run: |
           cd frontend

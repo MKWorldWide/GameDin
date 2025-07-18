@@ -82,3 +82,6 @@ deployment.zip
 # Submodules
 GameDinVR/
 GameDinDiscord/
+divina-l3/blockchain-client/
+divina-l3/react-hooks/
+divina-l3/smart-contracts/
