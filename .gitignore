@@ -35,6 +35,7 @@ htmlcov/
 *.lock
 
 # Submodules
+<<<<<<< HEAD
 .gitmodules
 .git/
 
@@ -49,3 +50,10 @@ htmlcov/
 
 # Ignore local config
 config.local.*
+=======
+GameDinVR/
+GameDinDiscord/
+divina-l3/blockchain-client/
+divina-l3/react-hooks/
+divina-l3/smart-contracts/
+>>>>>>> a197941fc0d98584a99d627beabfc9008c9509bd
