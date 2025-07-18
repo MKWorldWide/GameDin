@@ -78,3 +78,7 @@ amplifytools.xcconfig
 tmp/
 temp/
 deployment.zip
+
+# Submodules
+GameDinVR/
+GameDinDiscord/
