@@ -1,84 +1,51 @@
-# Dependencies
+# Python
+__pycache__/
+*.py[cod]
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.log
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+
+# Node
 node_modules/
-frontend/node_modules/
-/.pnp
-.pnp.js
-
-# Testing
-/coverage
-
-# Build
-/dist
-/build
-frontend/dist
-frontend/build
-/out/
-.next/
-
-# Environment Variables
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-.env*.local
-
-# Debug
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-
-# IDEs and editors
-/.idea
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
 
 # macOS
 .DS_Store
-.AppleDouble
-.LSOverride
-Icon
-._*
 
-# Windows
-Thumbs.db
-ehthumbs.db
-Desktop.ini
-$RECYCLE.BIN/
+# Test & coverage
+.coverage
+coverage/
+htmlcov/
+.pytest_cache/
 
-# AWS Amplify
-amplify/.config/local-*
-amplify/logs
-amplify/mock-data
-amplify/backend/amplify-meta.json
-amplify/backend/awscloudformation
-aws-exports.js
-awsconfiguration.json
-amplifyconfiguration.json
-amplifyconfiguration.dart
-amplify-build-config.json
-amplify-gradle-config.json
-amplifytools.xcconfig
-.secret-*
+# Environment
+.env
+.env.*
 
-# Misc
-.cache/
-.temp/
-.tmp/
-*.log
-tmp/
-temp/
-deployment.zip
+# CI/CD
+*.pid
+*.lock
 
 # Submodules
-GameDinVR/
-GameDinDiscord/
+.gitmodules
+.git/
+
+# Editor
+.idea/
+.vscode/
+
+# Misc
+*.swp
+*.bak
+*.tmp
+
+# Ignore local config
+config.local.*
