@@ -8,7 +8,6 @@ on:
 
 jobs:
   type-check:
-    continue-on-error: true
     runs-on: ubuntu-latest
     
     strategy:
@@ -20,25 +19,18 @@ jobs:
     
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
-      - name: Cache Node dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci || echo "⚠️ npm ci failed, continuing..."
+      run: npm ci
     
     - name: Type check
       run: npm run type-check
       
     - name: ESLint check
-      run: npm run lint || echo "⚠️ linting failed, continuing..."
+      run: npm run lint
       
     - name: Generate type coverage report
       run: npx type-coverage
@@ -57,7 +49,6 @@ jobs:
           type-coverage/
           
   type-regression:
-    continue-on-error: true
     needs: type-check
     runs-on: ubuntu-latest
     
@@ -68,19 +59,12 @@ jobs:
     
     - name: Use Node.js
       uses: actions/setup-node@v3
-      - name: Cache Node dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       with:
         node-version: '18.x'
         cache: 'npm'
     
     - name: Install dependencies
-      run: npm ci || echo "⚠️ npm ci failed, continuing..."
+      run: npm ci
       
     - name: Check for type regression
       run: |
@@ -111,7 +95,6 @@ jobs:
           current-coverage.txt
 
   report:
-    continue-on-error: true
     needs: [type-check, type-regression]
     runs-on: ubuntu-latest
     if: always()

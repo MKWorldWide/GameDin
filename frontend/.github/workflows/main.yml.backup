@@ -8,7 +8,6 @@ on:
 
 jobs:
   test:
-    continue-on-error: true
     runs-on: ubuntu-latest
     
     strategy:
@@ -20,22 +19,15 @@ jobs:
     
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v3
-      - name: Cache Node dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
         
     - name: Install dependencies
-      run: npm ci || echo "⚠️ npm ci failed, continuing..."
+      run: npm ci
       
     - name: Run linting
-      run: npm run lint || echo "⚠️ linting failed, continuing..."
+      run: npm run lint
       
     - name: Run type checking
       run: npm run typecheck
@@ -54,7 +46,6 @@ jobs:
         wait-on: 'http://localhost:4173'
         
   deploy:
-    continue-on-error: true
     needs: test
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main'
@@ -70,7 +61,7 @@ jobs:
         aws-region: us-east-1
         
     - name: Install AWS Amplify CLI
-      run: npm install || echo "⚠️ npm install failed, continuing..." -g @aws-amplify/cli
+      run: npm install -g @aws-amplify/cli
       
     - name: Deploy to AWS Amplify
       run: |
@@ -91,7 +82,6 @@ jobs:
       if: always()
 
   security:
-    continue-on-error: true
     runs-on: ubuntu-latest
     
     steps:

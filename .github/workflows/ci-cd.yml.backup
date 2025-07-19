@@ -13,7 +13,6 @@ env:
 jobs:
   # Build and Test Job
   build-and-test:
-    continue-on-error: true
     name: Build and Test
     runs-on: ubuntu-latest
     
@@ -23,13 +22,6 @@ jobs:
         
       - name: Setup Node.js
         uses: actions/setup-node@v4
-      - name: Cache Node dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -81,7 +73,6 @@ jobs:
 
   # Security Scan Job
   security-scan:
-    continue-on-error: true
     name: Security Scan
     runs-on: ubuntu-latest
     needs: build-and-test
@@ -92,13 +83,6 @@ jobs:
         
       - name: Setup Node.js
         uses: actions/setup-node@v4
-      - name: Cache Node dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
@@ -121,7 +105,6 @@ jobs:
 
   # AWS Amplify Deployment Job
   deploy-amplify:
-    continue-on-error: true
     name: Deploy to AWS Amplify
     runs-on: ubuntu-latest
     needs: [build-and-test, security-scan]
@@ -160,7 +143,6 @@ jobs:
 
   # Preview Deployment Job
   deploy-preview:
-    continue-on-error: true
     name: Deploy Preview
     runs-on: ubuntu-latest
     needs: [build-and-test, security-scan]
@@ -219,7 +201,6 @@ jobs:
 
   # Performance Testing Job
   performance-test:
-    continue-on-error: true
     name: Performance Test
     runs-on: ubuntu-latest
     needs: deploy-amplify
@@ -231,18 +212,11 @@ jobs:
         
       - name: Setup Node.js
         uses: actions/setup-node@v4
-      - name: Cache Node dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
         with:
           node-version: ${{ env.NODE_VERSION }}
           
       - name: Install Lighthouse CI
-        run: npm install || echo "⚠️ npm install failed, continuing..." -g @lhci/cli
+        run: npm install -g @lhci/cli
         
       - name: Run Lighthouse CI
         run: |
@@ -252,7 +226,6 @@ jobs:
 
   # Cleanup Job
   cleanup:
-    continue-on-error: true
     name: Cleanup
     runs-on: ubuntu-latest
     needs: [deploy-amplify, deploy-preview, performance-test]
