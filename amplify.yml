@@ -4,6 +4,8 @@ applications:
       phases:
         preBuild:
           commands:
+            # Configure git to use the provided GitHub PAT for all github.com URLs
+            - git config --global url."https://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@github.com/".insteadOf "https://github.com/"
             - echo "🚀 Starting GameDin Amplify optimization build..."
             - echo "📦 Installing dependencies with optimization..."
             - cd frontend
