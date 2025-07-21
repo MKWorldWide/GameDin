@@ -1,3 +1,9 @@
 [submodule "divina-l3"]
 	path = divina-l3
 	url = https://github.com/MKWorldWide/Divina-L3.git
+[submodule "GameDinVR"]
+	path = GameDinVR
+	url = https://github.com/MKWorldWide/GameDinVR
+[submodule "GameDinDiscord"]
+	path = GameDinDiscord
+	url = https://github.com/MKWorldWide/GameDinDiscord
