@@ -61,15 +61,40 @@ Resources:
         IdToken: hours
         RefreshToken: days
 
-  IdentityPool:
-    Type: AWS::Cognito::IdentityPool
+  # --- Social Identity Providers (Google, Facebook) ---
+  # To enable social login, add identity providers to the User Pool and federate them in the Identity Pool.
+  # Replace the placeholder values with your actual Google and Facebook app credentials.
+  GoogleIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
     Properties:
-      IdentityPoolName: GameDinIdentityPool
-      AllowUnauthenticatedIdentities: false
-      CognitoIdentityProviders:
-        - ClientId: !Ref UserPoolClient
-          ProviderName: !GetAtt UserPool.ProviderName
-          ServerSideTokenCheck: true
+      ProviderName: Google
+      ProviderType: Google
+      UserPoolId: !Ref UserPool
+      ProviderDetails:
+        client_id: "<GOOGLE_CLIENT_ID>"  # TODO: Insert your Google client ID
+        client_secret: "<GOOGLE_CLIENT_SECRET>"  # TODO: Insert your Google client secret
+        authorize_scopes: "openid email profile"
+      AttributeMapping:
+        email: email
+        given_name: given_name
+        family_name: family_name
+      IdpIdentifiers: []
+
+  FacebookIdentityProvider:
+    Type: AWS::Cognito::UserPoolIdentityProvider
+    Properties:
+      ProviderName: Facebook
+      ProviderType: Facebook
+      UserPoolId: !Ref UserPool
+      ProviderDetails:
+        client_id: "<FACEBOOK_APP_ID>"  # TODO: Insert your Facebook App ID
+        client_secret: "<FACEBOOK_APP_SECRET>"  # TODO: Insert your Facebook App Secret
+        authorize_scopes: "email public_profile"
+      AttributeMapping:
+        email: email
+        name: name
+      IdpIdentifiers: []
+  # --- End Social Identity Providers ---
 
   WAFWebACL:
     Type: AWS::WAFv2::WebACL

@@ -198,28 +198,26 @@ Cross-reference with @memories.md and @lessons-learned.md for context and best p
 - Track progress in @scratchpad.md and @memories.md 
 
 # Mode: PLAN 🎯
-Current Task: GameDin Amplify Prep & Optimization - Surgical refactoring for AWS Amplify deployment with code cleanup, modularity improvements, and performance optimization
-Understanding: 
-- Current project uses React 19, TypeScript 5.5+, Vite 6+ with comprehensive AWS integration
-- Multiple build configurations and optimization scripts already in place
-- Need to strip redundant code, improve modularity, and ensure Amplify readiness
-- Focus on efficiency, simplicity, and performance for cloud deployment
-- Must maintain existing functionality while optimizing for modern cloud systems
+Current Task: Ensure AWS Amplify app is accessible, supports login, and is ready for testing
+Understanding:
+- Amplify backend (Cognito/Auth) must be configured and connected to frontend
+- Frontend auth components (login, register, protected route) must be accessible (ARIA, keyboard, screen reader, focus management)
+- End-to-end login flow must be tested and verified
+- Documentation and memory files must be updated per project rules
+- Must follow strict accessibility, documentation, and Mode System protocols
 
 Questions:
-1. Should we prioritize removing specific redundant components or focus on overall structure optimization first?
-2. Are there any specific performance bottlenecks or large components that need immediate attention?
-3. Should we maintain all current AWS integrations or streamline for core Amplify deployment?
+1. Are there any custom authentication flows or is it standard Cognito username/password?
+2. Should we support social login (Google, Facebook, etc.) or just email/password for now?
+3. Is there a preferred test user account or should we create a new one for validation?
 
-Confidence: 85%
+Confidence: 80%
 Next Steps:
-- Analyze current codebase for redundant files and components
-- Optimize folder structure for Amplify deployment
-- Clean up build configurations and remove unnecessary dependencies
-- Implement lazy loading and tree-shaking optimizations
-- Set up comprehensive testing scaffold
-- Verify mobile-first responsive design
-- Create Amplify-ready documentation
+- Review Amplify backend (Cognito/Auth) configuration
+- Audit frontend auth components for accessibility and integration
+- Update components for ARIA, keyboard, and screen reader support
+- Test login flow end-to-end
+- Update documentation and memory files
 
 Current Phase: PHASE-AMPLIFY-OPTIMIZATION
 Mode Context: Implementation Type, FOCUS: AWS Amplify deployment preparation and codebase optimization

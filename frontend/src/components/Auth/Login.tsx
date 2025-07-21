@@ -24,6 +24,14 @@ const Login: React.FC = () => {
   const location = useLocation();
   const { login, loading, error: authError, user } = useAuth();
 
+  const emailInputRef = React.useRef<HTMLInputElement>(null);
+  const passwordInputRef = React.useRef<HTMLInputElement>(null);
+
+  // Focus email input on mount for accessibility
+  useEffect(() => {
+    emailInputRef.current?.focus();
+  }, []);
+
   useEffect(() => {
     if (user) {
       navigate('/', { replace: true });
@@ -42,12 +50,13 @@ const Login: React.FC = () => {
 
   return (
     <Container maxWidth="sm" sx={{ mt: 8 }}>
-      <Paper sx={{ p: 4 }}>
+      <Paper sx={{ p: 4 }} aria-label="Login form" role="form">
         <Typography variant="h4" component="h1" gutterBottom align="center">
           Login
         </Typography>
-        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }}>
+        <Box component="form" onSubmit={handleSubmit} sx={{ mt: 2 }} aria-labelledby="login-form-title">
           <TextField
+            inputRef={emailInputRef}
             fullWidth
             label="Email"
             type="email"
@@ -55,8 +64,14 @@ const Login: React.FC = () => {
             onChange={(e) => setEmail(e.target.value)}
             margin="normal"
             required
+            inputProps={{
+              'aria-label': 'Email address',
+              autoComplete: 'username',
+            }}
+            autoFocus
           />
           <TextField
+            inputRef={passwordInputRef}
             fullWidth
             label="Password"
             type="password"
@@ -64,15 +79,32 @@ const Login: React.FC = () => {
             onChange={(e) => setPassword(e.target.value)}
             margin="normal"
             required
+            inputProps={{
+              'aria-label': 'Password',
+              autoComplete: 'current-password',
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                // Move focus to submit button for accessibility
+                (e.target as HTMLInputElement).blur();
+              }
+            }}
           />
           <Button
             type="submit"
             fullWidth
             variant="contained"
             sx={{ mt: 3 }}
+            aria-label="Submit login form"
           >
             Login
           </Button>
+          {/* Accessibility: Announce errors to screen readers */}
+          {error && (
+            <Alert severity="error" role="alert" aria-live="assertive" sx={{ mt: 2 }}>
+              {error}
+            </Alert>
+          )}
         </Box>
       </Paper>
     </Container>
