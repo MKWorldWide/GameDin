@@ -3,12 +3,16 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Initialize git submodules with SSH instead of HTTPS
-        - git config --global url."git@github.com:".insteadOf "https://github.com/"
-        - git submodule update --init --recursive --remote
-        # Make build script executable and run it
-        - chmod +x build.sh
-        - ./build.sh
+        # Install Node.js dependencies
+        - npm ci --legacy-peer-deps
+    build:
+      commands:
+        # Build the application
+        - npm run build
+  artifacts:
+    baseDirectory: dist
+    files:
+      - '**/*'
   artifacts:
     baseDirectory: dist
     files:
