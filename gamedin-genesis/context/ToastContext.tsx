@@ -1,12 +1,12 @@
 
-import React, { useState, useCallback, useContext } from 'react';
+import { useState, useCallback, useContext, createContext } from 'react';
 
 interface ToastContextType {
   toastMessage: string | null;
   showToast: (message: string) => void;
 }
 
-export const ToastContext = React.createContext<ToastContextType | undefined>(undefined);
+export const ToastContext = createContext<ToastContextType | undefined>(undefined);
 
 export const useToast = () => {
   const context = useContext(ToastContext);

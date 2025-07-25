@@ -1,7 +1,6 @@
 
 
-import * as React from 'react';
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext, useCallback, ReactNode, createElement } from 'react';
 import { User, UserSettings, Path, NetworkProvider, UserRole, LinkedAccount } from '../types';
 import { createLilithIdentity, verifySoulSignature } from '../services/lilithOS';
 import { logOnboardingEvent } from '../services/novaSanctum';
@@ -219,5 +218,5 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   // Using createElement to ensure compatibility
-  return React.createElement(AuthContext.Provider, { value }, children);
+  return createElement(AuthContext.Provider, { value }, children);
 };

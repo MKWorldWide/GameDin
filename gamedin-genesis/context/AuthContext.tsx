@@ -1,6 +1,6 @@
 
 
-import React from 'react';
+import { createContext } from 'react';
 import { User, Path, NetworkProvider } from '../types';
 
 interface AuthContextType {
@@ -16,4 +16,4 @@ interface AuthContextType {
   refreshNexusData: () => Promise<void>;
 }
 
-export const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
+export const AuthContext = createContext<AuthContextType | undefined>(undefined);
