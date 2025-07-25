@@ -3,6 +3,9 @@ frontend:
   phases:
     preBuild:
       commands:
+        # Initialize git submodules with SSH instead of HTTPS
+        - git config --global url."git@github.com:".insteadOf "https://github.com/"
+        - git submodule update --init --recursive --remote
         - npm ci
     build:
       commands:
@@ -16,3 +19,11 @@ frontend:
       - node_modules/**/*
       - .cache/**/*
       - public/**/*
+      - .next/cache/**/*
+
+# Custom settings for AWS Amplify
+customHeaders:
+  - pattern: '**/*'
+    headers:
+      - key: 'Cache-Control'
+        value: 'public, max-age=0, must-revalidate'
