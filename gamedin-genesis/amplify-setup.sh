@@ -9,8 +9,8 @@ echo "🔐 Setting up AWS credentials for Amplify..."
 mkdir -p ~/.aws
 cat > ~/.aws/credentials <<EOL
 [default]
-aws_access_key_id=AKIA3X7QKZ5Z5Z5Z5Z5X
-aws_secret_access_key=YOUR_SECRET_ACCESS_KEY
+aws_access_key_id=AKIA4VDBLV57B27JXCVD
+aws_secret_access_key=5RAG/1MtzgFeDvy51EOS3Jv0Z/oJ5rzplHL1+K7E
 EOL
 
 # Set AWS region
