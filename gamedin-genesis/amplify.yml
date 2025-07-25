@@ -3,8 +3,10 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Install Node.js dependencies
-        - npm ci --legacy-peer-deps
+        # Clean and install dependencies
+        - rm -rf node_modules
+        - npm cache clean --force
+        - npm install --legacy-peer-deps --prefer-offline
     build:
       commands:
         # Build the application
@@ -13,10 +15,10 @@ frontend:
     baseDirectory: dist
     files:
       - '**/*'
-  artifacts:
-    baseDirectory: dist
-    files:
-      - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
+      - .cache/**/*
   cache:
     paths:
       - node_modules/**/*
