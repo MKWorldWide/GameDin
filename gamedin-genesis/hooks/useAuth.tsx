@@ -1,9 +1,10 @@
 
 
-import React, { useState, useEffect, useContext, useCallback } from 'react';
-import { User, UserSettings, Path, NetworkProvider, ProfileFrame, UserRole, LilithIdentity } from '../types';
+import * as React from 'react';
+import { useState, useEffect, useContext, useCallback } from 'react';
+import { User, UserSettings, Path, NetworkProvider, UserRole, LinkedAccount } from '../types';
 import { createLilithIdentity, verifySoulSignature } from '../services/lilithOS';
-import { logOnboardingEvent, OnboardingEventType } from '../services/novaSanctum';
+import { logOnboardingEvent } from '../services/novaSanctum';
 import { AuthContext } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
 import { MOCK_AVATARS, MOCK_HEADERS } from '../constants';
@@ -24,7 +25,11 @@ const defaultSettings: UserSettings = {
   profileFrame: 'none',
 };
 
-export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
@@ -47,12 +52,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }, []);
 
-  const login = async (soulName: string, dream: string, path: Path, role?: UserRole, verificationMethod?: 'email' | 'social' | 'signature', verificationData?: any) => {
+  const login = async (soulName: string, dream: string, path: Path, role: UserRole = 'Player', verificationMethod?: 'email' | 'social' | 'signature') => {
     // Create LilithOS identity for new users
     const lilithIdentity = await createLilithIdentity(soulName, dream);
     
     // Determine role if not provided (backward compatibility)
-    let userRole: UserRole = role || 'player';
+    const userRole: UserRole = role;
     
     // Log onboarding completion event
     await logOnboardingEvent({
@@ -86,8 +91,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       following: ['@oracle_ai'],
       linkedAccounts: [],
       nexusData: {},
-      isCreator: role === 'creator',
-      creatorProfile: role === 'creator' ? { 
+      isCreator: role === 'Creator',
+      creatorProfile: role === 'Creator' ? { 
         xp: { innovation: 0, integration: 0, expression: 0, engineering: 0 }, 
         tier: 'Dream Seedling' 
       } : undefined
@@ -128,7 +133,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!user) return;
     const isFollowing = user.following.includes(handle);
     const newFollowing = isFollowing
-        ? user.following.filter(f => f !== handle)
+        ? user.following.filter((followedHandle: string) => followedHandle !== handle)
         : [...user.following, handle];
     
     updateUser({ following: newFollowing });
@@ -150,7 +155,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const unlinkNexusAccount = useCallback((provider: NetworkProvider) => {
     if(!user) return;
-    const updatedAccounts = user.linkedAccounts.filter(acc => acc.provider !== provider);
+    const updatedAccounts = user.linkedAccounts.filter((account: LinkedAccount) => account.provider !== provider);
     updateUser({ linkedAccounts: updatedAccounts });
     showToast(`${provider.charAt(0).toUpperCase() + provider.slice(1)} account unlinked.`);
   }, [user, updateUser, showToast]);
@@ -190,8 +195,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     updateUser({ 
       role: newRole,
-      isCreator: newRole === 'creator',
-      creatorProfile: newRole === 'creator' ? { 
+      isCreator: newRole === 'Creator',
+      creatorProfile: newRole === 'Creator' ? { 
         xp: { innovation: 0, integration: 0, expression: 0, engineering: 0 }, 
         tier: 'Dream Seedling' 
       } : user.creatorProfile
@@ -213,5 +218,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     updateUserRole
   };
 
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  // Using createElement to ensure compatibility
+  return React.createElement(AuthContext.Provider, { value }, children);
 };

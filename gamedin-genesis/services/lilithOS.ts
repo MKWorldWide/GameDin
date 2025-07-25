@@ -1,4 +1,4 @@
-import { LilithIdentity, UserRole, OnboardingEvent } from '../types';
+import { LilithIdentity, UserRole } from '../types';
 
 // --- LILITHOS IDENTITY SERVICE ---
 // Handles layered identity verification and soul signature generation
@@ -64,8 +64,7 @@ export const validateLilithIdentity = (identity: LilithIdentity): boolean => {
  */
 export const determineUserRole = (
   dream: string, 
-  path: string, 
-  preferences?: Record<string, any>
+  path: string
 ): UserRole => {
   const dreamLower = dream.toLowerCase();
   const pathLower = path.toLowerCase();
@@ -122,6 +121,17 @@ export const verifySocialAccount = async (provider: string, soulName: string): P
   // Simulate social verification delay
   await new Promise(resolve => setTimeout(resolve, 1500));
   
-  // Mock success (in production, would integrate with social providers)
-  return Math.random() > 0.1; // 90% success rate
+  // In a real app, this would verify with the social provider
+  return Math.random() > 0.1; // 90% success rate for demo
+};
+
+/**
+ * Verifies a soul signature against a given identity
+ */
+export const verifySoulSignature = (identity: LilithIdentity, signature: string): boolean => {
+  if (!identity || !identity.soulSignature) return false;
+  
+  // In a real implementation, this would verify the cryptographic signature
+  // For demo purposes, we'll do a simple string comparison
+  return identity.soulSignature === signature;
 };

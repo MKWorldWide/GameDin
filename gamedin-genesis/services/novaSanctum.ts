@@ -1,4 +1,4 @@
-import { OnboardingEvent, User } from '../types';
+import { OnboardingEvent, User, OnboardingEventType } from '../types';
 
 // --- NOVASANCTUM EVENT LOGGING SERVICE ---
 // Handles event logging and cross-app communication
@@ -120,6 +120,36 @@ const generateMonetizationSuggestions = (user: User): string[] => {
   }
   
   return suggestions;
+};
+
+/**
+ * Logs an onboarding event and optionally notifies Athena
+ */
+export const logOnboardingEvent = async (event: {
+  userId: string;
+  eventType: OnboardingEventType;
+  metadata?: Record<string, any>;
+  notifyAthena?: boolean;
+}): Promise<OnboardingEvent> => {
+  const newEvent = createOnboardingEvent(
+    event.userId,
+    event.eventType,
+    event.metadata
+  );
+  
+  // Log to NovaSanctum
+  await logToNovaSanctum(newEvent);
+  
+  // If this is a completion event and notifyAthena is true, send notification
+  if (event.notifyAthena && event.eventType === 'onboarding_complete') {
+    const userEvents = getUserOnboardingEvents(event.userId);
+    const user = JSON.parse(localStorage.getItem('gamedin-user') || '{}');
+    if (user) {
+      await notifyAthena(user, [...userEvents, newEvent]);
+    }
+  }
+  
+  return newEvent;
 };
 
 /**

@@ -53,10 +53,12 @@ export interface LilithIdentity {
   };
 }
 
+export type OnboardingEventType = 'registration_start' | 'path_selected' | 'role_updated' | 'verification_complete' | 'onboarding_complete';
+
 export interface OnboardingEvent {
   eventId: string;
   userId: string;
-  eventType: 'registration_start' | 'path_selected' | 'role_assigned' | 'verification_complete' | 'onboarding_complete';
+  eventType: OnboardingEventType;
   timestamp: string;
   metadata: Record<string, any>;
   novaSanctumLogged: boolean;
