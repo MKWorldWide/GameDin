@@ -6,10 +6,9 @@ frontend:
         # Initialize git submodules with SSH instead of HTTPS
         - git config --global url."git@github.com:".insteadOf "https://github.com/"
         - git submodule update --init --recursive --remote
-        - npm ci
-    build:
-      commands:
-        - npm run build
+        # Make build script executable and run it
+        - chmod +x build.sh
+        - ./build.sh
   artifacts:
     baseDirectory: dist
     files:
