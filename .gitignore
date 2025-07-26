@@ -28,7 +28,9 @@ htmlcov/
 
 # Environment
 .env
+!.env.example
 .env.*
+!*.example
 
 # CI/CD
 *.pid
