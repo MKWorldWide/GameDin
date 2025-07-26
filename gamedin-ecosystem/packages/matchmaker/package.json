@@ -1,0 +1,43 @@
+{
+  "name": "@gamedin/matchmaker",
+  "version": "0.1.0",
+  "description": "GameDin Matchmaking Service - Handles player matching and game session management",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc -b",
+    "dev": "tsx watch --clear-screen=false src/index.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"**/*.ts\" \"**/*.tsx\"",
+    "clean": "rimraf dist coverage .turbo",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@gamedin/shared": "workspace:*",
+    "@types/node": "^20.0.0",
+    "dotenv": "^16.0.0",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.0.0",
+    "@types/node": "^20.0.0",
+    "@types/supertest": "^2.0.0",
+    "jest": "^29.0.0",
+    "supertest": "^6.0.0",
+    "ts-jest": "^29.0.0",
+    "tsx": "^4.0.0",
+    "typescript": "^5.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

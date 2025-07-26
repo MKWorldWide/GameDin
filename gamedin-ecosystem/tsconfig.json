@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "composite": true,
+    "baseUrl": ".",
+    "paths": {
+      "@gamedin/*": ["packages/*/src"],
+      "@gamedin/shared": ["packages/shared/src"],
+      "@gamedin/auth": ["packages/auth/src"],
+      "@gamedin/api": ["packages/api/src"],
+      "@gamedin/matchmaker": ["packages/matchmaker/src"],
+      "@gamedin/chat": ["packages/chat/src"],
+      "@gamedin/onboarding": ["packages/onboarding/src"],
+      "@gamedin/llm": ["packages/llm/src"],
+      "@gamedin/infrastructure": ["packages/infrastructure/src"]
+    }
+  },
+  "references": [
+    { "path": "./packages/shared" },
+    { "path": "./packages/auth" },
+    { "path": "./packages/api" },
+    { "path": "./packages/matchmaker" },
+    { "path": "./packages/chat" },
+    { "path": "./packages/onboarding" },
+    { "path": "./packages/llm" },
+    { "path": "./packages/infrastructure" },
+    { "path": "./apps/web" }
+  ],
+  "exclude": ["node_modules", "dist", "build", "coverage", ".turbo"],
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "**/*.json"]
+}
