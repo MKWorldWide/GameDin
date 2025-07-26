@@ -1,0 +1,68 @@
+{
+  "name": "@gamedin/ar-vr-core",
+  "version": "0.1.0",
+  "description": "Core AR/VR functionality for GameDin platform",
+  "main": "dist/index.js",
+  "module": "dist/index.esm.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "scripts": {
+    "build": "rollup -c",
+    "dev": "rollup -c -w",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "type-check": "tsc --noEmit",
+    "lint": "eslint src --ext .ts,.tsx"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.155.0"
+  },
+  "dependencies": {
+    "@react-three/drei": "^9.96.0",
+    "@react-three/fiber": "^8.15.16",
+    "@react-three/rapier": "^2.4.0",
+    "@react-three/xr": "^5.0.2",
+    "three": "^0.155.0"
+  },
+  "devDependencies": {
+    "@types/three": "^0.155.0",
+    "@types/react": "^18.2.0",
+    "@types/react-dom": "^18.2.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.45.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-react": "^7.33.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^3.0.0",
+    "rollup": "^3.28.0",
+    "rollup-plugin-dts": "^5.3.1",
+    "rollup-plugin-esbuild": "^5.0.0",
+    "rollup-plugin-peer-deps-external": "^2.2.4",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.5",
+    "vitest": "^0.32.2"
+  },
+  "keywords": [
+    "ar",
+    "vr",
+    "xr",
+    "threejs",
+    "react-three-fiber",
+    "gamedin"
+  ],
+  "author": "GameDin Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MKWorldWide/GameDin/tree/main/packages/ar-vr-core"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}
