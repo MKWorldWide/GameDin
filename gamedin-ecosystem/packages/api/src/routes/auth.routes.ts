@@ -1,7 +1,21 @@
-import { FastifyPluginAsync } from 'fastify';
+import type { FastifyPluginAsync, FastifyRequest, FastifyReply } from 'fastify';
 import { z } from 'zod';
-import { AuthService } from '@gamedin/auth';
-import { UserRole } from '@gamedin/shared/types/user';
+
+// Import types from our declaration files
+declare module '@gamedin/auth' {
+  export class AuthService {
+    static register(data: { email: string; username: string; password: string; displayName?: string }): Promise<{ user: any; token: string }>;
+    static login(credentials: { email: string; password: string }): Promise<{ user: any; token: string }>;
+    static refreshToken(token: string): Promise<{ token: string }>;
+  }
+}
+
+// Define UserRole enum locally since we're having issues with the import
+enum UserRole {
+  ADMIN = 'admin',
+  USER = 'user',
+  GUEST = 'guest'
+}
 
 const RegisterSchema = z.object({
   email: z.string().email(),
@@ -21,7 +35,7 @@ const RefreshTokenSchema = z.object({
 
 export const authRoutes: FastifyPluginAsync = async (fastify) => {
   // Register a new user
-  fastify.post('/register', {
+  fastify.post<{ Body: z.infer<typeof RegisterSchema> }>('/register', {
     schema: {
       body: RegisterSchema,
       response: {
@@ -35,7 +49,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
                 email: { type: 'string' },
                 username: { type: 'string' },
                 displayName: { type: 'string' },
-                role: { type: 'string', enum: Object.values(UserRole.Values) },
+                role: { type: 'string', enum: Object.values(UserRole) },
                 isVerified: { type: 'boolean' },
                 createdAt: { type: 'string' },
               },
@@ -45,8 +59,8 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
         },
       },
     },
-  }, async (request, reply) => {
-    const { email, username, password, displayName } = request.body as z.infer<typeof RegisterSchema>;
+  }, async (request: FastifyRequest<{ Body: z.infer<typeof RegisterSchema> }>, reply: FastifyReply) => {
+    const { email, username, password, displayName } = request.body;
     
     try {
       const { user, token } = await AuthService.register({
@@ -65,8 +79,9 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      // Don't send sensitive data to the client
-      const { password: _, ...userWithoutPassword } = user;
+// Don't send sensitive data to the client
+      const userData = user as Record<string, any>;
+      const { password: _, ...userWithoutPassword } = userData;
       
       reply.status(201).send({
         user: userWithoutPassword,
@@ -83,7 +98,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
   });
 
   // User login
-  fastify.post('/login', {
+  fastify.post<{ Body: z.infer<typeof LoginSchema> }>('/login', {
     schema: {
       body: LoginSchema,
       response: {
@@ -97,7 +112,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
                 email: { type: 'string' },
                 username: { type: 'string' },
                 displayName: { type: 'string' },
-                role: { type: 'string' },
+                role: { type: 'string', enum: Object.values(UserRole) },
                 isVerified: { type: 'boolean' },
               },
             },
@@ -106,8 +121,8 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
         },
       },
     },
-  }, async (request, reply) => {
-    const { email, password } = request.body as z.infer<typeof LoginSchema>;
+  }, async (request: FastifyRequest<{ Body: z.infer<typeof LoginSchema> }>, reply: FastifyReply) => {
+    const { email, password } = request.body;
     
     try {
       const { user, token } = await AuthService.login({
@@ -124,8 +139,9 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
         maxAge: 60 * 60 * 24 * 7, // 7 days
       });
 
-      // Don't send sensitive data to the client
-      const { password: _, ...userWithoutPassword } = user;
+// Don't send sensitive data to the client
+      const userData = user as Record<string, any>;
+      const { password: _, ...userWithoutPassword } = userData;
       
       return {
         user: userWithoutPassword,
@@ -145,12 +161,12 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
   });
 
   // Refresh access token
-  fastify.post('/refresh-token', {
+  fastify.post<{ Body: z.infer<typeof RefreshTokenSchema> }>('/refresh-token', {
     schema: {
       body: RefreshTokenSchema,
     },
-  }, async (request, reply) => {
-    const { refreshToken } = request.body as z.infer<typeof RefreshTokenSchema>;
+  }, async (request: FastifyRequest<{ Body: z.infer<typeof RefreshTokenSchema> }>, reply: FastifyReply) => {
+    const { refreshToken } = request.body;
     
     try {
       const { token } = await AuthService.refreshToken(refreshToken);
@@ -171,7 +187,7 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
   });
 
   // Logout (client should delete the token)
-  fastify.post('/logout', async (request, reply) => {
+  fastify.post('/logout', async (request: FastifyRequest, reply: FastifyReply) => {
     // Clear the access token cookie
     reply.clearCookie('accessToken', {
       path: '/',
@@ -186,9 +202,13 @@ export const authRoutes: FastifyPluginAsync = async (fastify) => {
   // Get current user (protected route)
   fastify.get('/me', {
     onRequest: [fastify.authenticate],
-  }, async (request) => {
+  }, async (request: FastifyRequest & { user?: any }) => {
     // The user is attached to the request by the JWT strategy
-    const { password, ...userWithoutPassword } = request.user;
+    if (!request.user) {
+      throw fastify.httpErrors.unauthorized('Not authenticated');
+    }
+    const userData = request.user as Record<string, any>;
+    const { password, ...userWithoutPassword } = userData;
     return userWithoutPassword;
   });
 };

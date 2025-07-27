@@ -21,7 +21,7 @@ async function start() {
     await server.ready();
     
     await server.listen({
-      port: parseInt(appConfig.PORT, 10),
+      port: appConfig.PORT,
       host: appConfig.HOST,
     });
 

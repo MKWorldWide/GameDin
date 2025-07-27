@@ -40,6 +40,11 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().optional(),
   GOOGLE_CLIENT_SECRET: z.string().optional(),
 
+  // MKWW Studio Integration
+  MKWW_STUDIO_URL: z.string().url().default('https://mkww.studio'),
+  MKWW_STUDIO_ENABLED: z.string().default('false'),
+  MKWW_STUDIO_API_PREFIX: z.string().default('/api/v1'),
+
   // Feature Flags
   ENABLE_LLM_MODERATION: z.string().default('false'),
   ENABLE_INVITE_FLOW: z.string().default('false'),

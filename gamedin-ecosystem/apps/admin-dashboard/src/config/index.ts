@@ -1,6 +1,19 @@
 // API Configuration
 export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:3001/api';
 
+// MKWW Studio Integration
+export const MKWW_STUDIO_CONFIG = {
+  BASE_URL: process.env.REACT_APP_MKWW_STUDIO_URL || 'https://mkww.studio',
+  API_PREFIX: '/api/v1',
+  AUTH_HEADER: 'X-MKWW-API-Key',
+  ENDPOINTS: {
+    VERIFY_TOKEN: '/auth/verify',
+    USER_PROFILE: '/users/me',
+    SYNC_USERS: '/sync/users',
+    SYNC_ANALYTICS: '/sync/analytics',
+  },
+};
+
 // Auth Configuration
 export const AUTH_CONFIG = {
   TOKEN_KEY: 'gamedin_admin_token',
