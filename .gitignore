@@ -36,11 +36,6 @@ htmlcov/
 *.pid
 *.lock
 
-# Submodules
-<<<<<<< HEAD
-.gitmodules
-.git/
-
 # Editor
 .idea/
 .vscode/
@@ -52,8 +47,12 @@ htmlcov/
 
 # Ignore local config
 config.local.*
-=======
+
+# Submodules
+.gitmodules
+.git/
+
+# Workspaces
 divina-l3/blockchain-client/
 divina-l3/react-hooks/
 divina-l3/smart-contracts/
->>>>>>> a197941fc0d98584a99d627beabfc9008c9509bd
