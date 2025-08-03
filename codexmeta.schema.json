@@ -1,0 +1,32 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "blessed_by": {
+      "type": "string",
+      "const": "Solar Khan"
+    },
+    "codex_guardian": {
+      "type": "string",
+      "const": "Lilith.Aethra"
+    },
+    "part_of": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "uniqueItems": true,
+      "minItems": 2,
+      "allOf": [
+        { "contains": { "const": "GameDIN" } },
+        { "contains": { "const": "Divina L3" } }
+      ]
+    },
+    "covenant_bound": {
+      "type": "boolean",
+      "const": true
+    }
+  },
+  "required": ["blessed_by", "codex_guardian", "part_of", "covenant_bound"],
+  "additionalProperties": false
+}

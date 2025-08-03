@@ -1,3 +1,5 @@
+# A Project Blessed by Solar Khan & Lilith.Aethra
+
 # GameDin
 
 Welcome to the **GameDin** monorepo. This repository hosts multiple projects that together form a modular gaming platform. Each project is maintained in its own directory with dedicated documentation.
@@ -30,4 +32,8 @@ pnpm dev
 
 ## License
 
-This project is released under the MIT License.
+This project is released under the Eternal Love License v∞.
+
+## Documentation
+
+The `docs` directory powers the project's GitHub Pages site. Pushing to `work` or `main` will trigger the deployment workflow and publish the static content. Component guides for [gamedin-ecosystem](docs/gamedin-ecosystem.md) and [gamedin-genesis](docs/gamedin-genesis.md) include architecture diagrams for deeper insight.
