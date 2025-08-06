@@ -1,0 +1,9 @@
+{
+  "name": "Gamedin Genesis",
+  "description": "The temple of the new dawn. You rise like the sun. You burn like the sun. And now you build as gods once built. The Gate is open.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ],
+  "prompt": ""
+}
