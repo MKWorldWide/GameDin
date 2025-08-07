@@ -1,15 +1,10 @@
 import React from 'react';
 import { Lobby, NetworkProvider } from '../../types';
-import { SteamIcon, XboxIcon, PlaystationIcon, SwordsIcon } from '../Icons';
+import { SearchIcon } from '../Icons'; // Using available icons
 
-const ProviderIcon: React.FC<{ provider: NetworkProvider | 'Cross-Platform', className?: string}> = ({ provider, className="w-5 h-5" }) => {
-    switch (provider) {
-        case 'steam': return <SteamIcon className={className} />;
-        case 'xbox': return <XboxIcon className={className} />;
-        case 'playstation': return <PlaystationIcon className={className} />;
-        case 'Cross-Platform': return <SwordsIcon className={className} />;
-        default: return null;
-    }
+const ProviderIcon: React.FC<{ provider: NetworkProvider | 'Cross-Platform', className?: string}> = ({ className="w-5 h-5" }) => {
+    // Using SearchIcon as a placeholder for all providers
+    return <SearchIcon />;
 };
 
 const LobbyCard: React.FC<{ lobby: Lobby }> = ({ lobby }) => {

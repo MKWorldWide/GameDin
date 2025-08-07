@@ -1,0 +1,71 @@
+src/components/CreatePost.tsx(4,10): error TS2305: Module '"./Icons"' has no exported member 'TwitterIcon'.
+src/components/creator/Generator.tsx(8,10): error TS2305: Module '"../Icons"' has no exported member 'SparklesIcon'.
+src/components/friends/FriendsList.tsx(3,10): error TS2305: Module '"../Icons"' has no exported member 'SteamIcon'.
+src/components/friends/FriendsList.tsx(3,21): error TS2305: Module '"../Icons"' has no exported member 'XboxIcon'.
+src/components/friends/FriendsList.tsx(3,31): error TS2305: Module '"../Icons"' has no exported member 'PlaystationIcon'.
+src/components/friends/FriendsList.tsx(3,48): error TS2305: Module '"../Icons"' has no exported member 'DiscordIcon'.
+src/components/GeminiKitten.tsx(3,10): error TS2305: Module '"./Icons"' has no exported member 'ScarabIcon'.
+src/components/GeminiKitten.tsx(3,22): error TS2305: Module '"./Icons"' has no exported member 'PaperPlaneIcon'.
+src/components/layout/BottomNav.tsx(2,20): error TS2305: Module '"../Icons"' has no exported member 'ChatBubbleLeftRightIcon'.
+src/components/layout/BottomNav.tsx(2,45): error TS2305: Module '"../Icons"' has no exported member 'UserCircleIcon'.
+src/components/layout/BottomNav.tsx(2,61): error TS2305: Module '"../Icons"' has no exported member 'VideoCameraIcon'.
+src/components/layout/BottomNav.tsx(2,78): error TS2305: Module '"../Icons"' has no exported member 'SwordsIcon'.
+src/components/layout/BottomNav.tsx(21,27): error TS2322: Type '{ className: string; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'className' does not exist on type 'IntrinsicAttributes'.
+src/components/layout/Header.tsx(2,10): error TS2305: Module '"../Icons"' has no exported member 'ScarabIcon'.
+src/components/layout/Header.tsx(2,22): error TS2305: Module '"../Icons"' has no exported member 'Bars3Icon'.
+src/components/layout/Header.tsx(2,33): error TS2305: Module '"../Icons"' has no exported member 'UserCircleIcon'.
+src/components/layout/Header.tsx(2,49): error TS2305: Module '"../Icons"' has no exported member 'ArrowRightOnRectangleIcon'.
+src/components/lobby/LobbyCard.tsx(5,102): error TS6133: 'className' is declared but its value is never read.
+src/components/PostCard.tsx(3,10): error TS2305: Module '"./Icons"' has no exported member 'HeartIcon'.
+src/components/PostCard.tsx(3,21): error TS2305: Module '"./Icons"' has no exported member 'ChatBubbleIcon'.
+src/components/PostCard.tsx(3,37): error TS2305: Module '"./Icons"' has no exported member 'ArrowPathIcon'.
+src/components/SearchBar.tsx(14,21): error TS2322: Type '{ className: string; }' is not assignable to type 'IntrinsicAttributes'.
+  Property 'className' does not exist on type 'IntrinsicAttributes'.
+src/components/trophies/TrophyConstellation.tsx(3,10): error TS2305: Module '"../Icons"' has no exported member 'SteamIcon'.
+src/components/trophies/TrophyConstellation.tsx(3,21): error TS2305: Module '"../Icons"' has no exported member 'XboxIcon'.
+src/components/trophies/TrophyConstellation.tsx(3,31): error TS2305: Module '"../Icons"' has no exported member 'PlaystationIcon'.
+src/components/trophies/TrophyConstellation.tsx(3,48): error TS2305: Module '"../Icons"' has no exported member 'TrophyIcon'.
+src/hooks/useAuth.tsx(2,98): error TS6133: 'LinkedAccount' is declared but its value is never read.
+src/index.tsx(1,1): error TS6133: 'React' is declared but its value is never read.
+src/pages/ChatPage.tsx(5,10): error TS2305: Module '"../components/Icons"' has no exported member 'PaperPlaneIcon'.
+src/pages/CreatorStudioPage.tsx(3,10): error TS2305: Module '"../components/Icons"' has no exported member 'SparklesIcon'.
+src/pages/GenesisPage.tsx(6,10): error TS2305: Module '"../components/Icons"' has no exported member 'ScarabIcon'.
+src/pages/GenesisPage.tsx(6,22): error TS2305: Module '"../components/Icons"' has no exported member 'SageIcon'.
+src/pages/GenesisPage.tsx(6,32): error TS2305: Module '"../components/Icons"' has no exported member 'SeerIcon'.
+src/pages/GenesisPage.tsx(6,42): error TS2305: Module '"../components/Icons"' has no exported member 'WarriorIcon'.
+src/pages/GenesisPage.tsx(6,55): error TS2305: Module '"../components/Icons"' has no exported member 'ArchitectIcon'.
+src/pages/GenesisPage.tsx(6,70): error TS2305: Module '"../components/Icons"' has no exported member 'SovereignIcon'.
+src/pages/ProfilePage.tsx(10,10): error TS2305: Module '"../components/Icons"' has no exported member 'UserPlusIcon'.
+src/pages/ProfilePage.tsx(10,24): error TS2305: Module '"../components/Icons"' has no exported member 'SteamIcon'.
+src/pages/ProfilePage.tsx(10,35): error TS2305: Module '"../components/Icons"' has no exported member 'XboxIcon'.
+src/pages/ProfilePage.tsx(10,45): error TS2305: Module '"../components/Icons"' has no exported member 'PlaystationIcon'.
+src/pages/ProfilePage.tsx(10,62): error TS2305: Module '"../components/Icons"' has no exported member 'SageIcon'.
+src/pages/ProfilePage.tsx(10,72): error TS2305: Module '"../components/Icons"' has no exported member 'SeerIcon'.
+src/pages/ProfilePage.tsx(10,82): error TS2305: Module '"../components/Icons"' has no exported member 'WarriorIcon'.
+src/pages/ProfilePage.tsx(10,95): error TS2305: Module '"../components/Icons"' has no exported member 'ArchitectIcon'.
+src/pages/ProfilePage.tsx(10,110): error TS2305: Module '"../components/Icons"' has no exported member 'SovereignIcon'.
+src/pages/ProfilePage.tsx(10,125): error TS2305: Module '"../components/Icons"' has no exported member 'DiscordIcon'.
+src/pages/ProfilePage.tsx(10,138): error TS2305: Module '"../components/Icons"' has no exported member 'TwitchIcon'.
+src/pages/ProfilePage.tsx(10,150): error TS2305: Module '"../components/Icons"' has no exported member 'TwitterIcon'.
+src/pages/ProfilePage.tsx(10,163): error TS2305: Module '"../components/Icons"' has no exported member 'LinkIcon'.
+src/pages/ProfilePage.tsx(10,173): error TS2305: Module '"../components/Icons"' has no exported member 'UnlinkIcon'.
+src/pages/ProfilePage.tsx(10,185): error TS2305: Module '"../components/Icons"' has no exported member 'MusicalNoteIcon'.
+src/pages/ProfilePage.tsx(10,202): error TS2305: Module '"../components/Icons"' has no exported member 'TrophyIcon'.
+src/pages/ProfilePage.tsx(10,214): error TS2305: Module '"../components/Icons"' has no exported member 'PaintBrushIcon'.
+src/pages/ProfilePage.tsx(10,230): error TS2305: Module '"../components/Icons"' has no exported member 'SparklesIcon'.
+src/pages/ProfilePage.tsx(10,244): error TS2305: Module '"../components/Icons"' has no exported member 'ArrowPathIcon'.
+src/pages/ProfilePage.tsx(228,92): error TS2322: Type 'Partial<User> | null' is not assignable to type 'Partial<User>'.
+  Type 'null' is not assignable to type 'Partial<User>'.
+src/pages/StreamPage.tsx(3,1): error TS6133: 'LoadingSpinner' is declared but its value is never read.
+src/pages/StreamPage.tsx(4,10): error TS2305: Module '"../components/Icons"' has no exported member 'HeartIcon'.
+src/pages/StreamPage.tsx(4,21): error TS2305: Module '"../components/Icons"' has no exported member 'UserPlusIcon'.
+src/services/creator.ts(12,32): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/creator.ts(59,34): error TS18048: 'imageResponse.generatedImages' is possibly 'undefined'.
+src/services/creator.ts(59,34): error TS2532: Object is possibly 'undefined'.
+src/services/creator.ts(64,28): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/services/geminiKitten.ts(11,30): error TS2339: Property 'env' does not exist on type 'ImportMeta'.
+src/services/geminiKitten.ts(30,5): error TS2322: Type 'string | undefined' is not assignable to type 'string'.
+  Type 'undefined' is not assignable to type 'string'.
+src/services/nexus.ts(1,60): error TS6133: 'Path' is declared but its value is never read.
