@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: gamedin
+    env: node
+    plan: free
+    buildCommand: npm ci || npm install && npm run build || echo "no build"
+    startCommand: npm run start || npm run preview || npx http-server dist -p 3000
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: LOG_LEVEL
+        value: info
