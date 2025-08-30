@@ -1,0 +1,109 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    ":disableDependencyDashboard",
+    ":enableVulnerabilityAlerts",
+    ":semanticCommits",
+    ":semanticCommitTypeAll(chore)",
+    ":semanticCommitScope(deps)",
+    "group:monorepos",
+    "group:recommended"
+  ],
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["patch", "pin", "digest"],
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true
+    },
+    {
+      "matchPackagePatterns": ["^@types/"],
+      "automerge": true,
+      "automergeType": "branch",
+      "platformAutomerge": true
+    },
+    {
+      "matchPackagePatterns": ["^eslint", "^@typescript-eslint/"],
+      "groupName": "eslint packages"
+    },
+    {
+      "matchPackagePatterns": ["^jest", "^@types/jest", "^ts-jest"],
+      "groupName": "test packages"
+    },
+    {
+      "matchPackagePatterns": ["^@testing-library/"],
+      "groupName": "testing library"
+    },
+    {
+      "matchPackagePatterns": ["^@babel/"],
+      "groupName": "babel packages"
+    },
+    {
+      "matchPackagePatterns": ["^webpack"],
+      "groupName": "webpack packages"
+    },
+    {
+      "matchPackagePatterns": ["^react", "^@remix-run/"],
+      "groupName": "react packages"
+    },
+    {
+      "matchPackagePatterns": ["^@tanstack/"],
+      "groupName": "tanstack packages"
+    },
+    {
+      "matchPackagePatterns": ["^@prisma/"],
+      "groupName": "prisma packages"
+    },
+    {
+      "matchPackagePatterns": ["^@trpc/"],
+      "groupName": "tRPC packages"
+    }
+  ],
+  "prHourlyLimit": 5,
+  "prConcurrentLimit": 10,
+  "rangeStrategy": "bump",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "automerge": true,
+    "automergeType": "branch",
+    "platformAutomerge": true
+  },
+  "packageRules": [
+    {
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dependencies (non-major)",
+      "schedule": ["before 3am on Monday"]
+    },
+    {
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "devDependencies (non-major)",
+      "schedule": ["before 3am on Monday"]
+    },
+    {
+      "matchUpdateTypes": ["major"],
+      "dependencyDashboardApproval": true,
+      "prPriority": -1
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "automerge": false,
+    "labels": ["security"],
+    "schedule": null
+  },
+  "ignoreDeps": ["node"],
+  "timezone": "America/New_York",
+  "schedule": ["before 3am on Monday"],
+  "prCreation": "not-pending",
+  "stabilityDays": 3,
+  "internalChecksFilter": "strict"
+}
